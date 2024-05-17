@@ -1,0 +1,43 @@
+{
+  "name": "soybean-admin-docs",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "The documentation of FastSoyAdmin",
+  "author": {
+    "name": "Sleep1223",
+    "email": "sleep1223@outlook.com",
+    "url": "https://github.com/sleep1223"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/sleep1223/fast-soy-admin-docs",
+  "repository": {
+    "url": "https://github.com/sleep1223/fast-soy-admin-docs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sleep1223/fast-soy-admin-docs/issues"
+  },
+  "engines": {
+    "node": ">=18.12.0",
+    "pnpm": ">=8.7.0"
+  },
+  "scripts": {
+    "build": "vitepress build",
+    "cleanup": "soy cleanup",
+    "commit": "soy git-commit",
+    "dev": "vitepress dev --port 1026",
+    "lint": "eslint . --fix",
+    "preview": "vite preview",
+    "release": "soy release",
+    "serve": "vitepress serve",
+    "typecheck": "vue-tsc --noEmit --skipLibCheck",
+    "update-pkg": "soy ncu"
+  },
+  "devDependencies": {
+    "@soybeanjs/cli": "1.0.13",
+    "@soybeanjs/eslint-config": "1.3.2",
+    "@types/node": "20.12.7",
+    "eslint": "9.1.1",
+    "typescript": "5.4.5",
+    "vitepress": "1.1.3"
+  }
+}
