@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress';
 import { qqSvg } from './icon.js';
 
 export default defineConfig({
+  base: '/fast-soy-admin-docs/',
   locales: {
     root: {
       label: 'English',
