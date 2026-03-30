@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress';
 import zh from './locales/zh.js';
 
 export default defineConfig({
+  base: '/fast-soy-admin-docs/',
   locales: {
     root: {
       label: 'English',
