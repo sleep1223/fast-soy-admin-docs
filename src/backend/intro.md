@@ -1,83 +1,62 @@
-# Backend Introduction
+# 后端简介
 
-The backend is built with **FastAPI** and follows a layered architecture: Router → Controller → CRUD/Model.
+后端基于 **FastAPI** 构建，采用分层架构：Router → Controller → CRUD/Model。
 
-## Tech Stack
+## 技术栈
 
-| Technology | Description |
-|-----------|-------------|
-| [FastAPI](https://fastapi.tiangolo.com/) | High-performance async web framework |
-| [Pydantic v2](https://docs.pydantic.dev/) | Data validation and serialization |
-| [Tortoise ORM](https://tortoise.github.io) | Async ORM for Python |
-| [Aerich](https://github.com/tortoise/aerich) | Database migrations for Tortoise |
-| [Redis](https://redis.io/) | Cache layer via fastapi-cache2 |
-| [Argon2](https://argon2-cffi.readthedocs.io/) | Secure password hashing |
-| [PyJWT](https://pyjwt.readthedocs.io/) | JWT token creation and validation |
-| [Loguru](https://loguru.readthedocs.io/) | Structured logging |
-| [uv](https://docs.astral.sh/uv/) | Fast Python package manager |
-| [Ruff](https://docs.astral.sh/ruff/) | Python linter and formatter |
-| [Pyright](https://microsoft.github.io/pyright/) | Static type checker |
+| 技术 | 说明 |
+|------|------|
+| [FastAPI](https://fastapi.tiangolo.com/) | 高性能异步 Web 框架 |
+| [Pydantic v2](https://docs.pydantic.dev/) | 数据校验与序列化 |
+| [Tortoise ORM](https://tortoise.github.io) | Python 异步 ORM |
+| [Aerich](https://github.com/tortoise/aerich) | Tortoise 数据库迁移 |
+| [Redis](https://redis.io/) | 缓存层（fastapi-cache2） |
+| [Argon2](https://argon2-cffi.readthedocs.io/) | 安全密码哈希 |
+| [PyJWT](https://pyjwt.readthedocs.io/) | JWT 令牌创建与验证 |
+| [Ruff](https://docs.astral.sh/ruff/) | Python 代码检查与格式化 |
+| [Pyright](https://microsoft.github.io/pyright/) | 静态类型检查 |
 
-## Directory Structure
+## 目录结构
 
 ```
 app/
-├── __init__.py            # App factory, middleware, startup hooks
-├── api/v1/                # API routers (grouped by domain)
-│   ├── auth/              # Authentication (login, token refresh)
-│   ├── route/             # Dynamic route management
-│   └── system_manage/     # Users, roles, menus CRUD
-├── controllers/           # Business logic layer
-│   ├── user.py            # UserController
-│   ├── role.py            # RoleController
-│   ├── menu.py            # MenuController
-│   └── api.py             # ApiController
-├── models/system/         # Tortoise ORM models
-│   ├── admin.py           # User, Role, Menu, Api, Button
-│   └── utils.py           # Base model, enums
-├── schemas/               # Pydantic request/response schemas
-│   ├── base.py            # Success, Fail, SuccessExtra wrappers
-│   ├── users.py           # User schemas
-│   ├── admin.py           # Admin schemas
-│   └── login.py           # Login/JWT schemas
-├── core/                  # Core modules
-│   ├── init_app.py        # DB, exceptions, router registration
+├── __init__.py            # App 工厂，中间件注册，启动钩子
+├── api/v1/                # API 路由（按业务域分组）
+│   ├── auth/              # 认证（登录、令牌刷新）
+│   ├── route/             # 动态路由管理
+│   └── system_manage/     # 用户、角色、菜单 CRUD
+├── controllers/           # 业务逻辑层
+├── models/system/         # Tortoise ORM 模型
+├── schemas/               # Pydantic 请求/响应模型
+├── core/                  # 核心模块
+│   ├── init_app.py        # 数据库、异常、路由注册
 │   ├── dependency.py      # AuthControl, PermissionControl
-│   ├── crud.py            # Generic CRUD base class
-│   ├── code.py            # Business response codes
-│   ├── exceptions.py      # Custom exception handlers
-│   ├── middlewares.py      # Request logging, background tasks
-│   ├── ctx.py             # Context variables
-│   └── redis.py           # Redis connection
-├── settings/config.py     # Pydantic Settings (.env)
-├── utils/
-│   ├── security.py        # Password hashing, JWT
-│   └── tools.py           # Utility functions
-├── monitor/               # System monitoring APIs
-└── radar/                 # Request/response debugger
+│   ├── crud.py            # 通用 CRUD 基类
+│   ├── code.py            # 业务响应码
+│   ├── exceptions.py      # 自定义异常处理
+│   ├── middlewares.py     # 请求日志、后台任务
+│   └── ctx.py             # 上下文变量
+├── settings/config.py     # 环境配置 (pydantic-settings)
+└── utils/                 # 工具函数（安全、通用）
 ```
 
-## Quick Start
+## 快速开始
 
 ```bash
-# Install dependencies
-uv sync
+uv sync                    # 安装依赖
+uv run python run.py       # 启动开发服务器 (:9999)
 
-# Start development server (port 9999)
-uv run python run.py
-
-# Code quality checks
-ruff check app/            # Lint
-ruff format app/           # Format
-pyright app                # Type check
-pytest tests/ -v           # Tests
+ruff check app/            # 代码检查
+ruff format app/           # 代码格式化
+pyright app                # 类型检查
+pytest tests/ -v           # 运行测试
 ```
 
-## Startup Flow
+## 启动流程
 
-1. Register Tortoise ORM (database connection + model discovery)
-2. Register Aerich (database migrations)
-3. Register exception handlers
-4. Mount API routers at `/api/v1`
-5. Register middleware stack
-6. Auto-register API endpoints to database (for RBAC)
+1. 注册 Tortoise ORM（数据库连接 + 模型发现）
+2. 注册 Aerich（数据库迁移）
+3. 注册异常处理器
+4. 挂载 API 路由（/api/v1）
+5. 注册中间件
+6. 启动钩子：自动注册 API 到数据库（用于 RBAC）

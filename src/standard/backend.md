@@ -1,94 +1,18 @@
-# Backend Style
+# 后端风格
 
-## Python Code Style
+## 代码格式
 
-### Formatting
+- 行宽 200，双引号，自动排序 import
+- Ruff 强制执行
 
-Enforced by Ruff:
+## 类型注解
 
-- Line length: 200 characters
-- Double quotes for strings
-- Sorted imports (isort)
+所有函数必须有类型注解，Pyright standard 模式检查。
 
-```python
-# Good
-from app.controllers.user import user_controller
-from app.schemas.base import Success, SuccessExtra
+## API 路由风格
 
-# Bad - wrong quote style
-from app.controllers.user import user_controller
-```
+使用 Pydantic Schema 处理请求/响应，统一响应封装。
 
-### Type Annotations
+## Schema 风格
 
-All functions should have type annotations. Enforced by Pyright in standard mode.
-
-```python
-# Good
-async def get_user(user_id: int) -> User:
-    return await User.get(id=user_id)
-
-# Good - Optional types
-async def find_user(username: str) -> User | None:
-    return await User.filter(user_name=username).first()
-```
-
-### API Route Style
-
-```python
-# Use Pydantic schemas for request/response
-@router.post("/users")
-async def create_user(
-    body: UserCreateSchema,
-    auth: AuthControl = Depends(),
-) -> Success:
-    user = await user_controller.create(body.model_dump())
-    return Success(data=UserSchema.model_validate(user))
-```
-
-### Response Pattern
-
-Always use the standard response wrappers:
-
-```python
-# Single item
-return Success(data=item)
-
-# Paginated list
-return SuccessExtra(data=items, total=total, current=page, size=page_size)
-
-# Error
-return Fail(code=CodeEnum.FAIL, msg="Operation failed")
-```
-
-### Schema Style
-
-Use camelCase aliases for frontend compatibility:
-
-```python
-class UserSchema(BaseModel):
-    id: int
-    user_name: str = Field(alias="userName")
-    nick_name: str = Field(alias="nickName")
-    status_type: int = Field(alias="status")
-
-    model_config = ConfigDict(
-        from_attributes=True,
-        populate_by_name=True
-    )
-```
-
-## Ruff Commands
-
-```bash
-ruff check app/              # Lint
-ruff check app/ --fix        # Lint and auto-fix
-ruff format app/             # Format
-```
-
-## Pyright Commands
-
-```bash
-pyright app                  # Type check
-pyright app --watch          # Watch mode
-```
+camelCase 别名，与前端保持一致。

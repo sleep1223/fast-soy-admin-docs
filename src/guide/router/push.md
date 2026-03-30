@@ -1,65 +1,12 @@
-# Router Push
+# 路由跳转
 
-The project provides the `useRouterPush` hook for type-safe route navigation.
-
-## Usage
+通过 `useRouterPush` Hook 提供类型安全的路由导航。
 
 ```typescript
-import { useRouterPush } from '@/hooks/common/router';
+const { routerPushByKey, toLogin, redirectFromLogin } = useRouterPush();
 
-const { routerPushByKey, toLogin, toggleLoginModule, redirectFromLogin } = useRouterPush();
-```
-
-## Methods
-
-### routerPushByKey
-
-Navigate by route key with full type checking:
-
-```typescript
-// Simple navigation
-routerPushByKey('manage_user');
-
-// With query parameters
-routerPushByKey('manage_user', { query: { id: '123' } });
-
-// With path parameters
-routerPushByKey('user_detail', { params: { id: '456' } });
-```
-
-### toLogin
-
-Redirect to the login page, preserving the current path for redirect after login:
-
-```typescript
-toLogin();
-```
-
-### toggleLoginModule
-
-Switch between login modules (login, register, forgot password):
-
-```typescript
-toggleLoginModule('register');
-toggleLoginModule('reset-pwd');
-```
-
-### redirectFromLogin
-
-After successful login, redirect to the originally requested page or the default home:
-
-```typescript
-redirectFromLogin();
-```
-
-## Direct Router Usage
-
-You can also use `vue-router` directly:
-
-```typescript
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
-router.push('/manage/user');
-router.push({ name: 'manage_user', query: { id: '123' } });
+routerPushByKey('manage_user');           // 按 key 跳转
+routerPushByKey('user_detail', { params: { id: '1' } }); // 带参数
+toLogin();                                // 跳转登录
+redirectFromLogin();                      // 登录后重定向
 ```

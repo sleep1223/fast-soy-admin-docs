@@ -1,40 +1,24 @@
-# Code Standards
+# 代码规范
 
-FastSoyAdmin follows strict code standards for both frontend and backend to ensure consistency and maintainability.
+## 前端
 
-## Frontend Standards
+- 基于 SoybeanJS ESLint 配置
+- ESLint + oxlint 检查
+- simple-git-hooks 预提交检查
+- vue-tsc 类型检查
 
-- Based on [SoybeanJS ESLint Config](https://github.com/soybeanjs/eslint-config)
-- ESLint + oxlint for linting
-- simple-git-hooks for pre-commit checks
-- Conventional Commits for commit messages
-- vue-tsc for TypeScript type checking
+## 后端
 
-## Backend Standards
+- Ruff 代码检查与格式化
+- Pyright 类型检查
+- 行宽 200，双引号
 
-- [Ruff](https://docs.astral.sh/ruff/) for linting and formatting
-- [Pyright](https://microsoft.github.io/pyright/) for type checking
-- Line length: 200 characters
-- Double quotes for strings
-- Rules: E (pycodestyle), F (pyflakes), I (isort)
-
-## Gate Checks
-
-Always run these checks before submitting code:
-
-### Backend
+## 检查命令
 
 ```bash
-ruff check app/        # Lint
-ruff format app/       # Format
-pyright app            # Type check
-pytest tests/ -v       # Tests
-```
+# 后端
+ruff check app/ && ruff format app/ && pyright app
 
-### Frontend
-
-```bash
-cd web
-pnpm lint              # ESLint + oxlint
-pnpm typecheck         # vue-tsc type check
+# 前端
+cd web && pnpm lint && pnpm typecheck
 ```

@@ -1,132 +1,104 @@
-# Quick Start
+# 快速开始
 
-This document will help you start the project from scratch.
+## 环境准备
 
-## Environment Preparation
-
-Make sure your environment meets the following requirements:
-
-| Tool | Version |
-|------|---------|
+| 工具 | 版本 |
+|------|------|
 | Git | - |
 | Python | >= 3.12 |
 | Node.js | >= 20.0.0 |
-| uv | latest |
+| uv | 最新 |
 | pnpm | >= 10.5 |
 
-## Get the Code
+## 获取代码
 
 ```bash
 git clone https://github.com/sleep1223/fast-soy-admin.git
 cd fast-soy-admin
 ```
 
-## Method 1: Docker Deployment (Recommended)
+## 方式一：Docker 部署（推荐）
 
 ```bash
 docker compose up -d
 ```
 
-Visit `http://localhost:1880`. Services include:
-- **Nginx** (:1880) — Frontend + API proxy
-- **FastAPI** (:9999) — Backend API
-- **Redis** (:6379) — Cache
+访问 `http://localhost:1880`，服务包括：
+- **Nginx** (:1880) — 前端 + API 代理
+- **FastAPI** (:9999) — 后端 API
+- **Redis** (:6379) — 缓存
 
-Update and redeploy:
+更新代码后重新部署：
 
 ```bash
 docker compose down && docker compose up -d
 ```
 
-## Method 2: Local Development
+## 方式二：本地开发
 
-### Backend Setup
+### 后端
 
 ```bash
-# Install dependencies
+# 安装依赖
 uv sync
 
-# Start backend server (port 9999)
+# 启动后端（端口 9999）
 uv run python run.py
 ```
 
-### Frontend Setup
+### 前端
 
 ```bash
-# Install dependencies
+# 安装依赖
 cd web && pnpm install
 
-# Start dev server (port 9527)
+# 启动开发服务器（端口 9527）
 pnpm dev
 ```
 
-## VSCode Plugins
-
-Recommended plugins for development:
-
-- [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar) — Vue language service
-- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) — Code checking
-- [UnoCSS](https://marketplace.visualstudio.com/items?itemName=antfu.unocss) — UnoCSS hints
-- [Iconify IntelliSense](https://marketplace.visualstudio.com/items?itemName=antfu.iconify) — Icon preview
-- [i18n Ally](https://marketplace.visualstudio.com/items?itemName=Lokalise.i18n-ally) — i18n plugin
-- [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python) — Python support
-- [Ruff](https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff) — Python linting
-- [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) — Python type checking
-
-## Project Structure
+## 项目结构
 
 ```
 fast-soy-admin/
-├── app/                       # Backend (FastAPI)
-│   ├── __init__.py            # App factory, middleware, startup hooks
-│   ├── api/v1/                # API routers
-│   │   ├── auth/              # Authentication (login, token refresh)
-│   │   ├── route/             # Dynamic route management
-│   │   └── system_manage/     # System management (users, roles, menus)
-│   ├── controllers/           # Business logic layer
-│   ├── models/system/         # Tortoise ORM models
-│   ├── schemas/               # Pydantic request/response schemas
-│   ├── core/                  # Core modules (init, auth, CRUD, middleware)
-│   ├── settings/config.py     # Environment configuration
-│   └── utils/                 # Utilities (security, tools)
-├── web/                       # Frontend (Vue3)
+├── app/                       # 后端 (FastAPI)
+│   ├── __init__.py            # App 工厂，中间件注册，启动钩子
+│   ├── api/v1/                # API 路由
+│   │   ├── auth/              # 认证（登录、刷新令牌）
+│   │   ├── route/             # 动态路由管理
+│   │   └── system_manage/     # 系统管理（用户、角色、菜单）
+│   ├── controllers/           # 业务逻辑层
+│   ├── models/system/         # Tortoise ORM 模型
+│   ├── schemas/               # Pydantic 请求/响应模型
+│   ├── core/                  # 核心模块
+│   ├── settings/config.py     # 环境配置
+│   └── utils/                 # 工具函数
+├── web/                       # 前端 (Vue3)
 │   ├── src/
-│   │   ├── views/             # Page components
-│   │   ├── service-alova/     # HTTP client + API endpoints
-│   │   ├── store/modules/     # Pinia state management
-│   │   ├── router/            # Elegant Router + guards
-│   │   ├── layouts/           # Layout components
-│   │   ├── components/        # Reusable components
-│   │   ├── locales/           # i18n (zh-CN, en-US)
-│   │   ├── hooks/             # Vue composables
-│   │   └── typings/           # TypeScript declarations
-│   └── packages/              # Internal monorepo packages
-├── deploy/                    # Docker deployment configs
-├── migrations/                # Database migrations (Aerich)
-├── docker-compose.yml         # Docker Compose orchestration
-├── pyproject.toml             # Backend dependencies
-└── run.py                     # Backend entry point
+│   │   ├── views/             # 页面组件
+│   │   ├── service-alova/     # HTTP 客户端 + API 接口
+│   │   ├── store/modules/     # Pinia 状态管理
+│   │   ├── router/            # Elegant Router + 路由守卫
+│   │   ├── layouts/           # 布局组件
+│   │   ├── components/        # 可复用组件
+│   │   ├── locales/           # 国际化 (zh-CN, en-US)
+│   │   └── hooks/             # Vue 组合式函数
+│   └── packages/              # 内部 monorepo 包
+├── deploy/                    # Docker 部署配置
+├── migrations/                # 数据库迁移 (Aerich)
+└── docker-compose.yml         # Docker Compose 编排
 ```
 
-## npm / Python Scripts
-
-### Frontend (web/)
-
-```json
-{
-  "dev": "vite --mode test",              // Dev server
-  "build": "vite build --mode prod",      // Production build
-  "lint": "oxlint --fix && eslint --fix .",// Lint and fix
-  "typecheck": "vue-tsc --noEmit"         // Type check
-}
-```
-
-### Backend
+## 代码检查
 
 ```bash
-uv run python run.py          # Start server
-ruff check app/               # Lint
-ruff format app/              # Format
-pyright app                   # Type check
-pytest tests/ -v              # Run tests
+# 后端
+ruff check app/               # lint
+ruff format app/               # format
+pyright app                    # 类型检查
+pytest tests/ -v               # 测试
+
+# 前端
+cd web
+pnpm lint                     # ESLint + oxlint
+pnpm typecheck                # vue-tsc 类型检查
 ```

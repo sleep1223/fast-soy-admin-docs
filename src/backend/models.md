@@ -1,121 +1,73 @@
-# Data Models
+# 数据模型
 
-All ORM models are defined with Tortoise ORM in `app/models/system/admin.py`.
+所有 ORM 模型基于 Tortoise ORM，定义在 `app/models/system/admin.py`。
 
-## User
+## User（用户）
 
-```python
-class User(BaseModel):
-    user_name: str              # Username (unique)
-    password: str               # Password (Argon2 hash)
-    nick_name: str              # Display name
-    gender: GenderType          # Gender enum
-    email: str                  # Email address
-    phone: str                  # Phone number
-    last_login: datetime        # Last login timestamp
-    status_type: StatusType     # Enabled / Disabled
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| user_name | str | 用户名（唯一） |
+| password | str | 密码（Argon2 哈希） |
+| nick_name | str | 昵称 |
+| gender | GenderType | 性别 |
+| email | str | 邮箱 |
+| phone | str | 手机号 |
+| last_login | datetime | 最后登录时间 |
+| status_type | StatusType | 状态（启用/禁用） |
 
-    # Relations
-    by_user_roles: M2M[Role]    # User ↔ Role (many-to-many)
-```
+关联：`by_user_roles` — 用户 ↔ 角色（多对多）
 
-## Role
+## Role（角色）
 
-```python
-class Role(BaseModel):
-    role_name: str              # Role display name
-    role_code: str              # Role code (unique, e.g., R_SUPER, R_ADMIN)
-    description: str            # Description
-    status_type: StatusType     # Enabled / Disabled
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| role_name | str | 角色名称 |
+| role_code | str | 角色编码（唯一，如 R_SUPER） |
+| description | str | 描述 |
+| status_type | StatusType | 状态 |
 
-    # Relations
-    by_role_menus: M2M[Menu]    # Role ↔ Menu (many-to-many)
-    by_role_apis: M2M[Api]      # Role ↔ API (many-to-many)
-    by_role_buttons: M2M[Button] # Role ↔ Button (many-to-many)
-    by_role_home: FK[Menu]      # Default home page (foreign key)
-```
+关联：
+- `by_role_menus` — 角色 ↔ 菜单
+- `by_role_apis` — 角色 ↔ API
+- `by_role_buttons` — 角色 ↔ 按钮
+- `by_role_home` — 角色默认首页
 
-## Menu
+## Menu（菜单）
 
-```python
-class Menu(BaseModel):
-    menu_name: str              # Menu display name
-    route_path: str             # Frontend route path
-    component: str              # Frontend component path
-    parent_id: int              # Parent menu ID (0 = root)
-    icon: str                   # Iconify icon name
-    i18n_key: str               # Internationalization key
-    redirect: str               # Redirect path
-    props: bool                 # Pass route params as props
-    constant: bool              # Constant route (no auth required)
-    hide_in_menu: bool          # Hide in sidebar menu
-    multi_tab: bool             # Allow multiple tabs
-    keep_alive: bool            # Cache with keep-alive
-    status_type: StatusType     # Enabled / Disabled
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| menu_name | str | 菜单名称 |
+| route_path | str | 前端路由路径 |
+| component | str | 前端组件路径 |
+| parent_id | int | 父级 ID |
+| icon | str | 图标 |
+| i18n_key | str | 国际化 Key |
+| constant | bool | 常量路由 |
+| hide_in_menu | bool | 菜单中隐藏 |
+| keep_alive | bool | 缓存 |
 
-    # Relations
-    by_menu_buttons: M2M[Button]  # Menu ↔ Button
-    active_menu: FK[Menu]         # Active menu for hidden routes
-```
+## Api（接口）
 
-## Api
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| api_path | str | 接口路径 |
+| api_method | str | HTTP 方法 |
+| summary | str | 接口描述 |
+| status_type | StatusType | 状态 |
 
-```python
-class Api(BaseModel):
-    api_path: str               # API endpoint path
-    api_method: str             # HTTP method (GET, POST, etc.)
-    summary: str                # API description
-    tags: str                   # API tags
-    status_type: StatusType     # Enabled / Disabled
+启动时自动从 FastAPI 路由注册到数据库。
 
-    # Reverse relation
-    by_api_roles: M2M[Role]     # API ↔ Role
-```
+## Button（按钮）
 
-APIs are auto-registered on application startup by scanning FastAPI router endpoints.
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| button_code | str | 按钮编码 |
+| button_desc | str | 按钮描述 |
+| status_type | StatusType | 状态 |
 
-## Button
+## 数据库
 
-```python
-class Button(BaseModel):
-    button_code: str            # Button code (e.g., B_USER_ADD)
-    button_desc: str            # Button description
-    status_type: StatusType     # Enabled / Disabled
-
-    # Relations
-    by_button_menus: M2M[Menu]  # Button ↔ Menu
-    by_button_roles: M2M[Role]  # Button ↔ Role
-```
-
-## Enums
-
-```python
-class GenderType(IntEnum):
-    MALE = 1
-    FEMALE = 2
-
-class StatusType(IntEnum):
-    ENABLED = 1
-    DISABLED = 2
-
-class MenuType(IntEnum):
-    DIRECTORY = 1
-    MENU = 2
-```
-
-## Database
-
-| Setting | Default |
-|---------|---------|
-| Engine | SQLite (`app_system.sqlite3`) |
-| ORM | Tortoise ORM |
-| Migrations | Aerich |
-| Cache | Redis via fastapi-cache2 |
-
-### Migration Commands
-
-```bash
-aerich init-db                # Initialize database
-aerich migrate                # Generate migration
-aerich upgrade                # Apply migration
-```
+- 默认：SQLite (`app_system.sqlite3`)
+- ORM：Tortoise ORM
+- 迁移：Aerich
+- 缓存：Redis (fastapi-cache2)

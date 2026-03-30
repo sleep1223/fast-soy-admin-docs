@@ -3,45 +3,45 @@ layout: home
 
 hero:
   name: FastSoyAdmin
-  text: Full-Stack Admin Template
+  text: 全栈后台管理模板
   tagline: FastAPI + Vue3 + TypeScript + NaiveUI + UnoCSS
   image:
     src: /logo.svg
     alt: FastSoyAdmin
   actions:
     - theme: brand
-      text: Get Started
-      link: /guide/intro
+      text: 快速开始
+      link: /zh/guide/intro
     - theme: alt
-      text: View on GitHub
+      text: GitHub
       link: https://github.com/sleep1223/fast-soy-admin
     - theme: alt
-      text: Live Preview
+      text: 在线预览
       link: https://fast-soy-admin.sleep0.de/
 
 features:
   - icon: "\U0001F680"
-    title: Full-Stack
-    details: FastAPI backend with Vue3 frontend, complete end-to-end solution with unified response format and type safety.
+    title: 全栈方案
+    details: FastAPI 后端 + Vue3 前端，完整的端到端解决方案，统一响应格式与类型安全。
   - icon: "\U0001F512"
-    title: RBAC Permission
-    details: Role-based access control with menu, API and button-level permissions. JWT authentication with auto token refresh.
+    title: RBAC 权限
+    details: 基于角色的访问控制，支持菜单、接口和按钮级别权限。JWT 认证，自动刷新令牌。
   - icon: "\U0001F3A8"
-    title: Theme System
-    details: Rich theme configuration with UnoCSS integration, dark mode support, and multiple layout options.
+    title: 主题系统
+    details: 丰富的主题配置，与 UnoCSS 深度集成，支持暗黑模式和多种布局方案。
   - icon: "\U0001F4C1"
-    title: File Routing
-    details: Automatic route generation from file structure via Elegant Router plugin. Dynamic route support with backend integration.
+    title: 文件路由
+    details: 通过 Elegant Router 插件从文件结构自动生成路由。支持后端动态路由集成。
   - icon: "\U0001F30F"
-    title: Internationalization
-    details: Built-in vue-i18n with Chinese and English support. Easy to extend with additional languages.
+    title: 国际化
+    details: 内置 vue-i18n 多语言支持（中文 / English），易于扩展更多语言。
   - icon: "\U0001F4E6"
-    title: Redis Cache
-    details: Integrated fastapi-cache2 with Redis for accelerated API responses and efficient data caching.
+    title: Redis 缓存
+    details: 集成 fastapi-cache2 + Redis，加速 API 响应，高效数据缓存。
   - icon: "\U0001F433"
-    title: Docker Deploy
-    details: One-command deployment with Docker Compose. Nginx + FastAPI + Redis, production-ready out of the box.
+    title: Docker 部署
+    details: Docker Compose 一键部署，Nginx + FastAPI + Redis，开箱即用。
   - icon: "\U0001F9F9"
-    title: Code Quality
-    details: Frontend ESLint + oxlint, backend Ruff + Pyright. Strict type checking across the full stack.
+    title: 代码质量
+    details: 前端 ESLint + oxlint，后端 Ruff + Pyright，全栈严格类型检查。
 ---

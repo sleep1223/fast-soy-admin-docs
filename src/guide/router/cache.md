@@ -1,36 +1,13 @@
-# Route Cache
+# 路由缓存
 
-Route caching uses Vue's `<keep-alive>` component to preserve page state when navigating away.
+通过 Vue `<keep-alive>` 组件缓存页面状态。
 
-## Enable Cache
+## 启用
 
-Set `keepAlive: true` in the route meta:
+在路由 meta 中设置 `keepAlive: true`。
 
-```typescript
-{
-  name: 'manage_user',
-  path: '/manage/user',
-  meta: {
-    title: 'User Management',
-    keepAlive: true
-  }
-}
-```
+## 注意
 
-## How It Works
-
-- When a page has `keepAlive: true`, its component instance is cached when you navigate away
-- When you return to the page, the cached instance is restored instead of re-creating
-- The cache is tied to the component `name`, so ensure your component has a name defined via `defineOptions`
-
-```vue
-<script setup lang="ts">
-defineOptions({ name: 'ManageUserPage' });
-</script>
-```
-
-## Notes
-
-- Cached pages won't trigger `onMounted` again on return. Use `onActivated` for refresh logic
-- Pages with `keepAlive` appear in the route store's cache list
-- Closing a tab removes the page from the cache
+- 缓存页面不会再次触发 `onMounted`，使用 `onActivated` 处理刷新逻辑
+- 确保组件通过 `defineOptions` 定义了 `name`
+- 关闭标签页会移除缓存

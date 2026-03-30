@@ -1,124 +1,46 @@
-# API Routes
+# API 路由
 
-All API routes are mounted under `/api/v1/`.
+所有路由挂载在 `/api/v1/` 下。
 
-## Authentication (`/auth`)
+## 认证 (`/auth`)
 
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | `/auth/login` | Authenticate user, return access + refresh tokens |
-| POST | `/auth/refresh-token` | Refresh access token using refresh token |
-| GET | `/auth/getUserInfo` | Get current user info with roles and buttons |
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| POST | `/auth/login` | 登录，返回 access + refresh token |
+| POST | `/auth/refresh-token` | 刷新 access token |
+| GET | `/auth/getUserInfo` | 获取当前用户信息 + 角色 + 按钮 |
 
-### Login Request
+## 系统管理 (`/system-manage`)
 
-```json
-POST /api/v1/auth/login
-{
-  "userName": "admin",
-  "password": "admin123"
-}
-```
+### 用户
 
-### Login Response
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| POST | `/users/all/` | 搜索用户（分页、过滤） |
+| GET | `/users/{user_id}` | 获取单个用户 |
+| POST | `/users` | 创建用户 |
+| PATCH | `/users/{user_id}` | 更新用户 |
+| DELETE | `/users/{user_id}` | 删除用户 |
+| DELETE | `/users` | 批量删除 |
 
-```json
-{
-  "code": "0000",
-  "msg": "OK",
-  "data": {
-    "token": "eyJhbGciOiJIUzI1NiIs...",
-    "refreshToken": "eyJhbGciOiJIUzI1NiIs..."
-  }
-}
-```
+### 角色
 
-## System Management (`/system-manage`)
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/roles` | 获取所有启用角色 |
+| POST | `/roles/all/` | 搜索角色 |
+| GET/POST/PATCH/DELETE | `/roles/{role_id}` | 角色 CRUD |
 
-### Users
+### 菜单
 
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | `/system-manage/users/all/` | Search users (paginated, with filters) |
-| GET | `/system-manage/users/{user_id}` | Get single user |
-| POST | `/system-manage/users` | Create user |
-| PATCH | `/system-manage/users/{user_id}` | Update user |
-| DELETE | `/system-manage/users/{user_id}` | Delete user |
-| DELETE | `/system-manage/users` | Batch delete (ids array) |
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/menus` | 获取菜单树 |
+| POST/PATCH/DELETE | `/menus/{menu_id}` | 菜单 CRUD |
+| GET | `/menus/pages/` | 获取所有页面 |
 
-### Roles
+## 动态路由 (`/route`)
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/system-manage/roles` | Get all enabled roles |
-| POST | `/system-manage/roles/all/` | Search roles (paginated) |
-| GET | `/system-manage/roles/{role_id}` | Get single role |
-| POST | `/system-manage/roles` | Create role |
-| PATCH | `/system-manage/roles/{role_id}` | Update role + permissions |
-| DELETE | `/system-manage/roles/{role_id}` | Delete role |
-
-### Menus
-
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/system-manage/menus` | Get menu tree |
-| POST | `/system-manage/menus` | Create menu |
-| PATCH | `/system-manage/menus/{menu_id}` | Update menu |
-| DELETE | `/system-manage/menus/{menu_id}` | Delete menu |
-| GET | `/system-manage/menus/pages/` | Get all pages (for component selection) |
-
-## Dynamic Routes (`/route`)
-
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/route/routes` | Get accessible routes for current user (RBAC filtered) |
-
-### Route Response
-
-```json
-{
-  "code": "0000",
-  "data": {
-    "home": "home",
-    "routes": [
-      {
-        "name": "manage",
-        "path": "/manage",
-        "component": "layout.base",
-        "meta": {
-          "title": "manage",
-          "i18nKey": "route.manage",
-          "icon": "carbon:cloud-service-management",
-          "order": 9
-        },
-        "children": [...]
-      }
-    ]
-  }
-}
-```
-
-## Pagination Format
-
-Paginated endpoints return:
-
-```json
-{
-  "code": "0000",
-  "msg": "OK",
-  "data": [
-    { "id": 1, "userName": "admin", ... }
-  ],
-  "total": 100,
-  "current": 1,
-  "size": 10
-}
-```
-
-## Authentication Header
-
-All authenticated endpoints require:
-
-```
-Authorization: Bearer <access_token>
-```
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/routes` | 获取当前用户可访问路由 |

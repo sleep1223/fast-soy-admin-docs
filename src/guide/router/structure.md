@@ -1,99 +1,23 @@
-# Route Structure
+# 路由结构
 
-Routes are automatically generated from the file structure in `src/views/`. There are several types of route structures.
+路由从 `src/views/` 目录的文件结构自动生成。
 
-## Single-Level Route
+## 一级路由
 
-A single page with the base layout.
+`views/about/index.vue` → `/about`
 
-**File structure:**
+## 二级路由
 
-```
-views/
-└── about/
-    └── index.vue
-```
+`views/manage/user/index.vue` → `/manage/user`
 
-**Generated route:**
+## 多级路由
 
-```typescript
-{
-  name: 'about',
-  path: '/about',
-  component: 'layout.base$view.about',
-  meta: { title: 'about' }
-}
-```
+用下划线 `_` 避免过深嵌套：`views/manage_user_detail/index.vue` → `/manage/user/detail`
 
-## Secondary Route
+## 参数路由
 
-A parent route with child pages.
+`views/user/[id].vue` → `/user/:id`
 
-**File structure:**
+## 自定义路由
 
-```
-views/
-└── manage/
-    ├── index.vue        // Optional parent page
-    └── user/
-        └── index.vue    // Child page
-```
-
-**Generated route:**
-
-```typescript
-{
-  name: 'manage',
-  path: '/manage',
-  component: 'layout.base',
-  children: [
-    {
-      name: 'manage_user',
-      path: '/manage/user',
-      component: 'view.manage_user',
-      meta: { title: 'manage_user' }
-    }
-  ]
-}
-```
-
-## Multi-Level Route
-
-For deeply nested routes, use underscore `_` to avoid excessive folder nesting.
-
-**File structure:**
-
-```
-views/
-└── manage_user_detail/
-    └── index.vue
-```
-
-This maps to the path `/manage/user/detail`.
-
-## Parameter Route
-
-Use bracket syntax `[param]` for dynamic segments.
-
-**File structure:**
-
-```
-views/
-└── user/
-    └── [id].vue
-```
-
-**Generated route:**
-
-```typescript
-{
-  name: 'user',
-  path: '/user/:id',
-  component: 'view.user',
-  props: true
-}
-```
-
-## Custom Route
-
-Routes like root `/` and 404 are declared in `src/router/routes/builtin.ts`.
+根路由 `/` 和 404 在 `src/router/routes/builtin.ts` 中声明。

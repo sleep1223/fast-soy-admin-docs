@@ -1,76 +1,25 @@
-# Connect Backend
+# 对接后端
 
-## Token Handling
+## Token 处理
 
-The request interceptor automatically adds the JWT token to every request:
+请求拦截器自动添加 JWT Token 到每个请求的 Authorization 头。
 
-```typescript
-onRequest(config) {
-  const token = localStg.get('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-}
-```
+## Token 自动刷新
 
-## Token Refresh
+后端返回 `2103` 时，前端自动使用 refresh token 刷新并重试原始请求。
 
-When the backend returns code `2103` (token expired), the frontend automatically:
+## 错误码映射
 
-1. Calls `POST /auth/refresh-token` with the refresh token
-2. Receives a new access token
-3. Retries the original failed request with the new token
+| 码值 | 行为 |
+|------|------|
+| `0000` | 成功，提取数据 |
+| `2100`, `2101` | 跳转登录页 |
+| `2102` | 弹窗确认后登出 |
+| `2103` | 自动刷新 Token |
+| 其他 | 显示错误消息 |
 
-This process is transparent to the user.
+## 新增 API
 
-## Error Handling
-
-Backend error codes are mapped to frontend actions:
-
-| Code | Action |
-|------|--------|
-| `0000` | Success — extract data |
-| `2100`, `2101` | Redirect to login page |
-| `2102` | Show modal, then logout |
-| `2103` | Auto-refresh token and retry |
-| Others | Show error message |
-
-## Backend Response Contract
-
-All APIs follow the standard response format:
-
-```json
-{
-  "code": "0000",
-  "msg": "OK",
-  "data": { ... }
-}
-```
-
-For paginated data:
-
-```json
-{
-  "code": "0000",
-  "msg": "OK",
-  "data": { "records": [...] },
-  "total": 100,
-  "current": 1,
-  "size": 10
-}
-```
-
-## Adding New APIs
-
-1. Define the API function in `service-alova/api/`:
-
-```typescript
-export function fetchUserList(params: Api.SystemManage.UserSearchParams) {
-  return request.Post<Api.SystemManage.UserList>('/system-manage/users/all/', params);
-}
-```
-
-2. Define TypeScript types in `typings/api.d.ts`
-
-3. Use in components or stores
+1. 在 `service-alova/api/` 定义函数
+2. 在 `typings/api.d.ts` 定义类型
+3. 在组件或 Store 中使用

@@ -1,82 +1,53 @@
-# Response Codes
+# 响应码
 
-All APIs return a unified format: `{"code": "xxxx", "msg": "...", "data": ...}`
+所有接口统一返回格式 `{"code": "xxxx", "msg": "...", "data": ...}`。
 
-Response codes are defined in `app/core/code.py`.
+## 0000 — 成功
 
-## 0000 — Success
+| 码值 | 常量名 | 说明 |
+|------|--------|------|
+| `0000` | `SUCCESS` | 请求成功 |
 
-| Code | Constant | Description |
-|------|----------|-------------|
-| `0000` | `SUCCESS` | Request successful |
+## 1xxx — 系统错误
 
-## 1xxx — System Errors
+| 码值 | 常量名 | 说明 |
+|------|--------|------|
+| `1000` | `INTERNAL_ERROR` | 内部异常 |
+| `1100` | `INTEGRITY_ERROR` | 数据库约束冲突 |
+| `1101` | `NOT_FOUND` | 记录不存在 |
+| `1200` | `REQUEST_VALIDATION` | 请求参数校验失败 |
+| `1201` | `RESPONSE_VALIDATION` | 响应序列化失败 |
 
-Automatically caught by framework exception handlers.
+## 2xxx — 业务错误
 
-| Code | Constant | Description |
-|------|----------|-------------|
-| `1000` | `INTERNAL_ERROR` | Uncaught internal exception |
-| `1100` | `INTEGRITY_ERROR` | Database constraint violation (unique, foreign key) |
-| `1101` | `NOT_FOUND` | Record does not exist |
-| `1200` | `REQUEST_VALIDATION` | Request parameter validation failed |
-| `1201` | `RESPONSE_VALIDATION` | Response serialization failed |
+### 21xx — 认证
 
-## 2xxx — Business Logic Errors
+| 码值 | 说明 | 前端行为 |
+|------|------|----------|
+| `2100` | Token 无效 | 跳转登录 |
+| `2101` | 会话无效 | 跳转登录 |
+| `2102` | 账号禁用 | 弹窗登出 |
+| `2103` | Token 过期 | 自动刷新 |
 
-### 21xx — Authentication
+### 22xx — 授权
 
-| Code | Constant | Description | Frontend Action |
-|------|----------|-------------|-----------------|
-| `2100` | `INVALID_TOKEN` | Token invalid / missing / decode failed | Redirect to login |
-| `2101` | `INVALID_SESSION` | Token type wrong / user not found | Redirect to login |
-| `2102` | `ACCOUNT_DISABLED` | Account is disabled | Modal confirm, then logout |
-| `2103` | `TOKEN_EXPIRED` | Token has expired | Auto-refresh token |
+| 码值 | 说明 |
+|------|------|
+| `2200` | API 已停用 |
+| `2201` | 权限不足 |
 
-### 22xx — Authorization
+### 23xx — 资源冲突
 
-| Code | Constant | Description | Frontend Action |
-|------|----------|-------------|-----------------|
-| `2200` | `API_DISABLED` | API endpoint is disabled | Show error message |
-| `2201` | `PERMISSION_DENIED` | RBAC permission denied | Show error message |
+| 码值 | 说明 |
+|------|------|
+| `2300` | 资源重复 |
 
-### 23xx — Resource Conflict
+### 24xx — 通用失败
 
-| Code | Constant | Description |
-|------|----------|-------------|
-| `2300` | `DUPLICATE_RESOURCE` | Duplicate resource (username, role code, etc.) |
+| 码值 | 说明 |
+|------|------|
+| `2400` | 通用业务失败 |
 
-### 24xx — General Business Failure
+## 4000-9999 — 自定义
 
-| Code | Constant | Description |
-|------|----------|-------------|
-| `2400` | `FAIL` | General business failure |
-
-## 3xxx — Reserved
-
-Reserved for future framework extensions.
-
-## 4000-9999 — User-Defined
-
-For custom business logic. The frontend will **not** auto-display error messages for these codes — callers must handle them explicitly.
-
-## Exception Handlers
-
-Defined in `app/core/exceptions.py`:
-
-| Exception | Code | Description |
-|-----------|------|-------------|
-| `IntegrityError` | `1100` | Database constraint violation |
-| `DoesNotExist` | `1101` | Record not found |
-| `RequestValidationError` | `1200` | Pydantic validation failed |
-| `ResponseValidationError` | `1201` | Response serialization failed |
-| Uncaught exceptions | `1000` | Internal server error |
-
-## Frontend Environment Variables
-
-```bash
-VITE_SERVICE_SUCCESS_CODE=0000
-VITE_SERVICE_LOGOUT_CODES=2100,2101
-VITE_SERVICE_MODAL_LOGOUT_CODES=2102
-VITE_SERVICE_EXPIRED_TOKEN_CODES=2103
-```
+业务层自定义，前端不自动弹出错误消息。

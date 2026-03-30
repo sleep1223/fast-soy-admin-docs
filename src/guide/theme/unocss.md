@@ -1,50 +1,16 @@
-# UnoCSS Theme
+# UnoCSS 主题
 
-Theme tokens are injected into UnoCSS configuration, allowing you to use theme colors directly in class names.
-
-## Color Classes
+主题 Token 注入到 UnoCSS 配置，可在 class 中直接使用主题色。
 
 ```html
-<!-- Text color -->
-<span class="text-primary">Primary text</span>
-<span class="text-success">Success text</span>
-<span class="text-warning">Warning text</span>
-<span class="text-error">Error text</span>
-
-<!-- Background color -->
-<div class="bg-primary">Primary background</div>
-<div class="bg-primary-100">Light primary background</div>
-
-<!-- Border color -->
-<div class="border border-primary">Primary border</div>
+<span class="text-primary">主题色文字</span>
+<div class="bg-primary-100">浅主题色背景</div>
 ```
 
-## Color Palette
+## 色阶
 
-Each theme color generates a palette of 10 shades (50-900):
+每种主题色生成 50-900 共 10 级色阶。
 
-```html
-<div class="bg-primary-50">Lightest</div>
-<div class="bg-primary-100">Lighter</div>
-<div class="bg-primary-200">Light</div>
-<div class="bg-primary-300">...</div>
-<div class="bg-primary-400">...</div>
-<div class="bg-primary-500">Base</div>
-<div class="bg-primary-600">...</div>
-<div class="bg-primary-700">Dark</div>
-<div class="bg-primary-800">Darker</div>
-<div class="bg-primary-900">Darkest</div>
-```
+## 暗黑模式
 
-## Dark Mode
-
-UnoCSS dark mode uses the `class` strategy. When `<html class="dark">` is present:
-
-```html
-<!-- Automatically switches to dark mode colors -->
-<div class="bg-white dark:bg-dark">Adaptive background</div>
-```
-
-## Configuration
-
-UnoCSS preset is defined in `web/packages/uno-preset/`, which reads theme tokens and generates the utility classes.
+使用 class 策略，`<html class="dark">` 时自动切换。

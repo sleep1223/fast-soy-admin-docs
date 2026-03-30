@@ -1,110 +1,45 @@
-# Architecture
+# 架构
 
-## Layered Architecture
-
-```
-Router (api/v1/)
-  ↓
-Controller (controllers/)
-  ↓
-CRUD Base (core/crud.py)
-  ↓
-Model (models/system/)
-  ↓
-Database (SQLite / PostgreSQL)
-```
-
-### Router Layer
-
-Defines HTTP endpoints, handles request/response serialization via Pydantic schemas. Dependencies inject authentication and permission checks.
-
-```python
-@router.get("/users/{user_id}")
-async def get_user(
-    user_id: int,
-    auth: AuthControl = Depends()      # JWT validation
-):
-    user = await user_controller.get(user_id)
-    return Success(data=user)
-```
-
-### Controller Layer
-
-Business logic: validation, data transformation, cross-model operations.
-
-```python
-class UserController(CRUDBase[User]):
-    async def authenticate(self, username: str, password: str) -> User:
-        user = await self.model.filter(user_name=username).first()
-        if not user or not verify_password(password, user.password):
-            raise ...
-        return user
-```
-
-### CRUD Base Layer
-
-Generic async CRUD operations shared by all controllers.
-
-### Model Layer
-
-Tortoise ORM models defining the database schema and relationships.
-
-## RBAC Permission Model
+## 分层架构
 
 ```
-User ←M2M→ Role ←M2M→ Menu   (Menu permissions)
-                  ←M2M→ API    (API permissions)
-                  ←M2M→ Button (Button permissions)
+Router (api/v1/) → Controller (controllers/) → CRUD Base (core/crud.py) → Model (models/)
 ```
 
-- **Users** are assigned one or more **Roles**
-- **Roles** are granted access to **Menus** (frontend routes), **APIs** (backend endpoints), and **Buttons** (UI actions)
-- The super admin role `R_SUPER` bypasses all permission checks
+### 路由层
 
-## Request Flow
+定义 HTTP 端点，通过 Pydantic Schema 处理请求/响应序列化。依赖注入实现认证与权限检查。
+
+### Controller 层
+
+业务逻辑：校验、数据转换、跨模型操作。
+
+### CRUD 基类层
+
+所有 Controller 共享的通用异步 CRUD 操作。
+
+### 模型层
+
+Tortoise ORM 模型，定义数据库表结构和关联关系。
+
+## RBAC 权限模型
 
 ```
-Client → Nginx → FastAPI
-                    ↓
-              Middleware Stack
-              (CORS, RequestID, Logging)
-                    ↓
-              Router (path matching)
-                    ↓
-              Dependencies
-              (AuthControl → PermissionControl)
-                    ↓
-              Route Handler
-                    ↓
-              Controller → Model → Database
-                    ↓
-              Pydantic Response Schema
-                    ↓
-              JSON Response to Client
+User ←M2M→ Role ←M2M→ Menu   (菜单权限)
+                  ←M2M→ API    (接口权限)
+                  ←M2M→ Button (按钮权限)
 ```
 
-## Middleware Stack
+- **用户** 被分配一个或多个 **角色**
+- **角色** 被授权访问 **菜单**（前端路由）、**API**（后端接口）和 **按钮**（UI 操作）
+- 超级管理员角色 `R_SUPER` 跳过所有权限检查
 
-Middleware executes in order for every request:
+## 中间件栈
 
-| Order | Middleware | Purpose |
-|-------|-----------|---------|
-| 1 | CORSMiddleware | Cross-origin request handling |
-| 2 | PrettyErrorsMiddleware | Error output formatting |
-| 3 | BackgroundTaskMiddleware | Background task support |
-| 4 | RequestIDMiddleware | Inject X-Request-ID |
-| 5 | RadarMiddleware (optional) | Request/response debugging |
-
-## Context Variables
-
-Python `contextvars` provide request-scoped state:
-
-```python
-from app.core.ctx import CTX_USER_ID, CTX_X_REQUEST_ID
-
-# Set by AuthControl dependency
-user_id = CTX_USER_ID.get()
-
-# Set by RequestIDMiddleware
-request_id = CTX_X_REQUEST_ID.get()
-```
+| 顺序 | 中间件 | 作用 |
+|------|--------|------|
+| 1 | CORSMiddleware | 跨域请求处理 |
+| 2 | PrettyErrorsMiddleware | 错误输出美化 |
+| 3 | BackgroundTaskMiddleware | 后台任务支持 |
+| 4 | RequestIDMiddleware | 注入 X-Request-ID |
+| 5 | RadarMiddleware（可选） | 请求/响应调试 |

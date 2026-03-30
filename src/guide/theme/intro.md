@@ -1,39 +1,21 @@
-# System Theme
+# 系统主题
 
-The system theme implementation consists of two parts: the component library theme configuration (Naive UI) and the UnoCSS theme configuration. A unified set of theme variables controls both.
+主题实现分为两部分：组件库主题配置（Naive UI）和 UnoCSS 主题配置。
 
-## Principle
+## 原理
 
-1. Define theme configuration variables (colors, layout parameters, etc.)
-2. Generate component library theme variables from these configurations
-3. Generate CSS variables and pass them to UnoCSS
+1. 定义主题配置变量（颜色、布局参数等）
+2. 生成符合组件库规范的主题变量
+3. 生成 CSS 变量传递给 UnoCSS
 
-## Theme Structure
+## 主题色
 
-```
-src/theme/
-├── settings.ts    # Default theme configuration and override configuration
-└── vars.ts        # CSS variables corresponding to theme tokens
-```
+五种语义颜色，每种 10 级色阶：primary、info、success、warning、error
 
-## Theme Colors
+## 暗黑模式
 
-The system provides five semantic colors, each with a palette of 10 shades:
+通过 `<html>` 添加 `class="dark"` 激活。
 
-- **Primary** — Main brand color
-- **Info** — Informational elements
-- **Success** — Success states
-- **Warning** — Warning states
-- **Error** — Error states
+## 布局模式
 
-## Dark Mode
-
-Dark mode is activated by adding `class="dark"` to the `<html>` element. The theme system automatically generates corresponding dark mode colors.
-
-## Layout Modes
-
-The project supports multiple layout modes:
-
-- **Vertical** — Sidebar on the left, content on the right
-- **Horizontal** — Top navigation, content below
-- **Mix** — Combined sidebar and top navigation
+垂直布局、水平布局、混合布局。

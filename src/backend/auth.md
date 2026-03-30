@@ -1,116 +1,52 @@
-# Auth & RBAC
+# 认证与权限
 
-## JWT Authentication
+## JWT 认证
 
-| Setting | Value |
-|---------|-------|
-| Algorithm | HS256 |
-| Access Token | 12 hours |
-| Refresh Token | 7 days |
-| Password Hash | Argon2 |
+| 设置 | 值 |
+|------|------|
+| 算法 | HS256 |
+| Access Token | 12 小时 |
+| Refresh Token | 7 天 |
+| 密码哈希 | Argon2 |
 
-### Login Flow
+### 登录流程
 
 ```
 POST /auth/login
-  → Validate username + password (Argon2 verify)
-  → Check account status (not disabled)
-  → Generate access_token (12h) + refresh_token (7d)
-  → Return tokens to frontend
+  → 验证用户名 + 密码（Argon2）
+  → 检查账号状态
+  → 生成 access_token + refresh_token
+  → 返回令牌
 ```
 
-### Token Refresh Flow
+### Token 刷新
 
 ```
 POST /auth/refresh-token
-  → Validate refresh_token signature
-  → Verify token type is "refresh"
-  → Check user still exists and is active
-  → Generate new access_token
-  → Return new token
+  → 验证 refresh_token 签名
+  → 确认 token 类型为 refresh
+  → 生成新的 access_token
+  → 返回新令牌
 ```
 
-### Token Payload
-
-```json
-{
-  "sub": "access",           // "access" or "refresh"
-  "user_id": 1,
-  "exp": 1735689600
-}
-```
-
-## RBAC Permission Control
-
-Implemented as FastAPI dependencies in `app/core/dependency.py`.
+## RBAC 权限控制
 
 ### AuthControl
 
-Validates authentication on every protected request:
-
-1. Extract `Bearer <token>` from Authorization header
-2. Decode JWT and validate signature
-3. Check token type is "access"
-4. Query user from database
-5. Verify user is not disabled
-6. Store `user_id` in context variable
-
-```python
-@router.get("/users")
-async def get_users(auth: AuthControl = Depends()):
-    # auth validates the JWT automatically
-    ...
-```
+1. 从 Header 提取 Bearer Token
+2. 解码 JWT 获取 user_id
+3. 查询数据库验证用户存在且启用
+4. 将 user_id 存入上下文变量
 
 ### PermissionControl
 
-Validates RBAC permissions after authentication:
+1. 获取当前用户的所有角色
+2. 超级管理员 `R_SUPER` 直接放行
+3. 获取角色关联的所有 API
+4. 匹配当前请求的 method + path
+5. 检查 API 状态（停用返回 2200）
+6. 无匹配返回 2201（权限不足）
 
-1. Get current user's roles
-2. If role is `R_SUPER` → **allow** (skip all checks)
-3. Get all APIs associated with user's roles
-4. Match current request `method + path` against role's APIs
-5. If API is disabled → return `2200` (API disabled)
-6. If no match → return `2201` (permission denied)
-7. If matched and enabled → **allow**
+## 按钮权限
 
-```python
-@router.delete("/users/{user_id}")
-async def delete_user(
-    user_id: int,
-    auth: AuthControl = Depends(),
-    perm: PermissionControl = Depends()
-):
-    # Both auth and permission are checked
-    ...
-```
-
-## Super Admin
-
-The role with code `R_SUPER` has unrestricted access:
-- Bypasses all API permission checks
-- Has access to all routes
-- Can manage all users, roles, and menus
-
-## Button-Level Permissions
-
-Buttons are permission codes sent to the frontend in `getUserInfo`:
-
-```json
-{
-  "buttons": ["B_USER_ADD", "B_USER_EDIT", "B_USER_DELETE"]
-}
-```
-
-The frontend conditionally renders buttons based on these codes.
-
-## Password Security
-
-Passwords are hashed using Argon2 (recommended by OWASP):
-
-```python
-from app.utils.security import hash_password, verify_password
-
-hashed = hash_password("user_password")
-is_valid = verify_password("user_password", hashed)
-```
+按钮编码通过 `getUserInfo` 接口返回给前端，前端根据编码条件渲染按钮。

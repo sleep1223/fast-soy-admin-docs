@@ -1,37 +1,22 @@
-# Naming Conventions
+# 命名规范
 
-## Frontend
+## 前端
 
-| Type | Convention | Example |
-|------|-----------|---------|
-| Files & directories | kebab-case | `demo-page/`, `user-list.vue` |
-| Vue components | PascalCase | `AppProvider`, `UserList` |
-| Icon components | kebab-case | `icon-mdi-emoticon` |
-| Functions | camelCase | `getUser()`, `handleSubmit()` |
-| Constants | UPPER_SNAKE_CASE | `MAX_COUNT`, `API_BASE_URL` |
-| CSS classes | kebab-case | `.container-item`, `.user-card` |
-| Request functions | fetchXxx prefix | `fetchUserList()`, `fetchLogin()` |
-| Hook functions | useXxx prefix | `useTable()`, `useRouterPush()` |
-| Type definitions | PascalCase | `UserInfo`, `RouteConfig` |
-| Enum values | PascalCase | `GenderType.Male` |
+| 类型 | 规范 | 示例 |
+|------|------|------|
+| 文件/目录 | kebab-case | `user-list.vue` |
+| Vue 组件 | PascalCase | `UserCard` |
+| 函数 | camelCase | `getUser()` |
+| 常量 | UPPER_SNAKE_CASE | `MAX_COUNT` |
+| 请求函数 | fetchXxx | `fetchUserList()` |
 
-## Backend
+## 后端
 
-| Type | Convention | Example |
-|------|-----------|---------|
-| Files & directories | snake_case | `user.py`, `system_manage/` |
-| Classes | PascalCase | `UserController`, `RoleSchema` |
-| Functions & methods | snake_case | `get_user()`, `create_role()` |
-| Variables | snake_case | `user_name`, `role_code` |
-| Constants | UPPER_SNAKE_CASE | `SECRET_KEY`, `R_SUPER` |
-| API paths | kebab-case | `/system-manage/users` |
-| Model fields | snake_case | `user_name`, `status_type` |
-| Schema aliases | camelCase | `userName`, `statusType` |
-
-## Route Naming
-
-| Type | Convention | Example |
-|------|-----------|---------|
-| Route key | snake_case with underscores | `manage_user`, `manage_role` |
-| Route path | kebab-case | `/manage/user`, `/manage/role` |
-| i18n key | dot-separated | `route.manage_user` |
+| 类型 | 规范 | 示例 |
+|------|------|------|
+| 文件/目录 | snake_case | `user.py` |
+| 类 | PascalCase | `UserController` |
+| 函数/方法 | snake_case | `get_user()` |
+| 常量 | UPPER_SNAKE_CASE | `SECRET_KEY` |
+| API 路径 | kebab-case | `/system-manage/users` |
+| Schema 别名 | camelCase | `userName` |

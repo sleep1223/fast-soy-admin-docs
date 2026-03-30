@@ -1,74 +1,35 @@
-# Icon Usage
+# 图标使用
 
-## Static Usage (Auto-import)
-
-### Iconify Icons
-
-Use the format `<icon-{collection}-{name}>`:
+## 静态使用
 
 ```html
-<icon-mdi-emoticon />
-<icon-carbon-user />
-<icon-ic-round-settings />
+<icon-mdi-emoticon />          <!-- Iconify 图标 -->
+<icon-local-logo />            <!-- 本地图标 -->
 ```
 
-### Local Icons
-
-Use the format `<icon-local-{name}>`:
+## 动态使用
 
 ```html
-<icon-local-logo />
-<icon-local-custom-icon />
-```
-
-Local icons must be placed in `src/assets/svg-icon/`.
-
-## Dynamic Usage (SvgIcon Component)
-
-For icons determined at runtime:
-
-```html
-<!-- Iconify icon -->
 <svg-icon icon="mdi:emoticon" />
-
-<!-- Local icon -->
 <svg-icon local-icon="logo" />
-
-<!-- With size and color -->
-<svg-icon icon="mdi:emoticon" class="text-24px text-primary" />
 ```
 
-## Render Function
-
-For programmatic rendering (e.g., in table columns or menu items):
+## 渲染函数
 
 ```typescript
-import { useSvgIconRender } from '@/hooks/common/icon';
-import SvgIcon from '@/components/custom/svg-icon.vue';
-
 const { SvgIconVNode } = useSvgIconRender(SvgIcon);
-
-// Create icon VNode
 const icon = SvgIconVNode({ icon: 'mdi:emoticon' });
-const localIcon = SvgIconVNode({ localIcon: 'logo' });
 ```
 
-## Offline Mode
+## 离线模式
 
-Install `@iconify/json` for fully offline Iconify icons:
+安装 `@iconify/json` 后完全离线使用。
 
-```bash
-pnpm add -D @iconify/json
-```
-
-This downloads the complete icon dataset locally, so no network requests are needed at runtime.
-
-## Usage in Route Meta
+## 路由图标
 
 ```typescript
 meta: {
-  icon: 'mdi:home',           // Iconify icon in menu
-  // or
-  localIcon: 'custom-home'    // Local icon in menu
+  icon: 'mdi:home',           // Iconify
+  localIcon: 'custom-home'    // 本地
 }
 ```

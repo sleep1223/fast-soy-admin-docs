@@ -1,76 +1,19 @@
-# Dynamic Route
+# 动态路由
 
-FastSoyAdmin supports two route permission modes:
+## 静态路由模式
 
-## Static Route Mode
+设置 `VITE_AUTH_ROUTE_MODE=static`，前端定义路由，通过 `roles` 字段过滤。
 
-Set `VITE_AUTH_ROUTE_MODE=static` in `.env`.
+## 动态路由模式
 
-Routes are defined in the frontend. The `roles` field in route meta controls access:
+设置 `VITE_AUTH_ROUTE_MODE=dynamic`，从后端 API `GET /route/routes` 获取路由。
 
-```typescript
-{
-  name: 'manage_user',
-  path: '/manage/user',
-  meta: {
-    title: 'User Management',
-    roles: ['R_SUPER', 'R_ADMIN']  // Only these roles can access
-  }
-}
-```
+### 工作流程
 
-If `roles` is empty or not set, the route is accessible to all authenticated users.
+1. 用户登录获取 JWT
+2. 前端调用 `GET /route/routes`
+3. 后端根据用户角色 → 角色菜单 → 构建路由树
+4. 前端动态注册路由
+5. 从路由树生成菜单
 
-## Dynamic Route Mode
-
-Set `VITE_AUTH_ROUTE_MODE=dynamic` in `.env`.
-
-Routes are fetched from the backend API `GET /api/v1/route/routes`. The backend returns only the routes the current user has permission to access, based on their roles.
-
-### How It Works
-
-1. User logs in and receives a JWT token
-2. Frontend calls `GET /route/routes` with the token
-3. Backend checks user's roles → role's menus → builds route tree
-4. Frontend receives the route tree and registers routes dynamically
-5. Menu is generated from the route tree
-
-### Backend Route Response Format
-
-```json
-{
-  "code": "0000",
-  "data": {
-    "home": "home",
-    "routes": [
-      {
-        "name": "manage",
-        "path": "/manage",
-        "component": "layout.base",
-        "meta": {
-          "title": "manage",
-          "i18nKey": "route.manage",
-          "icon": "carbon:cloud-service-management",
-          "order": 9
-        },
-        "children": [
-          {
-            "name": "manage_user",
-            "path": "/manage/user",
-            "component": "view.manage_user",
-            "meta": {
-              "title": "manage_user",
-              "i18nKey": "route.manage_user",
-              "icon": "ic:round-manage-accounts"
-            }
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-### Super Admin
-
-The role `R_SUPER` bypasses all permission checks and has access to all routes.
+超级管理员 `R_SUPER` 拥有所有路由的访问权限。
