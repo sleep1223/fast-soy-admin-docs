@@ -107,5 +107,5 @@ Icons render as inline SVG — **control them with CSS / Tailwind / UnoCSS**:
 
 ## See also
 
-- [Icon system intro](/en/guide/icon/intro)
-- Route meta: [Create routes](/en/guide/router/create)
+- [Icon system intro](/en/frontend/icon/intro)
+- Route meta: [Create routes](/en/frontend/router/create)

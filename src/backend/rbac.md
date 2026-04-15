@@ -142,18 +142,7 @@ from app.utils import DependPermission, require_buttons, require_roles
 
 ## 前端按钮鉴权
 
-```vue
-<script setup lang="tsx">
-import { useAuth } from '@/hooks/business/auth';
-const { hasAuth } = useAuth();
-</script>
-
-<template>
-  <NButton v-if="hasAuth('B_HR_EMP_CREATE')" @click="handleAdd">新增</NButton>
-</template>
-```
-
-`hasAuth` 的数据来自 `GET /api/v1/auth/user-info`，由后端 `CTX_BUTTON_CODES` 透出。`R_SUPER` 用户接口直接返回**全部**按钮码。
+按钮编码通过 `GET /api/v1/auth/user-info` 下发到前端（来源是 `CTX_BUTTON_CODES`；`R_SUPER` 直接返回**全部**按钮码）。前端用 `hasAuth('B_HR_EMP_CREATE')` 判断是否渲染对应按钮——具体写法见 [前端 / Hooks / useTable / 配合权限按钮](../frontend/hooks/use-table.md#配合权限按钮)。
 
 ## 缓存
 

@@ -49,6 +49,7 @@ export default defineConfig({
     },
     nav: [
       { text: '指南', link: '/guide/intro', activeMatch: '/guide/' },
+      { text: '前端', link: '/frontend/intro', activeMatch: '/frontend/' },
       { text: '后端', link: '/backend/intro', activeMatch: '/backend/' },
       { text: '规范', link: '/standard/', activeMatch: '/standard/' },
       { text: '常见问题', link: '/faq/', activeMatch: '/faq/' },
@@ -72,48 +73,56 @@ export default defineConfig({
             { text: '简介', link: '/guide/intro' },
             { text: '快速开始', link: '/guide/quick-start' }
           ]
-        },
+        }
+      ],
+      '/frontend/': [
         {
-          text: '主题',
+          text: '开始',
           items: [
-            { text: '简介', link: '/guide/theme/intro' },
-            { text: '配置', link: '/guide/theme/config' },
-            { text: 'UnoCSS 主题', link: '/guide/theme/unocss' }
-          ]
-        },
-        {
-          text: '图标',
-          items: [
-            { text: '简介', link: '/guide/icon/intro' },
-            { text: '使用方式', link: '/guide/icon/usage' }
+            { text: '简介', link: '/frontend/intro' }
           ]
         },
         {
           text: '路由',
           items: [
-            { text: '简介', link: '/guide/router/intro' },
-            { text: '路由结构', link: '/guide/router/structure' },
-            { text: '创建路由', link: '/guide/router/create' },
-            { text: '动态路由', link: '/guide/router/dynamic' },
-            { text: '路由缓存', link: '/guide/router/cache' },
-            { text: '路由组件', link: '/guide/router/component' },
-            { text: '路由跳转', link: '/guide/router/push' },
-            { text: '路由守卫', link: '/guide/router/guard' }
+            { text: '简介', link: '/frontend/router/intro' },
+            { text: '路由结构', link: '/frontend/router/structure' },
+            { text: '创建路由', link: '/frontend/router/create' },
+            { text: '动态路由', link: '/frontend/router/dynamic' },
+            { text: '路由缓存', link: '/frontend/router/cache' },
+            { text: '路由组件', link: '/frontend/router/component' },
+            { text: '路由跳转', link: '/frontend/router/push' },
+            { text: '路由守卫', link: '/frontend/router/guard' }
           ]
         },
         {
           text: '请求',
           items: [
-            { text: '简介', link: '/guide/request/intro' },
-            { text: '使用方式', link: '/guide/request/usage' },
-            { text: '代理', link: '/guide/request/proxy' },
-            { text: '对接后端', link: '/guide/request/backend' }
+            { text: '简介', link: '/frontend/request/intro' },
+            { text: '使用方式', link: '/frontend/request/usage' },
+            { text: '代理', link: '/frontend/request/proxy' },
+            { text: '对接后端', link: '/frontend/request/backend' }
+          ]
+        },
+        {
+          text: '主题',
+          items: [
+            { text: '简介', link: '/frontend/theme/intro' },
+            { text: '配置', link: '/frontend/theme/config' },
+            { text: 'UnoCSS 主题', link: '/frontend/theme/unocss' }
+          ]
+        },
+        {
+          text: '图标',
+          items: [
+            { text: '简介', link: '/frontend/icon/intro' },
+            { text: '使用方式', link: '/frontend/icon/usage' }
           ]
         },
         {
           text: 'Hooks',
           items: [
-            { text: 'useTable', link: '/guide/hooks/use-table' }
+            { text: 'useTable', link: '/frontend/hooks/use-table' }
           ]
         }
       ],

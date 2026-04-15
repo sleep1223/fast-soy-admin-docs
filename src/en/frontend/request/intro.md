@@ -98,11 +98,11 @@ const reportRequest = createRequest({
 });
 ```
 
-See [Proxy](/en/guide/request/proxy).
+See [Proxy](/en/frontend/request/proxy).
 
 ## See also
 
-- [Usage](/en/guide/request/usage)
-- [Proxy](/en/guide/request/proxy)
-- [Connect backend](/en/guide/request/backend)
+- [Usage](/en/frontend/request/usage)
+- [Proxy](/en/frontend/request/proxy)
+- [Connect backend](/en/frontend/request/backend)
 - Backend: [API conventions](/en/backend/api) / [Response codes](/en/backend/codes)

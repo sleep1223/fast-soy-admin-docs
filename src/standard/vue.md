@@ -91,7 +91,7 @@ const { data, getData } = useTable({
 
 - 列表页用 `useNaivePaginatedTable`（带分页 + 列可见性 + 操作状态）
 - 抽屉式编辑用 `useTableOperate`（管理 visible / mode / record）
-- 详见 [Hooks / useTable](../guide/hooks/use-table.md)
+- 详见 [Hooks / useTable](../frontend/hooks/use-table.md)
 
 ## 按钮鉴权
 

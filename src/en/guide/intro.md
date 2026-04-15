@@ -1,85 +1,57 @@
 # Introduction
 
-[FastSoyAdmin](https://github.com/sleep1223/fast-soy-admin) is an out-of-the-box full-stack admin template. The frontend is built on [SoybeanAdmin](https://github.com/soybeanjs/soybean-admin) with Vue3, Vite7, TypeScript, Pinia and UnoCSS. The backend is built with FastAPI, Pydantic v2 and Tortoise ORM, accelerated by Redis caching.
+[FastSoyAdmin](https://github.com/sleep1223/fast-soy-admin) is an out-of-the-box full-stack admin template.
 
-## Features
+- **Frontend** — based on [SoybeanAdmin](https://github.com/soybeanjs/soybean-admin), Vue3 + Vite7 + TypeScript + Pinia + UnoCSS + Naive UI
+- **Backend** — FastAPI + Pydantic v2 + Tortoise ORM + Redis, layered as "system + business" with autodiscovered business modules
 
-- **Full-stack stack**: FastAPI + Pydantic v2 + Tortoise ORM on the backend; Vue3 + Vite7 + TypeScript + Pinia + UnoCSS on the frontend
-- **Complete permission model**: RBAC with strict frontend / backend separation; the backend re-checks API and button permissions
-- **Row-level data scope**: `all` / `department` / `self` per role; multiple roles fall back to the most permissive
-- **Redis-accelerated**: fastapi-cache2 + Redis for hot permission data, constant routes, and per-module business caches
-- **Modular layout**: pnpm monorepo for the frontend; the backend is split into `app/system/` (built-in) and `app/business/<x>/` (autodiscovered modules)
-- **Strict code quality**: ESLint + oxlint + simple-git-hooks on the frontend; Ruff + basedpyright on the backend
-- **TypeScript-first**: strict typing throughout
-- **Theme system**: built-in light/dark + multiple layouts, deeply integrated with UnoCSS
-- **i18n**: vue-i18n (zh-CN / en-US), easy to extend
-- **Rich pages & components**: built-in error pages, ECharts / AntV / VChart visualizations
-- **Mobile responsive**
-- **One-command Docker deploy**: Nginx + FastAPI + Redis
+The repo is a monorepo: `/app` is the backend, `/web` is the frontend, `/deploy` is Docker / Nginx.
 
-## Tech Stack
+## Highlights
 
-### Backend
+- **Full-stack** — end-to-end type safety, unified response format (camelCase)
+- **Complete RBAC** — three permission layers (menu / API / button) + row-level `data_scope`, strict frontend / backend separation
+- **Dynamic routing** — routes delivered per role at runtime; the frontend doesn't maintain permission distribution logic
+- **Autodiscovered business modules** — drop a folder in `app/business/<x>/` and routes / models / init data register themselves; modules are mutually decoupled
+- **Code generators** — `make cli-init / cli-gen / cli-gen-web` end-to-end from a model to frontend + backend CRUD
+- **Redis-accelerated** — role permissions / constant routes / token_version cached, falls back to DB on outage
+- **State machine / event bus / Sqid IDs** — framework-level primitives
+- **Production-ready** — fastapi-radar tracing + fastapi-guard rate limit + multi-worker init lock
+- **Docker one-shot deploy** — Nginx + FastAPI + Redis
 
-| Tech | Version | Purpose |
-|------|---------|---------|
-| Python | ≥ 3.12 | Runtime |
-| FastAPI | ≥ 0.121 | Web framework |
-| Pydantic | v2 | Validation & serialization |
-| Tortoise ORM | ≥ 0.25 | Async ORM (a vendored copy lives at `/tortoise-orm/`) |
-| Tortoise migrations | built-in | Manual `tortoise makemigrations` / `migrate` |
-| Redis | — | Cache (fastapi-cache2) + multi-worker init lock |
-| Argon2 | — | Password hashing |
-| PyJWT | — | JWT signing |
-| Sqids | — | Public-facing resource ID encoding |
-| Granian | — | ASGI server with `X-Forwarded-*` proxy support |
-| fastapi-radar | — | Built-in request / SQL / exception dashboard |
-| fastapi-guard | — | Rate-limit + auto-ban |
+## How to read these docs
 
-### Frontend
+| Goal | Start here |
+|---|---|
+| Get the project running | [Quick start](/en/guide/quick-start) |
+| Add a new business module (most common) | [Development guide](/en/backend/development) (CLI end-to-end) |
+| Understand backend architecture / autodiscover / RBAC | [Backend / Intro](/en/backend/intro) → [Architecture](/en/backend/architecture) |
+| Understand frontend routing / requests / theme | [Frontend / Intro](/en/frontend/intro) |
+| Pre-PR conventions | [Standard / Backend](/en/standard/backend) + [Vue style](/en/standard/vue) + [Naming](/en/standard/naming) |
+| Deploy | [Deployment](/en/backend/deployment) |
+| Troubleshoot | [FAQ](/en/faq/) |
 
-| Tech | Version | Purpose |
-|------|---------|---------|
-| Vue | 3.5 | UI framework |
-| Vite | 7 | Build tool |
-| TypeScript | 5.9 | Type system |
-| Naive UI | 2.44 | Component library |
-| Pinia | 3 | State management |
-| UnoCSS | 66+ | Atomic CSS |
-| Alova | — | HTTP client |
-| vue-router | 4 | Dynamic routing (server-issued) |
-| vue-i18n | 11 | Internationalization |
-
-## Architecture
+## Architecture overview
 
 ```
 ┌─────────────────────────────────────────────────┐
 │                    Nginx (:1880)                 │
-│   Static asset hosting + /api/* reverse-proxy   │
+│        Static assets + /api/* reverse proxy      │
 ├─────────────────────┬───────────────────────────┤
-│   Frontend (:9527)  │     Backend (:9999)        │
-│   Vue3 + Vite7      │     FastAPI                │
-│                     │                            │
-│   Views             │     api/  (system/business)│
-│     ↓               │       ↓                    │
-│   Pinia Store       │     services/              │
-│     ↓               │       ↓                    │
-│   Service (Alova)   │     controllers (CRUDBase) │
-│     ↓               │       ↓                    │
-│   HTTP request ─────┼──→  /api/v1/*              │
-│                     │       ↓                    │
-│                     │     Tortoise / Redis       │
+│   Frontend (:9527)   │     Backend (:9999)        │
+│   Vue3 + Vite7       │     FastAPI                │
+│                      │                            │
+│   Views              │     api/  (system/business)│
+│     ↓                │       ↓                    │
+│   Pinia Store        │     services/              │
+│     ↓                │       ↓                    │
+│   Service (Alova)    │     controllers (CRUDBase) │
+│     ↓                │       ↓                    │
+│   HTTP request ──────┼──→  /api/v1/*              │
+│                      │       ↓                    │
+│                      │     Tortoise / Redis       │
 └─────────────────────┴───────────────────────────┘
 ```
-
-## Module boundaries (backend)
-
-- `app/core/` — framework infrastructure (no business logic)
-- `app/system/` — built-in modules (auth, RBAC, users, menus, APIs, dictionary, monitoring)
-- `app/business/<x>/` — business modules, **auto-discovered** at startup
-- `app/utils/` — the stable import facade for business code (re-exports the common subset of core/system)
-
-`system → business` is one-way: system never imports business. Business modules also never import each other — cross-module communication goes through the [Event bus](/en/backend/core/events).
 
 ## Resources
 

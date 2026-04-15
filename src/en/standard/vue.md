@@ -91,7 +91,7 @@ const { data, getData } = useTable({
 
 - List pages use `useNaivePaginatedTable` (paging + column visibility + operate state)
 - Drawer-style edit uses `useTableOperate` (manages visible / mode / record)
-- See [Hooks / useTable](/en/guide/hooks/use-table)
+- See [Hooks / useTable](/en/frontend/hooks/use-table)
 
 ## Button permission
 

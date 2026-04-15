@@ -88,5 +88,5 @@ onActivated(() => {
 
 ## See also
 
-- [Route component](/en/guide/router/component)
-- [Router push](/en/guide/router/push)
+- [Route component](/en/frontend/router/component)
+- [Router push](/en/frontend/router/push)

@@ -119,6 +119,6 @@ The backend hasn't declared the `Menu`, or the current role's `menus` list doesn
 
 ## See also
 
-- [Route structure](/en/guide/router/structure)
-- [Dynamic routes](/en/guide/router/dynamic)
+- [Route structure](/en/frontend/router/structure)
+- [Dynamic routes](/en/frontend/router/dynamic)
 - Backend: [RBAC](/en/backend/rbac) / [Init data](/en/backend/init-data)

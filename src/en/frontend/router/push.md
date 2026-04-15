@@ -85,5 +85,5 @@ The progress bar on navigation is handled automatically by [src/router/guard/pro
 
 ## See also
 
-- [Route guard](/en/guide/router/guard)
-- [Create routes](/en/guide/router/create)
+- [Route guard](/en/frontend/router/guard)
+- [Create routes](/en/frontend/router/create)

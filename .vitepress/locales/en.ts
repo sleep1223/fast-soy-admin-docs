@@ -9,6 +9,7 @@ const enConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
   themeConfig: {
     nav: [
       { text: 'Guide', link: '/en/guide/intro', activeMatch: '/en/guide/' },
+      { text: 'Frontend', link: '/en/frontend/intro', activeMatch: '/en/frontend/' },
       { text: 'Backend', link: '/en/backend/intro', activeMatch: '/en/backend/' },
       { text: 'Standard', link: '/en/standard/', activeMatch: '/en/standard/' },
       { text: 'FAQ', link: '/en/faq/', activeMatch: '/en/faq/' },
@@ -32,48 +33,56 @@ const enConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
             { text: 'Introduction', link: '/en/guide/intro' },
             { text: 'Quick Start', link: '/en/guide/quick-start' }
           ]
-        },
+        }
+      ],
+      '/en/frontend/': [
         {
-          text: 'Theme',
+          text: 'Getting Started',
           items: [
-            { text: 'Introduction', link: '/en/guide/theme/intro' },
-            { text: 'Config', link: '/en/guide/theme/config' },
-            { text: 'UnoCSS Theme', link: '/en/guide/theme/unocss' }
-          ]
-        },
-        {
-          text: 'Icon',
-          items: [
-            { text: 'Introduction', link: '/en/guide/icon/intro' },
-            { text: 'Usage', link: '/en/guide/icon/usage' }
+            { text: 'Introduction', link: '/en/frontend/intro' }
           ]
         },
         {
           text: 'Router',
           items: [
-            { text: 'Introduction', link: '/en/guide/router/intro' },
-            { text: 'Route Structure', link: '/en/guide/router/structure' },
-            { text: 'Route Creation', link: '/en/guide/router/create' },
-            { text: 'Dynamic Route', link: '/en/guide/router/dynamic' },
-            { text: 'Route Cache', link: '/en/guide/router/cache' },
-            { text: 'Route Component', link: '/en/guide/router/component' },
-            { text: 'Router Push', link: '/en/guide/router/push' },
-            { text: 'Router Guard', link: '/en/guide/router/guard' }
+            { text: 'Introduction', link: '/en/frontend/router/intro' },
+            { text: 'Route Structure', link: '/en/frontend/router/structure' },
+            { text: 'Route Creation', link: '/en/frontend/router/create' },
+            { text: 'Dynamic Route', link: '/en/frontend/router/dynamic' },
+            { text: 'Route Cache', link: '/en/frontend/router/cache' },
+            { text: 'Route Component', link: '/en/frontend/router/component' },
+            { text: 'Router Push', link: '/en/frontend/router/push' },
+            { text: 'Router Guard', link: '/en/frontend/router/guard' }
           ]
         },
         {
           text: 'Request',
           items: [
-            { text: 'Introduction', link: '/en/guide/request/intro' },
-            { text: 'Usage', link: '/en/guide/request/usage' },
-            { text: 'Proxy', link: '/en/guide/request/proxy' },
-            { text: 'Connect Backend', link: '/en/guide/request/backend' }
+            { text: 'Introduction', link: '/en/frontend/request/intro' },
+            { text: 'Usage', link: '/en/frontend/request/usage' },
+            { text: 'Proxy', link: '/en/frontend/request/proxy' },
+            { text: 'Connect Backend', link: '/en/frontend/request/backend' }
+          ]
+        },
+        {
+          text: 'Theme',
+          items: [
+            { text: 'Introduction', link: '/en/frontend/theme/intro' },
+            { text: 'Config', link: '/en/frontend/theme/config' },
+            { text: 'UnoCSS Theme', link: '/en/frontend/theme/unocss' }
+          ]
+        },
+        {
+          text: 'Icon',
+          items: [
+            { text: 'Introduction', link: '/en/frontend/icon/intro' },
+            { text: 'Usage', link: '/en/frontend/icon/usage' }
           ]
         },
         {
           text: 'Hooks',
           items: [
-            { text: 'useTable', link: '/en/guide/hooks/use-table' }
+            { text: 'useTable', link: '/en/frontend/hooks/use-table' }
           ]
         }
       ],

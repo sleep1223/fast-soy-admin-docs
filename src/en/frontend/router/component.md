@@ -47,12 +47,12 @@ Real projects rarely need this — `base` covers 95% of cases.
 
 ## Relationship with file structure
 
-The route file structure ([Route structure](/en/guide/router/structure)) decides **what routes exist**.
+The route file structure ([Route structure](/en/frontend/router/structure)) decides **what routes exist**.
 `component` decides **what shell renders them**.
 They're independent — the same view can be reused by different layouts (rare).
 
 ## See also
 
-- [Route structure](/en/guide/router/structure)
-- [Create routes](/en/guide/router/create)
+- [Route structure](/en/frontend/router/structure)
+- [Create routes](/en/frontend/router/create)
 - Backend: [Data models / Menu](/en/backend/models#menu)

@@ -96,7 +96,7 @@ Each theme change triggers `setupThemeVarsToHtml()`: generates 11 shades from th
 }
 ```
 
-UnoCSS automatically derives `text-primary` / `bg-primary-200` from these. See [UnoCSS theme](/en/guide/theme/unocss).
+UnoCSS automatically derives `text-primary` / `bg-primary-200` from these. See [UnoCSS theme](/en/frontend/theme/unocss).
 
 ## Dark-mode strategy
 
@@ -118,5 +118,5 @@ For mourning days etc.; affects the entire screen.
 
 ## See also
 
-- [Intro](/en/guide/theme/intro)
-- [UnoCSS theme](/en/guide/theme/unocss)
+- [Intro](/en/frontend/theme/intro)
+- [UnoCSS theme](/en/frontend/theme/unocss)

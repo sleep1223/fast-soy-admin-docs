@@ -85,6 +85,6 @@ Route data comes from Redis (loaded at startup). After backend CUD, you must cal
 
 ## See also
 
-- [Route structure](/en/guide/router/structure)
-- [Route guard](/en/guide/router/guard)
+- [Route structure](/en/frontend/router/structure)
+- [Route guard](/en/frontend/router/guard)
 - Backend: [Auth](/en/backend/auth) / [RBAC](/en/backend/rbac)

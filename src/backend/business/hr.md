@@ -169,25 +169,7 @@ dept_crud = CRUDRouter(
 
 ### 前端怎么挂权限
 
-```vue
-<script setup lang="tsx">
-import { useAuth } from '@/hooks/business/auth';
-const { hasAuth } = useAuth();
-</script>
-
-<!-- 操作列：按权限 v-if -->
-{hasAuth('B_HR_EMP_EDIT') && <NButton onClick={...}>编辑</NButton>}
-
-<!-- 表头：用 TableHeaderOperation 的 default slot 完全替换 -->
-<TableHeaderOperation v-model:columns="columnChecks" :loading="loading" @refresh="getData">
-  <NButton v-if="hasAuth('B_HR_EMP_CREATE')" @click="handleAdd">新增</NButton>
-  <NPopconfirm v-if="hasAuth('B_HR_EMP_DELETE')" @positive-click="handleBatchDelete">
-    ...
-  </NPopconfirm>
-</TableHeaderOperation>
-```
-
-完整示例见 [web/src/views/hr/employee/index.vue](../../../web/src/views/hr/employee/index.vue)。
+按钮码透传到前端后，模板里用 `hasAuth(...)` 控制按钮可见性。前端用法详见 [前端 / Hooks / useTable](../../frontend/hooks/use-table.md#配合权限按钮)，完整样例在 [web/src/views/hr/employee/index.vue](../../../web/src/views/hr/employee/index.vue)。
 
 ## 行级数据权限（data_scope）
 

@@ -141,7 +141,7 @@ VITE_ICON_PREFIX=icon
 VITE_ICON_LOCAL_PREFIX=icon-local
 ```
 
-See [Frontend / Request / intro](/en/guide/request/intro).
+See [Frontend / Request / intro](/en/frontend/request/intro).
 
 ## Code style
 

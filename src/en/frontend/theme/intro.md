@@ -64,5 +64,5 @@ Toggle: user picks in the settings drawer; `useThemeStore.layout.mode` persists 
 
 ## See also
 
-- [Configuration](/en/guide/theme/config) — all theme fields
-- [UnoCSS theme](/en/guide/theme/unocss) — how to use theme colors in classes
+- [Configuration](/en/frontend/theme/config) — all theme fields
+- [UnoCSS theme](/en/frontend/theme/unocss) — how to use theme colors in classes

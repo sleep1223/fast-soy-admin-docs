@@ -113,6 +113,6 @@ Steps 1–3 can be auto-generated via `make cli-gen-all`. See [Development](/en/
 
 ## See also
 
-- [Intro](/en/guide/request/intro)
-- [Usage](/en/guide/request/usage)
+- [Intro](/en/frontend/request/intro)
+- [Usage](/en/frontend/request/usage)
 - Backend: [Auth](/en/backend/auth) / [Response codes](/en/backend/codes)

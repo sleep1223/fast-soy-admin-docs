@@ -142,18 +142,7 @@ from app.utils import DependPermission, require_buttons, require_roles
 
 ## Frontend button gating
 
-```vue
-<script setup lang="tsx">
-import { useAuth } from '@/hooks/business/auth';
-const { hasAuth } = useAuth();
-</script>
-
-<template>
-  <NButton v-if="hasAuth('B_HR_EMP_CREATE')" @click="handleAdd">Add</NButton>
-</template>
-```
-
-`hasAuth` reads from `GET /api/v1/auth/user-info`, which the backend populates from `CTX_BUTTON_CODES`. `R_SUPER` users get **all** buttons.
+Button codes are delivered via `GET /api/v1/auth/user-info` (sourced from `CTX_BUTTON_CODES`; `R_SUPER` users get **all** codes). The frontend uses `hasAuth('B_HR_EMP_CREATE')` to decide whether to render a button — see [Frontend / Hooks / useTable / Pair with permission buttons](/en/frontend/hooks/use-table#pair-with-permission-buttons).
 
 ## Cache
 

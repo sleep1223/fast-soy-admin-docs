@@ -169,25 +169,7 @@ dept_crud = CRUDRouter(
 
 ### Frontend wiring
 
-```vue
-<script setup lang="tsx">
-import { useAuth } from '@/hooks/business/auth';
-const { hasAuth } = useAuth();
-</script>
-
-<!-- Action column: per-permission v-if -->
-{hasAuth('B_HR_EMP_EDIT') && <NButton onClick={...}>Edit</NButton>}
-
-<!-- Toolbar: replace TableHeaderOperation default slot -->
-<TableHeaderOperation v-model:columns="columnChecks" :loading="loading" @refresh="getData">
-  <NButton v-if="hasAuth('B_HR_EMP_CREATE')" @click="handleAdd">Add</NButton>
-  <NPopconfirm v-if="hasAuth('B_HR_EMP_DELETE')" @positive-click="handleBatchDelete">
-    ...
-  </NPopconfirm>
-</TableHeaderOperation>
-```
-
-Full example: `web/src/views/hr/employee/index.vue`.
+Once button codes are surfaced to the frontend, templates use `hasAuth(...)` to gate visibility. For the actual frontend syntax see [Frontend / Hooks / useTable / Pair with permission buttons](/en/frontend/hooks/use-table#pair-with-permission-buttons); a full example lives in `web/src/views/hr/employee/index.vue`.
 
 ## Row-level data scope
 

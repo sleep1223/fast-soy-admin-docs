@@ -41,7 +41,7 @@ UnoCSS config: [web/uno.config.ts](../../../web/uno.config.ts).
 </div>
 ```
 
-Strategy `dark: 'class'`: relies on `<html class="dark">`, toggled by [`useThemeStore`](/en/guide/theme/config).
+Strategy `dark: 'class'`: relies on `<html class="dark">`, toggled by [`useThemeStore`](/en/frontend/theme/config).
 
 ## Custom utilities
 
@@ -68,6 +68,6 @@ In Chrome devtools, inspect computed style — CSS variables are at `:root`. Cha
 
 ## See also
 
-- [Intro](/en/guide/theme/intro)
-- [Configuration](/en/guide/theme/config)
+- [Intro](/en/frontend/theme/intro)
+- [Configuration](/en/frontend/theme/config)
 - [UnoCSS docs](https://unocss.dev/)

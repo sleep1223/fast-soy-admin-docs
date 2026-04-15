@@ -84,7 +84,7 @@ In short: **the frontend defines what each page looks like; the backend defines 
 
 ## See also
 
-- [Create routes](/en/guide/router/create)
-- [Dynamic routes](/en/guide/router/dynamic)
-- [Route component](/en/guide/router/component)
+- [Create routes](/en/frontend/router/create)
+- [Dynamic routes](/en/frontend/router/dynamic)
+- [Route component](/en/frontend/router/component)
 - Backend: [RBAC](/en/backend/rbac)

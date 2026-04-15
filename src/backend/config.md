@@ -145,7 +145,7 @@ VITE_ICON_PREFIX=icon
 VITE_ICON_LOCAL_PREFIX=icon-local
 ```
 
-详见 [前端 / 请求 / 简介](../guide/request/intro.md)。
+详见 [前端 / 请求 / 简介](../frontend/request/intro.md)。
 
 ## 代码风格
 

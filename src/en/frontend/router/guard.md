@@ -104,6 +104,6 @@ Add after `createRouter`. Remove in production.
 
 ## See also
 
-- [Dynamic routes](/en/guide/router/dynamic)
-- [Router push](/en/guide/router/push)
+- [Dynamic routes](/en/frontend/router/dynamic)
+- [Router push](/en/frontend/router/push)
 - Backend: [Auth](/en/backend/auth)

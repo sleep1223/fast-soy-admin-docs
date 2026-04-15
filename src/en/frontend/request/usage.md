@@ -77,7 +77,7 @@ if (error) {
 console.log(data.records);
 ```
 
-Or with [`useTable`](/en/guide/hooks/use-table):
+Or with [`useTable`](/en/frontend/hooks/use-table):
 
 ```typescript
 const { data, loading, columns, pagination, getData } = useNaivePaginatedTable({
@@ -135,7 +135,7 @@ abortRequestByMethodName('fetchEmployeeList');
 
 ## See also
 
-- [Intro](/en/guide/request/intro)
-- [Proxy](/en/guide/request/proxy)
-- [Connect backend](/en/guide/request/backend)
-- [Hooks / useTable](/en/guide/hooks/use-table)
+- [Intro](/en/frontend/request/intro)
+- [Proxy](/en/frontend/request/proxy)
+- [Connect backend](/en/frontend/request/backend)
+- [Hooks / useTable](/en/frontend/hooks/use-table)

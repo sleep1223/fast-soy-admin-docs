@@ -103,5 +103,5 @@ Backend CORS is in `app/core/init_app.py`'s `CORSMiddleware`, default `["*"]`. P
 
 ## See also
 
-- [Intro](/en/guide/request/intro)
+- [Intro](/en/frontend/request/intro)
 - Backend: [Deployment](/en/backend/deployment) / [Configuration](/en/backend/config)

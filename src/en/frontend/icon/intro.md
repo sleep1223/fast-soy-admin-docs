@@ -44,7 +44,7 @@ Direct component form (auto-registered by unplugin-icons):
 - Iconify: `<icon-mdi-home />`, `<icon-material-symbols-settings-rounded />`
 - Local: `<icon-local-logo />`
 
-For dynamic icons use `<svg-icon>`. See [Usage](/en/guide/icon/usage).
+For dynamic icons use `<svg-icon>`. See [Usage](/en/frontend/icon/usage).
 
 ## In menus
 
@@ -71,4 +71,4 @@ Powered by [unplugin-icons](https://github.com/unplugin/unplugin-icons) + [@icon
 
 ## See also
 
-- [Usage](/en/guide/icon/usage)
+- [Usage](/en/frontend/icon/usage)
