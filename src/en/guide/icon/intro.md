@@ -1,26 +1,74 @@
 # Icon System
 
-The project supports two types of icons: **Iconify** (remote/offline SVG icon sets) and **local SVG** icons.
+Two icon kinds:
 
-## Iconify Icons
+- **Iconify** — massive online / offline icon sets (mdi / material-symbols / carbon / ...)
+- **Local SVG** — project-specific logo / business glyphs
 
-[Iconify](https://iconify.design/) provides 100,000+ icons from popular icon sets. Icons are loaded as SVG, rendered inline.
+Both render through `<svg-icon>`; menus / routes use the same field (`icon` + `iconType`).
 
-Browse icons at [icones.js.org](https://icones.js.org/).
+## Modes
 
-## Local SVG Icons
+| Mode | Network | Range |
+|---|---|---|
+| Online Iconify | required | 100,000+ icons |
+| Offline Iconify | none | installed sets |
+| Local SVG | none | your `src/assets/svg-icon/` |
 
-Custom SVG icons stored in `src/assets/svg-icon/` are bundled with the project and available offline.
+### Online Iconify
 
-## How It Works
+Nothing to install — browse [icones.js.org](https://icones.js.org/), pick `mdi:home` etc., and use directly. Iconify lazy-loads from CDN.
 
-1. **unplugin-icons**: Auto-imports Iconify icons as Vue components
-2. **vite-plugin-svg-icons**: Bundles local SVGs into a sprite
-3. **@iconify/vue**: Provides the `<Icon>` component for dynamic rendering
+### Offline Iconify
 
-## Prefix Configuration
-
+```bash
+cd web && pnpm add @iconify/json   # download all sets (~90MB, one-time)
 ```
-VITE_ICON_PREFIX=icon               # Iconify icon prefix
-VITE_ICON_LOCAL_PREFIX=icon-local   # Local icon prefix
+
+Vite then inlines the icons you actually use into the bundle — no network at runtime. Strongly recommended for production.
+
+### Local SVG
+
+Drop `.svg` files into [web/src/assets/svg-icon/](../../../web/src/assets/svg-icon/); they're auto-registered with names matching the file. `logo.svg` → `<svg-icon local-icon="logo" />`.
+
+## Prefix config
+
+```dotenv
+# web/.env
+VITE_ICON_PREFIX=icon
+VITE_ICON_LOCAL_PREFIX=icon-local
 ```
+
+Direct component form (auto-registered by unplugin-icons):
+
+- Iconify: `<icon-mdi-home />`, `<icon-material-symbols-settings-rounded />`
+- Local: `<icon-local-logo />`
+
+For dynamic icons use `<svg-icon>`. See [Usage](/en/guide/icon/usage).
+
+## In menus
+
+Backend `Menu.icon` + `Menu.icon_type`:
+
+```python
+{"icon": "mdi:account-group", "icon_type": "1"}        # Iconify
+{"icon": "logo",              "icon_type": "2"}        # local SVG
+```
+
+`icon_type` enum: `"1"=iconify`, `"2"=local`. Frontend renders by prefix.
+
+## Recommended icon sets
+
+| Use | Recommended |
+|---|---|
+| General UI | `mdi:` (Material Design Icons) |
+| Modern, flat | `material-symbols:` |
+| Carbon / IBM style | `carbon:` |
+| Clean lines | `tabler:` |
+| Chinese / domain-specific | `icon-park-outline:` |
+
+Powered by [unplugin-icons](https://github.com/unplugin/unplugin-icons) + [@iconify](https://iconify.design/).
+
+## See also
+
+- [Usage](/en/guide/icon/usage)

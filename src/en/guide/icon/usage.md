@@ -1,74 +1,111 @@
 # Icon Usage
 
-## Static Usage (Auto-import)
+Three forms: direct component, `<svg-icon>`, JSX renderer. The first two cover 99%.
 
-### Iconify Icons
+## Direct component (simplest)
 
-Use the format `<icon-{collection}-{name}>`:
+[unplugin-icons](https://github.com/unplugin/unplugin-icons) auto-registers on demand:
 
-```html
-<icon-mdi-emoticon />
-<icon-carbon-user />
-<icon-ic-round-settings />
+```vue
+<template>
+  <!-- Iconify -->
+  <icon-mdi-home class="text-2xl" />
+  <icon-material-symbols-settings-rounded class="text-primary" />
+
+  <!-- Local SVG -->
+  <icon-local-logo />
+</template>
 ```
 
-### Local Icons
+**Pros**: name checked at compile time; tree-shaken; zero runtime cost
+**Cons**: name is template-literal — dynamic switching is awkward
 
-Use the format `<icon-local-{name}>`:
+## Dynamic via `<svg-icon>`
 
-```html
-<icon-local-logo />
-<icon-local-custom-icon />
+For data-driven icons:
+
+```vue
+<template>
+  <svg-icon icon="mdi:home" />
+  <svg-icon :icon="dynamicIconName" />
+
+  <!-- Local -->
+  <svg-icon local-icon="logo" />
+
+  <!-- Custom size / color -->
+  <svg-icon icon="mdi:check" class="text-success text-2xl" />
+</template>
 ```
 
-Local icons must be placed in `src/assets/svg-icon/`.
+`<svg-icon>` is a global component: [src/components/custom/svg-icon.vue](../../../web/src/components/custom/svg-icon.vue).
 
-## Dynamic Usage (SvgIcon Component)
+## Renderer (JSX / TSX)
 
-For icons determined at runtime:
-
-```html
-<!-- Iconify icon -->
-<svg-icon icon="mdi:emoticon" />
-
-<!-- Local icon -->
-<svg-icon local-icon="logo" />
-
-<!-- With size and color -->
-<svg-icon icon="mdi:emoticon" class="text-24px text-primary" />
-```
-
-## Render Function
-
-For programmatic rendering (e.g., in table columns or menu items):
+For NaiveUI scenes that need a VNode (`MessageProvider`, `MenuOption.icon`, ...):
 
 ```typescript
-import { useSvgIconRender } from '@/hooks/common/icon';
+import { useSvgIconRender } from '@sa/hooks';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 
 const { SvgIconVNode } = useSvgIconRender(SvgIcon);
 
-// Create icon VNode
-const icon = SvgIconVNode({ icon: 'mdi:emoticon' });
+const icon = SvgIconVNode({ icon: 'mdi:home' });
 const localIcon = SvgIconVNode({ localIcon: 'logo' });
+
+// In NMenu
+const menuOption = {
+  label: 'Home',
+  key: 'home',
+  icon: () => SvgIconVNode({ icon: 'mdi:home' }),
+};
 ```
 
-## Offline Mode
+## Route / menu icons
 
-Install `@iconify/json` for fully offline Iconify icons:
+Backend `Menu.icon` + `icon_type`:
 
-```bash
-pnpm add -D @iconify/json
+```python
+# init_data.py
+{"icon": "mdi:account-group", "icon_type": "1"}     # Iconify
+{"icon": "logo",              "icon_type": "2"}     # local
 ```
 
-This downloads the complete icon dataset locally, so no network requests are needed at runtime.
-
-## Usage in Route Meta
+Or frontend route meta:
 
 ```typescript
 meta: {
-  icon: 'mdi:home',           // Iconify icon in menu
+  icon: 'mdi:home',           // Iconify
   // or
-  localIcon: 'custom-home'    // Local icon in menu
+  localIcon: 'logo'           // local
 }
 ```
+
+Sidebar / tabs auto-render.
+
+## Offline mode
+
+```bash
+cd web && pnpm add @iconify/json
+```
+
+Vite inlines all Iconify icons referenced in templates / config — no network at runtime. Strongly recommended for production.
+
+## Sizing / color
+
+Icons render as inline SVG — **control them with CSS / Tailwind / UnoCSS**:
+
+```html
+<icon-mdi-home class="text-3xl text-primary hover:text-primary-700" />
+```
+
+| Want | class |
+|---|---|
+| Size | `text-base / lg / xl / 2xl / ...` (inherits font-size) |
+| Color | `text-primary / text-success / text-gray-500` |
+| Rotate | `rotate-90 / -rotate-45` |
+| Hover | `hover:text-primary` |
+
+## See also
+
+- [Icon system intro](/en/guide/icon/intro)
+- Route meta: [Create routes](/en/guide/router/create)

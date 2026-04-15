@@ -30,8 +30,8 @@ features:
     title: 主题系统
     details: 丰富的主题配置，与 UnoCSS 深度集成，支持暗黑模式和多种布局方案。
   - icon: "\U0001F4C1"
-    title: 文件路由
-    details: 通过 Elegant Router 插件从文件结构自动生成路由。支持后端动态路由集成。
+    title: 动态路由
+    details: 菜单、API、按钮权限由后端统一管理，用户登录后按角色动态下发路由，RBAC 全链路贯通。
   - icon: "\U0001F30F"
     title: 国际化
     details: 内置 vue-i18n 多语言支持（中文 / English），易于扩展更多语言。
@@ -43,5 +43,5 @@ features:
     details: Docker Compose 一键部署，Nginx + FastAPI + Redis，开箱即用。
   - icon: "\U0001F9F9"
     title: 代码质量
-    details: 前端 ESLint + oxlint，后端 Ruff + Pyright，全栈严格类型检查。
+    details: 前端 ESLint + oxlint，后端 Ruff + basedpyright，全栈严格类型检查。
 ---

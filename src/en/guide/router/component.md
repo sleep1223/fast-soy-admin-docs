@@ -1,61 +1,58 @@
 # Route Component
 
-Each route maps to a component through the `component` field. The Elegant Router plugin uses a specific format to define this mapping.
+The backend's `Menu.component` field decides which "layout + view" combo loads the route; the frontend transform maps the string to actual components.
 
-## Component Types
+## Component types
 
-### Layout Component
+| `component` value | Meaning | When to use |
+|---|---|---|
+| `layout.base` | Main layout: sidebar / header / tabs / content / footer | top-level catalogs |
+| `layout.blank` | Blank layout: only the view | login / error pages |
+| `view.about` | View only (`views/about/index.vue`) | pages embedded in an existing layout |
+| `layout.base$view.about` | Layout + view together (also a route root) | top-level standalone business routes |
+| `layout.blank$view.login` | Blank layout + view | login |
 
-Layout wraps the page with the global header, sidebar, tabs, and footer.
+## Naming map
 
-```typescript
-component: 'layout.base'    // BaseLayout — full layout
-component: 'layout.blank'   // BlankLayout — empty wrapper
-```
+`view.<route_name>`: treat `_` as `/`.
 
-### View Component
+| route_name | File |
+|---|---|
+| `view.about` | `views/about/index.vue` |
+| `view.manage_user` | `views/manage/user/index.vue` |
+| `view.manage_user-detail` | `views/manage_user-detail/index.vue` |
+| `view.function_multi-tab` | `views/function/multi-tab/index.vue` |
+| `view.hr_employee` | `views/hr/employee/index.vue` |
 
-Actual page content rendered inside the layout.
+`_` is the directory separator; multi-word path segments (`user-detail` / `multi-tab`) stay kebab.
 
-```typescript
-component: 'view.about'           // views/about/index.vue
-component: 'view.manage_user'     // views/manage/user/index.vue
-```
+## When `component=null`
 
-### Mixed Component
+- Top-level catalog (`catalog` menu) is just grouping — no view. `ensure_menu` infers automatically:
+  - top + has children → `layout.base`
+  - inner + has children → leave blank (catalog only)
+  - leaf node → required; warning otherwise
 
-Combines layout and view in one declaration using `$` separator:
+Backend `ensure_menu` source: [app/system/services/init_helper.py](../../../app/system/services/init_helper.py).
 
-```typescript
-component: 'layout.base$view.about'
-// Equivalent to: layout = BaseLayout, view = views/about/index.vue
-```
+## Custom layouts
 
-## Usage in Route Declaration
+To add a global layout (e.g. dual sidebar):
 
-**Single page (layout + view):**
+1. Add a component under `web/src/layouts/`, e.g. `dual-sidebar.vue`
+2. Add `'dual-sidebar'` to `LayoutType` in `src/typings/router.d.ts`
+3. Backend `Menu.component` uses `layout.dual-sidebar$view.xxx`
 
-```typescript
-{
-  name: 'about',
-  path: '/about',
-  component: 'layout.base$view.about'
-}
-```
+Real projects rarely need this — `base` covers 95% of cases.
 
-**Parent with children:**
+## Relationship with file structure
 
-```typescript
-{
-  name: 'manage',
-  path: '/manage',
-  component: 'layout.base',      // Parent only has layout
-  children: [
-    {
-      name: 'manage_user',
-      path: '/manage/user',
-      component: 'view.manage_user'  // Child has view only
-    }
-  ]
-}
-```
+The route file structure ([Route structure](/en/guide/router/structure)) decides **what routes exist**.
+`component` decides **what shell renders them**.
+They're independent — the same view can be reused by different layouts (rare).
+
+## See also
+
+- [Route structure](/en/guide/router/structure)
+- [Create routes](/en/guide/router/create)
+- Backend: [Data models / Menu](/en/backend/models#menu)

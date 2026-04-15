@@ -11,7 +11,7 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /guide/intro
+      link: /en/guide/intro
     - theme: alt
       text: View on GitHub
       link: https://github.com/sleep1223/fast-soy-admin
@@ -22,26 +22,26 @@ hero:
 features:
   - icon: "\U0001F680"
     title: Full-Stack
-    details: FastAPI backend with Vue3 frontend, complete end-to-end solution with unified response format and type safety.
+    details: FastAPI backend + Vue3 frontend, end-to-end with unified response format and type safety.
   - icon: "\U0001F512"
-    title: RBAC Permission
-    details: Role-based access control with menu, API and button-level permissions. JWT authentication with auto token refresh.
+    title: RBAC
+    details: Role-based menu / API / button permissions, plus row-level data_scope. JWT with auto-refresh.
   - icon: "\U0001F3A8"
     title: Theme System
-    details: Rich theme configuration with UnoCSS integration, dark mode support, and multiple layout options.
+    details: Rich theme config, deep UnoCSS integration, dark mode and multiple layouts.
   - icon: "\U0001F4C1"
-    title: File Routing
-    details: Automatic route generation from file structure via Elegant Router plugin. Dynamic route support with backend integration.
+    title: Dynamic Routing
+    details: Menus, APIs and button permissions are owned by the backend; routes are issued per user at login based on roles — true end-to-end RBAC.
   - icon: "\U0001F30F"
-    title: Internationalization
-    details: Built-in vue-i18n with Chinese and English support. Easy to extend with additional languages.
+    title: i18n
+    details: Built-in vue-i18n (Chinese / English), easy to extend.
   - icon: "\U0001F4E6"
     title: Redis Cache
-    details: Integrated fastapi-cache2 with Redis for accelerated API responses and efficient data caching.
+    details: fastapi-cache2 + Redis for hot permission data, constant routes, and business caching.
   - icon: "\U0001F433"
     title: Docker Deploy
-    details: One-command deployment with Docker Compose. Nginx + FastAPI + Redis, production-ready out of the box.
+    details: One-command deploy with Docker Compose. Nginx + FastAPI + Redis, production-ready.
   - icon: "\U0001F9F9"
     title: Code Quality
-    details: Frontend ESLint + oxlint, backend Ruff + Pyright. Strict type checking across the full stack.
+    details: Frontend ESLint + oxlint, backend Ruff + basedpyright. Strict types across the stack.
 ---

@@ -1,69 +1,108 @@
 # Request
 
-## Multiple Request Environments
+The frontend HTTP layer is built on [Alova](https://alova.js.org/) (business requests) + Axios (compatibility), wrapped in [src/service/](../../../web/src/service/). Every business module shares the same configuration: auto-attaches token, auto-refreshes token, routes business codes to logout / modal / error toast.
 
-The project uses environment files to configure different backend addresses:
+## Layout
 
-- `.env` — Common configuration
-- `.env.test` — Test environment
-- `.env.prod` — Production environment
-
-## Configuration
-
-Configuration items in `.env`:
-
-- `VITE_SERVICE_SUCCESS_CODE`: Success code from backend (default: `0000`)
-- `VITE_SERVICE_LOGOUT_CODES`: Codes that trigger logout (e.g., `2100,2101`)
-- `VITE_SERVICE_MODAL_LOGOUT_CODES`: Codes that trigger modal logout (e.g., `2102`)
-- `VITE_SERVICE_EXPIRED_TOKEN_CODES`: Codes that trigger token refresh (e.g., `2103`)
-
-Configuration items in `.env.test` / `.env.prod`:
-
-- `VITE_SERVICE_BASE_URL`: Base URL for requests (default: `/api/v1`)
-- `VITE_OTHER_SERVICE_BASE_URL`: Base URL for other services
-
-## Request Functions
-
-### createRequest
-
-Returns Axios response data directly (with optional transformation):
-
-```typescript
-const { request } = createRequest({
-  baseURL: '/api/v1'
-});
-
-const data = await request({ url: '/users', method: 'GET' });
+```
+web/src/service/
+├── api/                    # per-module fetchXxx functions
+│   ├── auth.ts
+│   ├── system-manage.ts
+│   ├── hr-manage.ts
+│   └── ...
+└── request/                # generic request layer (interceptors, codes, refresh)
+    └── index.ts
 ```
 
-### createFlatRequest
+## Environment
 
-Wraps the response in a flat object with error handling:
+```dotenv
+# web/.env
+VITE_SERVICE_BASE_URL=/api/v1                    # business base
+VITE_OTHER_SERVICE_BASE_URL={"demo":"/demo"}     # other services (multi-backend)
+
+VITE_SERVICE_SUCCESS_CODE=0000                    # success code
+VITE_SERVICE_LOGOUT_CODES=2100,2101              # force logout
+VITE_SERVICE_MODAL_LOGOUT_CODES=2102             # modal then logout
+VITE_SERVICE_EXPIRED_TOKEN_CODES=2103            # auto-refresh
+```
+
+Backend codes: see [Response codes](/en/backend/codes).
+
+## Response shape (1:1 with backend)
 
 ```typescript
-const { request } = createFlatRequest({
-  baseURL: '/api/v1'
-});
-
-const { data, error } = await request({ url: '/users', method: 'GET' });
-if (error) {
-  // Handle error
+interface BackendResponse<T> {
+  code: string;   // "0000" = success
+  msg: string;    // message
+  data: T;        // payload
 }
 ```
 
-## Request Options
+## Request factories
+
+`src/service/request/index.ts` provides two factories:
+
+| Factory | Returns | Use |
+|---|---|---|
+| `createRequest` | `Promise<TData>` (the business `data`) | most calls |
+| `createFlatRequest` | `Promise<{ data, error }>` | when you need custom error handling |
+
+Usage:
 
 ```typescript
-interface RequestOption<ResponseData = any> {
-  /** Modify request config before sending (e.g., add token header) */
-  onRequest: (config: InternalAxiosRequestConfig) => InternalAxiosRequestConfig;
-  /** Determine if backend response indicates success */
-  isBackendSuccess: (response: AxiosResponse<ResponseData>) => boolean;
-  /** Handle backend business failure (e.g., token expiration) */
-  onBackendFail: (response: AxiosResponse<ResponseData>, instance: AxiosInstance) => Promise<void>;
-  /** Transform backend response data */
-  transformBackendResponse(response: AxiosResponse<ResponseData>): any;
-  /** Handle request errors */
-  onError: (error: AxiosError<ResponseData>) => void;
+const request = createRequest({
+  baseURL: import.meta.env.VITE_SERVICE_BASE_URL,
+});
+
+export function fetchLogin(body: { userName: string; password: string }) {
+  return request.Post<Api.Auth.LoginToken>('/auth/login', body);
 }
 ```
+
+## Request options
+
+```typescript
+interface RequestOption {
+  onRequest:               (config) => config;          // inject token / common params
+  isBackendSuccess:        (response) => boolean;       // success predicate (default code === '0000')
+  onBackendFail:           (response, instance) => void; // unified failure handling (modal / logout / refresh)
+  transformBackendResponse:(response) => any;           // unwrap { code, msg, data } → data
+  onError:                 (error) => void;             // network / 5xx
+}
+```
+
+Implementation: [src/service/request/index.ts](../../../web/src/service/request/index.ts).
+
+## Automatic behavior
+
+| Behavior | Trigger |
+|---|---|
+| Auto-attach `Authorization: Bearer <token>` | every request |
+| Auto-refresh token + replay | code in `VITE_SERVICE_EXPIRED_TOKEN_CODES` (default `2103`) |
+| Force logout | code in `VITE_SERVICE_LOGOUT_CODES` (default `2100,2101`) |
+| Modal then logout | code in `VITE_SERVICE_MODAL_LOGOUT_CODES` (default `2102`) |
+| Default error toast | other non-success codes |
+| Promise reject | network / 5xx / parse error |
+
+Business code never deals with token expiration / refresh — only the value matters.
+
+## Multi-backend
+
+When connecting to multiple backends (main + dashboard service), call `createRequest` once per backend, or use `VITE_OTHER_SERVICE_BASE_URL`:
+
+```typescript
+const reportRequest = createRequest({
+  baseURL: import.meta.env.VITE_OTHER_SERVICE_BASE_URL.report,
+});
+```
+
+See [Proxy](/en/guide/request/proxy).
+
+## See also
+
+- [Usage](/en/guide/request/usage)
+- [Proxy](/en/guide/request/proxy)
+- [Connect backend](/en/guide/request/backend)
+- Backend: [API conventions](/en/backend/api) / [Response codes](/en/backend/codes)

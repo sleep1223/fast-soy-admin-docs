@@ -1,92 +1,153 @@
 # useTable
 
-`useTable` is a UI-agnostic hook for managing table data with pagination, column visibility, and data transformation.
+A data-driven table hook, **UI-agnostic** — only fetches data and manages pagination / loading. NaiveUI variants build on top of it. Most business code uses `useNaivePaginatedTable`.
 
-## Basic Usage
+Source: `web/packages/hooks/src/use-table.ts` and `web/src/hooks/common/table/`.
+
+## Variants
+
+| Hook | Use |
+|---|---|
+| `useTable` | UI-agnostic base, data only |
+| `useNaiveTable` | Adds column defs + scroll width (no pagination) |
+| `useNaivePaginatedTable` | Full pagination + column visibility + loading state (**most common**) |
+| `useTableOperate` | Companion state for add / edit / delete drawers / dialogs |
+
+## Typical usage
+
+```vue
+<script setup lang="tsx">
+import { fetchEmployeeList } from '@/service/api/hr-manage';
+import { useNaivePaginatedTable, useTableOperate } from '@/hooks/common/table';
+
+const { columns, columnChecks, data, loading, getData, getDataByPage, mobilePagination, searchParams, resetSearchParams }
+  = useNaivePaginatedTable({
+    apiFn: fetchEmployeeList,
+    apiParams: {
+      current: 1,
+      size: 10,
+      name: '',
+      status: undefined,
+    },
+    columns: () => [
+      { key: 'employeeNo', title: 'No.', align: 'center' },
+      { key: 'name', title: 'Name', align: 'center' },
+      { key: 'status', title: 'Status', align: 'center', render: (row) => statusTag(row.status) },
+      { key: 'createdAt', title: 'Created', align: 'center' },
+      {
+        key: 'operate',
+        title: 'Actions',
+        align: 'center',
+        render: (row) => (
+          <div class="flex-center gap-8px">
+            <NButton type="primary" ghost size="small" onClick={() => handleEdit(row.id)}>Edit</NButton>
+            <NPopconfirm onPositiveClick={() => handleDelete(row.id)}>
+              {{ trigger: () => <NButton type="error" ghost size="small">Delete</NButton> }}
+            </NPopconfirm>
+          </div>
+        ),
+      },
+    ],
+  });
+
+const { handleAdd, handleEdit, checkedRowKeys, drawerVisible, operateType, editingData }
+  = useTableOperate(data, getData);
+</script>
+```
+
+## API
+
+### apiFn
+
+A fetch function returning `{ records, total, current, size }`. `fetchEmployeeList` hits `POST /employees/search`; the response is auto-mapped.
+
+### apiParams
+
+Initial query (paging + your search fields). **Reactive** — changing it triggers `getData`.
+
+### transformer (optional)
+
+When backend field names differ from `useTable`'s expectation:
 
 ```typescript
-import { useTable } from '@/hooks/common/table';
-
-const { data, loading, columns, pagination, getData } = useTable({
-  apiFn: fetchUserList,
-  apiParams: {
-    current: 1,
-    size: 10
-  },
-  columns: () => [
-    { key: 'userName', title: 'Username' },
-    { key: 'email', title: 'Email' },
-    { key: 'status', title: 'Status' }
-  ],
+useNaivePaginatedTable({
+  apiFn,
+  apiParams,
+  columns,
   transformer: (res) => ({
     data: res.data.records,
     pageNum: res.data.current,
     pageSize: res.data.size,
-    total: res.data.total
-  })
+    total: res.data.total,
+  }),
 });
 ```
 
-## Naive UI Extensions
+Default expects `{ records, total, current, size }` — FastSoyAdmin's `SuccessExtra` already returns this, **no transformer needed**.
 
-### useNaiveTable
+### columns
 
-Adds Naive UI column definitions with scroll width calculation:
+Function returning column config (not an array — keeps it reactive to i18n / theme).
+
+| Field | Use |
+|---|---|
+| `key` | data field name (use `operate` for action column) |
+| `title` | header |
+| `align` / `width` / `fixed` | passed through to NaiveUI DataTable |
+| `render` | JSX / VNode custom render |
+
+### `columnChecks`
+
+`useNaivePaginatedTable` exposes column visibility (paired with `<TableHeaderOperation v-model:columns="columnChecks">`).
+
+### Methods
+
+| Method | Use |
+|---|---|
+| `getData()` | re-fetch with current `apiParams` (preserve page) |
+| `getDataByPage(page?)` | jump to page (default 1) |
+| `mobilePagination` | mobile pagination object (already wired to `apiParams`) |
+| `searchParams` | v-model on the search form |
+| `resetSearchParams` | reset to initial values |
+
+## useTableOperate (CRUD kit)
 
 ```typescript
-import { useNaiveTable } from '@/hooks/common/table';
-
-const { columns, scrollX } = useNaiveTable({
-  columns: () => [
-    { key: 'userName', title: 'Username', width: 150 },
-    { key: 'email', title: 'Email', minWidth: 200 },
-    { key: 'actions', title: 'Actions', width: 120, fixed: 'right' }
-  ]
-});
-```
-
-### useTableOperate
-
-Manages CRUD UI states:
-
-```typescript
-import { useTableOperate } from '@/hooks/common/table';
-
 const {
-  drawerVisible,
-  operateType,      // 'add' | 'edit'
-  editingData,
-  handleAdd,
-  handleEdit,
-  checkedRowKeys,
-  onBatchDeleted,
-  onDeleted
+  drawerVisible,        // drawer visibility
+  operateType,          // 'add' | 'edit'
+  editingData,          // row being edited
+  checkedRowKeys,       // selected row keys (batch delete)
+  handleAdd,            // open drawer in add mode
+  handleEdit,           // open drawer in edit mode
+  handleBatchDelete,    // call batch-delete API + refresh
+  onBatchDeleted,       // post-batch-delete (clear selection)
+  onDeleted,            // post-single-delete
 } = useTableOperate(data, getData);
-
-// Open add drawer
-handleAdd();
-
-// Open edit drawer with data
-handleEdit(rowData);
 ```
 
-## Data Transformer
+## Pair with permission buttons
 
-The `transformer` function converts backend pagination response to the standard format:
-
-```typescript
-transformer: (response) => ({
-  data: response.data.records,   // Table data array
-  pageNum: response.current,     // Current page number
-  pageSize: response.size,       // Items per page
-  total: response.total          // Total items
-})
+```vue
+<TableHeaderOperation v-model:columns="columnChecks" :loading="loading" @refresh="getData">
+  <NButton v-if="hasAuth('B_HR_EMP_CREATE')" @click="handleAdd">Add</NButton>
+  <NPopconfirm
+    v-if="hasAuth('B_HR_EMP_DELETE')"
+    @positive-click="handleBatchDelete">
+    <template #trigger>
+      <NButton :disabled="!checkedRowKeys.length">Batch delete</NButton>
+    </template>
+  </NPopconfirm>
+</TableHeaderOperation>
 ```
 
-## Column Visibility
+Full sample: [HR employee list](../../../web/src/views/hr/employee/index.vue).
 
-Columns can be shown/hidden at runtime. The `columns` reactive array tracks visibility state.
+## CLI auto-generation
 
-## Refresh
+`make cli-gen-web MOD=xxx` produces a list page wired with `useNaivePaginatedTable` + `useTableOperate`, including search form, drawer, action column, batch delete. Manual code should follow the same template.
 
-Call `getData()` to refresh the table data. It uses the current pagination and filter parameters.
+## See also
+
+- [Development guide](/en/backend/development) — end-to-end CRUD module
+- Backend [API conventions / pagination](/en/backend/api#pagination)

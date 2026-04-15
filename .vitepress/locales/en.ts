@@ -82,24 +82,61 @@ const enConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
           text: 'Getting Started',
           items: [
             { text: 'Introduction', link: '/en/backend/intro' },
-            { text: 'Architecture', link: '/en/backend/architecture' }
+            { text: 'Architecture', link: '/en/backend/architecture' },
+            { text: 'Commands', link: '/en/backend/commands' },
+            { text: 'Development Guide', link: '/en/backend/development' }
           ]
         },
         {
-          text: 'Core',
+          text: 'Routing / Schema',
           items: [
-            { text: 'Models', link: '/en/backend/models' },
-            { text: 'API Routes', link: '/en/backend/api' },
-            { text: 'Auth & RBAC', link: '/en/backend/auth' },
-            { text: 'CRUD Base', link: '/en/backend/crud' },
-            { text: 'Response Codes', link: '/en/backend/codes' }
+            { text: 'API Conventions', link: '/en/backend/api' },
+            { text: 'CRUDRouter', link: '/en/backend/crud-router' },
+            { text: 'CRUDBase', link: '/en/backend/crud' },
+            { text: 'Schema Base', link: '/en/backend/schema' },
+            { text: 'Response Codes', link: '/en/backend/codes' },
+            { text: 'app.utils Facade', link: '/en/backend/utils' }
+          ]
+        },
+        {
+          text: 'Core Mechanisms',
+          items: [
+            { text: 'Autodiscover', link: '/en/backend/core/autodiscover' },
+            { text: 'Startup Init & Reconciliation', link: '/en/backend/init-data' },
+            { text: 'Resource IDs (Sqids)', link: '/en/backend/core/sqids' },
+            { text: 'Event Bus', link: '/en/backend/core/events' },
+            { text: 'State Machine', link: '/en/backend/core/state-machine' }
+          ]
+        },
+        {
+          text: 'Data',
+          items: [
+            { text: 'Data Models (System)', link: '/en/backend/models' },
+            { text: 'Model Mixins', link: '/en/backend/mixins' },
+            { text: 'Switching Database', link: '/en/backend/database' },
+            { text: 'Cache', link: '/en/backend/cache' }
+          ]
+        },
+        {
+          text: 'Auth & Permissions',
+          items: [
+            { text: 'Authentication (JWT / token_version)', link: '/en/backend/auth' },
+            { text: 'RBAC (menu/api/button)', link: '/en/backend/rbac' },
+            { text: 'Data Scope', link: '/en/backend/data-scope' }
+          ]
+        },
+        {
+          text: 'Business Modules',
+          items: [
+            { text: 'HR (reference)', link: '/en/backend/business/hr' }
           ]
         },
         {
           text: 'Operations',
           items: [
             { text: 'Configuration', link: '/en/backend/config' },
-            { text: 'Deployment', link: '/en/backend/deployment' }
+            { text: 'Deployment', link: '/en/backend/deployment' },
+            { text: 'Monitoring (Radar / Guard)', link: '/en/backend/radar' }
           ]
         }
       ],

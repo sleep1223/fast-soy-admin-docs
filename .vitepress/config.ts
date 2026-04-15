@@ -32,6 +32,12 @@ export default defineConfig({
   ],
   assetsDir: 'public',
   srcDir: 'src',
+  // 文档里大量引用 app/ 与 web/ 下的源码路径作为相对链接，
+  // 这些链接在 GitHub 视图下能跳转，但 VitePress 看不到对应 .md/.html。
+  // 用正则放行这类源码路径的 dead link 检查。
+  ignoreDeadLinks: [
+    /\.\.\/(\.\.\/)+(app|web|tortoise-orm|migrations|deploy|tests)\//
+  ],
   themeConfig: {
     logo: '/logo.svg',
     socialLinks: [
@@ -116,24 +122,61 @@ export default defineConfig({
           text: '开始',
           items: [
             { text: '简介', link: '/backend/intro' },
-            { text: '架构', link: '/backend/architecture' }
+            { text: '架构', link: '/backend/architecture' },
+            { text: '命令参考', link: '/backend/commands' },
+            { text: '开发指南', link: '/backend/development' }
           ]
         },
         {
-          text: '核心',
+          text: '路由 / Schema',
           items: [
-            { text: '数据模型', link: '/backend/models' },
-            { text: 'API 路由', link: '/backend/api' },
-            { text: '认证与权限', link: '/backend/auth' },
-            { text: 'CRUD 基类', link: '/backend/crud' },
-            { text: '响应码', link: '/backend/codes' }
+            { text: 'API 约定', link: '/backend/api' },
+            { text: 'CRUDRouter', link: '/backend/crud-router' },
+            { text: 'CRUDBase', link: '/backend/crud' },
+            { text: 'Schema 基类', link: '/backend/schema' },
+            { text: '响应码', link: '/backend/codes' },
+            { text: 'app.utils 入口', link: '/backend/utils' }
+          ]
+        },
+        {
+          text: '核心机制',
+          items: [
+            { text: '自动发现', link: '/backend/core/autodiscover' },
+            { text: '启动初始化与对账', link: '/backend/init-data' },
+            { text: '资源 ID（Sqids）', link: '/backend/core/sqids' },
+            { text: '事件总线', link: '/backend/core/events' },
+            { text: '状态机', link: '/backend/core/state-machine' }
+          ]
+        },
+        {
+          text: '数据',
+          items: [
+            { text: '数据模型（System）', link: '/backend/models' },
+            { text: '模型 Mixin', link: '/backend/mixins' },
+            { text: '切换数据库', link: '/backend/database' },
+            { text: '缓存', link: '/backend/cache' }
+          ]
+        },
+        {
+          text: '认证与权限',
+          items: [
+            { text: '认证（JWT / token_version）', link: '/backend/auth' },
+            { text: 'RBAC（菜单/API/按钮）', link: '/backend/rbac' },
+            { text: '数据权限（data_scope）', link: '/backend/data-scope' }
+          ]
+        },
+        {
+          text: '业务模块',
+          items: [
+            { text: 'HR 管理（参考样例）', link: '/backend/business/hr' }
           ]
         },
         {
           text: '运维',
           items: [
             { text: '配置', link: '/backend/config' },
-            { text: '部署', link: '/backend/deployment' }
+            { text: '部署', link: '/backend/deployment' },
+            { text: '监控（Radar / Guard）', link: '/backend/radar' }
           ]
         }
       ],

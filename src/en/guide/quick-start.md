@@ -1,132 +1,115 @@
 # Quick Start
 
-This document will help you start the project from scratch.
-
-## Environment Preparation
-
-Make sure your environment meets the following requirements:
+## Prerequisites
 
 | Tool | Version |
 |------|---------|
-| Git | - |
-| Python | >= 3.12 |
-| Node.js | >= 20.0.0 |
+| Git | — |
+| Python | ≥ 3.12 |
+| Node.js | ≥ 20.0.0 |
 | uv | latest |
-| pnpm | >= 10.5 |
+| pnpm | ≥ 10.5 |
+| make | any |
 
-## Get the Code
+## Get the code
 
 ```bash
 git clone https://github.com/sleep1223/fast-soy-admin.git
 cd fast-soy-admin
 ```
 
-## Method 1: Docker Deployment (Recommended)
+## Option A: Docker (recommended)
 
 ```bash
-docker compose up -d
+make up           # == docker compose up -d
 ```
 
-Visit `http://localhost:1880`. Services include:
-- **Nginx** (:1880) — Frontend + API proxy
-- **FastAPI** (:9999) — Backend API
-- **Redis** (:6379) — Cache
+Visit `http://localhost:1880`. Services:
 
-Update and redeploy:
+- **Nginx** (:1880) — frontend + API reverse-proxy
+- **FastAPI** (:9999) — backend API
+- **Redis** (:6379) — cache
 
 ```bash
-docker compose down && docker compose up -d
+make logs         # follow all logs
+make down         # stop & remove containers
 ```
 
-## Method 2: Local Development
-
-### Backend Setup
+## Option B: Local development
 
 ```bash
-# Install dependencies
-uv sync
-
-# Start backend server (port 9999)
-uv run python run.py
+make install-all  # install backend + frontend deps
+make initdb       # first-time DB init (only once)
+make dev          # start backend (:9999) and frontend (:9527) together; Ctrl+C to stop both
 ```
 
-### Frontend Setup
+Or run them separately:
 
 ```bash
-# Install dependencies
-cd web && pnpm install
-
-# Start dev server (port 9527)
-pnpm dev
+make run          # backend only
+make web-dev      # frontend only
 ```
 
-## VSCode Plugins
+## Default accounts
 
-Recommended plugins for development:
+After `make initdb`, the seed users (password = `123456`):
 
-- [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar) — Vue language service
-- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) — Code checking
-- [UnoCSS](https://marketplace.visualstudio.com/items?itemName=antfu.unocss) — UnoCSS hints
-- [Iconify IntelliSense](https://marketplace.visualstudio.com/items?itemName=antfu.iconify) — Icon preview
-- [i18n Ally](https://marketplace.visualstudio.com/items?itemName=Lokalise.i18n-ally) — i18n plugin
-- [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python) — Python support
-- [Ruff](https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff) — Python linting
-- [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) — Python type checking
+| User | Roles |
+|------|-------|
+| `Soybean` | `R_SUPER` |
+| `Super` | `R_SUPER` |
+| `Admin` | `R_ADMIN` |
+| `User` | `R_USER` |
 
-## Project Structure
+The HR demo (auto-loaded by `app/business/hr/init_data.py`) adds 9 more accounts (`9001`–`9009`, password `123456`) including 5 department managers; see [HR module](/en/backend/business/hr) for the full matrix.
+
+## What's next
+
+- [Development guide](/en/backend/development) — end-to-end CRUD module from `make cli-init` to deployable
+- [Commands reference](/en/backend/commands) — every `make` target
+- [Architecture](/en/backend/architecture) — layering, RBAC, lifecycle
+- [Response codes](/en/backend/codes) — the unified business code convention
+
+## Project structure
 
 ```
 fast-soy-admin/
-├── app/                       # Backend (FastAPI)
-│   ├── __init__.py            # App factory, middleware, startup hooks
-│   ├── api/v1/                # API routers
-│   │   ├── auth/              # Authentication (login, token refresh)
-│   │   ├── route/             # Dynamic route management
-│   │   └── system_manage/     # System management (users, roles, menus)
-│   ├── controllers/           # Business logic layer
-│   ├── models/system/         # Tortoise ORM models
-│   ├── schemas/               # Pydantic request/response schemas
-│   ├── core/                  # Core modules (init, auth, CRUD, middleware)
-│   ├── settings/config.py     # Environment configuration
-│   └── utils/                 # Utilities (security, tools)
-├── web/                       # Frontend (Vue3)
-│   ├── src/
-│   │   ├── views/             # Page components
-│   │   ├── service-alova/     # HTTP client + API endpoints
-│   │   ├── store/modules/     # Pinia state management
-│   │   ├── router/            # Elegant Router + guards
-│   │   ├── layouts/           # Layout components
-│   │   ├── components/        # Reusable components
-│   │   ├── locales/           # i18n (zh-CN, en-US)
-│   │   ├── hooks/             # Vue composables
-│   │   └── typings/           # TypeScript declarations
-│   └── packages/              # Internal monorepo packages
-├── deploy/                    # Docker deployment configs
-├── migrations/                # Database migrations (Aerich)
-├── docker-compose.yml         # Docker Compose orchestration
-├── pyproject.toml             # Backend dependencies
-└── run.py                     # Backend entry point
+├── app/                          # Backend (FastAPI)
+│   ├── __init__.py               # App factory, middleware, lifespan
+│   ├── core/                     # Framework infrastructure
+│   ├── system/                   # Built-in modules (auth/users/roles/menus/...)
+│   ├── business/                 # Business modules (autodiscovered)
+│   │   └── hr/                   #   reference: employees / departments / tags
+│   ├── cli/                      # Code generators
+│   └── utils/                    # Stable import facade for business modules
+├── web/                          # Frontend (Vue3 + Vite + NaiveUI)
+│   └── src/
+│       ├── views/                # Pages
+│       ├── service/api/          # API request wrappers
+│       ├── typings/api/          # TS types matching backend schemas
+│       ├── locales/              # i18n (zh-CN / en-US)
+│       ├── router/               # Dynamic router (server-issued)
+│       ├── store/                # Pinia
+│       └── hooks/                # Composables
+├── deploy/                       # Docker / Nginx
+├── migrations/                   # Tortoise migrations
+├── tests/                        # Backend unit tests
+├── Makefile                      # All common commands
+└── docker-compose.yml
 ```
 
-## npm / Python Scripts
-
-### Frontend (web/)
-
-```json
-{
-  "dev": "vite --mode test",              // Dev server
-  "build": "vite build --mode prod",      // Production build
-  "lint": "oxlint --fix && eslint --fix .",// Lint and fix
-  "typecheck": "vue-tsc --noEmit"         // Type check
-}
-```
-
-### Backend
+## Quality checks
 
 ```bash
-uv run python run.py          # Start server
-ruff check app/               # Lint
-ruff format app/              # Format
-pyright app                   # Type check
-pytest tests/ -v              # Run tests
+make check-all    # full backend + frontend gate (run before pushing)
+```
+
+Granular:
+
+```bash
+make fmt          # backend ruff fix + format
+make typecheck    # backend basedpyright
+make test         # backend pytest
+make web-lint     # frontend eslint + oxlint
+make web-typecheck # frontend vue-tsc
 ```

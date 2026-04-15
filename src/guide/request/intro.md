@@ -1,26 +1,108 @@
 # 请求
 
+前端的 HTTP 层基于 [Alova](https://alova.js.org/)（业务请求）+ Axios（部分场景兼容），统一封装在 [src/service/](../../../web/src/service/) 下。所有业务模块用同一套配置：自动加 token、自动刷 token、自动按业务码路由到登出 / 弹窗 / 错误提示。
+
+## 目录结构
+
+```
+web/src/service/
+├── api/                    # 各模块的 fetchXxx 函数
+│   ├── auth.ts
+│   ├── system-manage.ts
+│   ├── hr-manage.ts
+│   └── ...
+└── request/                # 通用请求层（拦截器、错误码处理、token 刷新）
+    └── index.ts
+```
+
 ## 环境配置
 
-- `VITE_SERVICE_SUCCESS_CODE`：成功码（默认 `0000`）
-- `VITE_SERVICE_LOGOUT_CODES`：需登出的码（`2100,2101`）
-- `VITE_SERVICE_MODAL_LOGOUT_CODES`：弹窗登出码（`2102`）
-- `VITE_SERVICE_EXPIRED_TOKEN_CODES`：刷新 Token 码（`2103`）
-- `VITE_SERVICE_BASE_URL`：请求基础地址（`/api/v1`）
+```dotenv
+# web/.env
+VITE_SERVICE_BASE_URL=/api/v1                    # 业务请求 base
+VITE_OTHER_SERVICE_BASE_URL={"demo":"/demo"}     # 其他 service（多后端）
 
-## 请求函数
+VITE_SERVICE_SUCCESS_CODE=0000                    # 视为成功的码
+VITE_SERVICE_LOGOUT_CODES=2100,2101              # 直接登出
+VITE_SERVICE_MODAL_LOGOUT_CODES=2102             # 弹窗后登出
+VITE_SERVICE_EXPIRED_TOKEN_CODES=2103            # 自动刷新 token
+```
 
-- **`createRequest`**：返回 Axios 响应数据
-- **`createFlatRequest`**：包装为 `{ data, error }` 格式
+后端响应码定义见 [响应码](../../backend/codes.md)。
 
-## 请求选项
+## 响应格式（与后端完全对应）
+
+```typescript
+interface BackendResponse<T> {
+  code: string;   // "0000" 表示成功；其他详见后端响应码
+  msg: string;    // 业务提示
+  data: T;        // 业务数据
+}
+```
+
+## 请求函数工厂
+
+`src/service/request/index.ts` 提供两种工厂：
+
+| 工厂 | 返回 | 用途 |
+|---|---|---|
+| `createRequest` | `Promise<TData>`（直接是业务 data） | 大部分业务调用 |
+| `createFlatRequest` | `Promise<{ data, error }>` | 需要自定义错误处理的场景 |
+
+使用：
+
+```typescript
+const request = createRequest({
+  baseURL: import.meta.env.VITE_SERVICE_BASE_URL,
+});
+
+export function fetchLogin(body: { userName: string; password: string }) {
+  return request.Post<Api.Auth.LoginToken>('/auth/login', body);
+}
+```
+
+## 请求选项（可在工厂里覆盖）
 
 ```typescript
 interface RequestOption {
-  onRequest: (config) => config;               // 请求拦截（加 Token）
-  isBackendSuccess: (response) => boolean;     // 判断业务成功
-  onBackendFail: (response, instance) => void; // 业务失败处理
-  transformBackendResponse: (response) => any; // 响应转换
-  onError: (error) => void;                    // 错误处理
+  onRequest:               (config) => config;          // 注入 token / 公共参数
+  isBackendSuccess:        (response) => boolean;       // 判定业务成功（默认看 code === '0000'）
+  onBackendFail:           (response, instance) => void; // 业务失败时统一处理（弹窗 / 登出 / 刷 token）
+  transformBackendResponse:(response) => any;           // 把 { code, msg, data } 拆掉，只返回 data
+  onError:                 (error) => void;             // 网络错误 / 5xx
 }
 ```
+
+完整实现见 [src/service/request/index.ts](../../../web/src/service/request/index.ts)。
+
+## 自动行为速查
+
+| 行为 | 触发条件 |
+|---|---|
+| 自动加 `Authorization: Bearer <token>` | 全部请求 |
+| 自动刷新 token + 重放原请求 | 业务码命中 `VITE_SERVICE_EXPIRED_TOKEN_CODES`（默认 `2103`） |
+| 直接登出 | 业务码命中 `VITE_SERVICE_LOGOUT_CODES`（默认 `2100,2101`） |
+| 弹窗后登出 | 业务码命中 `VITE_SERVICE_MODAL_LOGOUT_CODES`（默认 `2102`） |
+| 弹默认错误消息 | 其他非成功业务码 |
+| Promise reject | 网络错误 / 5xx / 解析失败 |
+
+业务里**不需要**关心 token 失效、刷新等基础设施——只关心业务返回值即可。
+
+## 多后端
+
+如果项目里同时连多个后端（例如主后端 + 数据看板服务），用 `createRequest` 多次构造，或在 `.env` 配 `VITE_OTHER_SERVICE_BASE_URL`：
+
+```typescript
+const reportRequest = createRequest({
+  baseURL: import.meta.env.VITE_OTHER_SERVICE_BASE_URL.report,
+});
+```
+
+详见 [代理](./proxy.md)。
+
+## 相关
+
+- [使用方式](./usage.md) — 怎么写一个 fetchXxx
+- [代理](./proxy.md) — 开发 / 生产代理
+- [对接后端](./backend.md) — 错误码 + token 行为
+- 后端：[API 约定](../../backend/api.md) / [响应码](../../backend/codes.md)

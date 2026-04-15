@@ -9,6 +9,7 @@
 | Node.js | >= 20.0.0 |
 | uv | 最新 |
 | pnpm | >= 10.5 |
+| make | 任意版本 |
 
 ## 获取代码
 
@@ -20,85 +21,82 @@ cd fast-soy-admin
 ## 方式一：Docker 部署（推荐）
 
 ```bash
-docker compose up -d
+make up           # == docker compose up -d
 ```
 
 访问 `http://localhost:1880`，服务包括：
-- **Nginx** (:1880) — 前端 + API 代理
+
+- **Nginx** (:1880) — 前端 + API 反向代理
 - **FastAPI** (:9999) — 后端 API
 - **Redis** (:6379) — 缓存
 
-更新代码后重新部署：
-
 ```bash
-docker compose down && docker compose up -d
+make logs         # 实时查看所有服务日志
+make down         # 停止并移除容器
 ```
 
 ## 方式二：本地开发
 
-### 后端
-
 ```bash
-# 安装依赖
-uv sync
-
-# 启动后端（端口 9999）
-uv run python run.py
+make install-all  # 一次性安装后端 + 前端依赖
+make initdb       # 首次初始化数据库（之后不再需要）
+make dev          # 并行启动后端(:9999) 和前端(:9527)，Ctrl+C 一起停
 ```
 
-### 前端
+分开启动也可以：
 
 ```bash
-# 安装依赖
-cd web && pnpm install
-
-# 启动开发服务器（端口 9527）
-pnpm dev
+make run          # 仅后端
+make web-dev      # 仅前端
 ```
+
+## 下一步
+
+- [开发指南](../backend/development.md) — 从 `make cli-init` 到完整 CRUD 模块的端到端流程
+- [命令参考](../backend/commands.md) — 所有 `make` 命令与对应原始命令的对照表
+- [架构](../backend/architecture.md) — 分层结构、RBAC 权限模型
+- [响应码](../backend/codes.md) — 统一业务码约定
 
 ## 项目结构
 
 ```
 fast-soy-admin/
-├── app/                       # 后端 (FastAPI)
-│   ├── __init__.py            # App 工厂，中间件注册，启动钩子
-│   ├── api/v1/                # API 路由
-│   │   ├── auth/              # 认证（登录、刷新令牌）
-│   │   ├── route/             # 动态路由管理
-│   │   └── system_manage/     # 系统管理（用户、角色、菜单）
-│   ├── controllers/           # 业务逻辑层
-│   ├── models/system/         # Tortoise ORM 模型
-│   ├── schemas/               # Pydantic 请求/响应模型
-│   ├── core/                  # 核心模块
-│   ├── settings/config.py     # 环境配置
-│   └── utils/                 # 工具函数
-├── web/                       # 前端 (Vue3)
-│   ├── src/
-│   │   ├── views/             # 页面组件
-│   │   ├── service-alova/     # HTTP 客户端 + API 接口
-│   │   ├── store/modules/     # Pinia 状态管理
-│   │   ├── router/            # Elegant Router + 路由守卫
-│   │   ├── layouts/           # 布局组件
-│   │   ├── components/        # 可复用组件
-│   │   ├── locales/           # 国际化 (zh-CN, en-US)
-│   │   └── hooks/             # Vue 组合式函数
-│   └── packages/              # 内部 monorepo 包
-├── deploy/                    # Docker 部署配置
-├── migrations/                # 数据库迁移 (Aerich)
-└── docker-compose.yml         # Docker Compose 编排
+├── app/                          # 后端 (FastAPI)
+│   ├── __init__.py               # App 工厂、中间件、生命周期
+│   ├── core/                     # 分层公共设施（CRUD、dep、中间件）
+│   ├── system/                   # 内置系统模块（auth / user / role / menu）
+│   ├── business/                 # 业务模块（autodiscover 自动加载）
+│   │   └── hr/                   #   示例：员工/部门/标签
+│   ├── cli/                      # CLI 代码生成器
+│   └── utils/                    # 业务开发者的统一导入入口
+├── web/                          # 前端 (Vue3 + Vite + NaiveUI)
+│   └── src/
+│       ├── views/                # 页面组件
+│       ├── service/api/          # API 请求封装
+│       ├── typings/api/          # TS 类型声明
+│       ├── locales/              # i18n (zh-CN / en-US)
+│       ├── router/               # 动态路由（后端下发）
+│       ├── store/                # Pinia
+│       └── hooks/                # Vue 组合式函数
+├── deploy/                       # Docker / Nginx 配置
+├── migrations/                   # Tortoise 迁移文件
+├── tests/                        # 后端单元测试
+├── Makefile                      # 所有常用命令的统一入口
+└── docker-compose.yml
 ```
 
-## 代码检查
+## 质量检查
 
 ```bash
-# 后端
-ruff check app/               # lint
-ruff format app/               # format
-pyright app                    # 类型检查
-pytest tests/ -v               # 测试
+make check-all    # 后端 + 前端所有质量检查（提交前跑）
+```
 
-# 前端
-cd web
-pnpm lint                     # ESLint + oxlint
-pnpm typecheck                # vue-tsc 类型检查
+细分命令：
+
+```bash
+make fmt          # 后端 ruff fix + format
+make typecheck    # 后端 basedpyright
+make test         # 后端 pytest
+make web-lint     # 前端 eslint + oxlint
+make web-typecheck # 前端 vue-tsc
 ```

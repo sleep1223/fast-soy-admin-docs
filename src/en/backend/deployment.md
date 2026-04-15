@@ -1,10 +1,6 @@
 # Deployment
 
-## Docker Compose (Recommended)
-
-The project includes a complete Docker Compose configuration for production deployment.
-
-### Quick Deploy
+## Docker Compose (recommended)
 
 ```bash
 git clone https://github.com/sleep1223/fast-soy-admin
@@ -12,138 +8,86 @@ cd fast-soy-admin
 docker compose up -d
 ```
 
-### Services
-
-| Service | Port | Description |
-|---------|------|-------------|
+| Service | Port | Purpose |
+|---|---|---|
 | nginx | 1880 | Frontend + API reverse proxy |
 | app | 9999 | FastAPI backend |
-| redis | 6379 | Cache layer |
+| redis | 6379 | Cache |
 
-### Architecture
+### Logs
 
-```
-Internet → Nginx (:1880)
-              ├── Static files (frontend build)
-              └── /api/* → FastAPI (:9999)
-                              └── Redis (:6379)
+```bash
+docker compose logs -f          # all services
+docker compose logs -f app      # backend only
 ```
 
-### Update & Redeploy
+### Update
 
 ```bash
 git pull
 docker compose down && docker compose up -d
 ```
 
-### View Logs
-
-```bash
-docker compose logs -f          # All services
-docker compose logs -f app      # Backend only
-docker compose logs -f nginx    # Nginx only
-```
-
-## Docker Files
-
-### Backend Dockerfile (`deploy/app.Dockerfile`)
-
-Multi-stage build:
-1. **Dependencies stage**: Install Python dependencies with uv
-2. **Runtime stage**: Copy dependencies and application code
-
-### Frontend Dockerfile (`deploy/web.Dockerfile`)
-
-Multi-stage build:
-1. **Dependencies stage**: Install Node.js dependencies with pnpm
-2. **Build stage**: Build the Vue3 application
-3. **Serve stage**: Copy build output to Nginx
-
-### Nginx Configuration (`deploy/web.conf`)
-
-```nginx
-server {
-    listen 80;
-
-    # Serve frontend static files
-    location / {
-        root /usr/share/nginx/html;
-        try_files $uri $uri/ /index.html;
-    }
-
-    # Proxy API requests to backend
-    location /api/ {
-        proxy_pass http://app:9999;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-}
-```
-
-## Manual Deployment
+## Manual deployment
 
 ### Backend
 
 ```bash
-# Install dependencies
 uv sync --no-dev
 
-# Start with uvicorn
-uvicorn app:app --host 0.0.0.0 --port 9999 --workers 4
+# Granian (recommended; matches docker setup)
+uv run granian --interface asgi --host 0.0.0.0 --port 9999 --workers 4 app:app
+
+# Or uvicorn
+uv run uvicorn app:app --host 0.0.0.0 --port 9999 --workers 4
 ```
+
+::: warning Behind a reverse proxy
+Set `PROXY_HEADERS_ENABLED=true` and `TRUSTED_HOSTS` so granian reconciles `X-Forwarded-For` / `X-Forwarded-Proto` and the real client IP reaches fastapi-guard's rate limiting. Otherwise every request looks like it comes from the proxy IP and gets banned.
+:::
 
 ### Frontend
 
 ```bash
-cd web
-pnpm install
-pnpm build
-# Copy dist/ to your web server
+cd web && pnpm install && pnpm build
+# Deploy dist/ to your web server
 ```
 
-### Nginx Configuration (Manual)
+### Nginx
 
 ```nginx
 server {
     listen 80;
-    server_name your-domain.com;
-
-    # Frontend
     root /path/to/web/dist;
-    index index.html;
 
     location / {
         try_files $uri $uri/ /index.html;
     }
 
-    # Backend API proxy
     location /api/ {
         proxy_pass http://127.0.0.1:9999;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
 ```
 
-## Redis Setup
+## Key production checklist
 
-Redis is required for caching. Install or use Docker:
+- [ ] `.env` `SECRET_KEY` rotated to a secure random value (note: this also invalidates historical sqids and JWTs)
+- [ ] `APP_DEBUG=false` (hides `/openapi.json` / Swagger)
+- [ ] `DB_URL` switched to PostgreSQL or MySQL (with appropriate driver installed)
+- [ ] `REDIS_URL` set with strong password
+- [ ] `PROXY_HEADERS_ENABLED=true` + `TRUSTED_HOSTS` if behind nginx / gateway
+- [ ] `CORS_ORIGINS` restricted to actual frontend origins
+- [ ] Logs rotated / shipped (default goes to `logs/`, retention 30 days)
+- [ ] Migrations applied: `make mm` after deploy
+- [ ] Multi-worker setup verified: only the leader writes seeds (check `app:init_done` in Redis)
 
-```bash
-# Docker
-docker run -d --name redis -p 6379:6379 redis:latest
+## See also
 
-# Or install locally
-# macOS
-brew install redis && brew services start redis
-
-# Ubuntu
-sudo apt install redis-server && sudo systemctl start redis
-```
-
-Configure the Redis URL in `.env`:
-
-```bash
-REDIS_URL=redis://localhost:6379/0
-```
+- [Configuration](/en/backend/config) — env vars
+- [Switching DB](/en/backend/database) — drivers
+- [Monitoring](/en/backend/radar) — Radar / Guard tuning

@@ -1,98 +1,173 @@
 # Configuration
 
-## Backend Configuration
+The backend reads `.env` from the project root via Pydantic Settings (`app/core/config.py`). The frontend reads `web/.env` via Vite.
 
-Configuration is managed via `pydantic-settings` in `app/settings/config.py`, loaded from the `.env` file at the project root.
+## Backend `.env`
 
-### Environment Variables
+::: code-group
+```dotenv [development]
+# ---- App ----
+APP_TITLE=FastSoyAdmin
+APP_DEBUG=true
+SECRET_KEY=015a42020f023ac2c3eda3d45fe5ca3fef8921ce63589f6d4fcdef9814cd7fa7
 
-```bash
-# .env
-SECRET_KEY=your-secret-key-change-in-production
-DEBUG=true
-
-# CORS
+# ---- CORS ----
 CORS_ORIGINS=["http://localhost:9527"]
 
-# Database
-DB_PATH=app_system.sqlite3
+# ---- DB ----
+DB_URL=sqlite://app_system.sqlite3?busy_timeout=5000
 
-# Redis
+# ---- Redis ----
 REDIS_URL=redis://localhost:6379/0
 
-# JWT
-ACCESS_TOKEN_EXPIRE=720        # Minutes (12 hours)
-REFRESH_TOKEN_EXPIRE=7         # Days
+# ---- JWT ----
+JWT_ALGORITHM=HS256
+JWT_ACCESS_TOKEN_EXPIRE_MINUTES=720         # 12 hours
+JWT_REFRESH_TOKEN_EXPIRE_MINUTES=10080      # 7 days
+
+# ---- Monitoring ----
+RADAR_ENABLED=true
+
+# ---- Rate limit (fastapi-guard) ----
+GUARD_ENABLED=true
+GUARD_RATE_LIMIT=100
+GUARD_RATE_LIMIT_WINDOW=60
+GUARD_AUTO_BAN_THRESHOLD=10
+GUARD_AUTO_BAN_DURATION=21600
+
+# ---- Reverse-proxy header reconciliation ----
+PROXY_HEADERS_ENABLED=false
+TRUSTED_HOSTS=["127.0.0.1"]
+
+# ---- Logging ----
+LOG_INFO_RETENTION=30 days
 ```
 
-### Settings Class
+```dotenv [production diffs]
+APP_DEBUG=false
+SECRET_KEY=<generate a fresh 256-bit random>
+
+CORS_ORIGINS=["https://your-admin.example.com"]
+
+DB_URL=postgres://user:pwd@db:5432/fastsoyadmin?maxsize=50&minsize=5
+
+REDIS_URL=redis://:strong-password@redis:6379/0
+
+# Required behind Nginx / a gateway
+PROXY_HEADERS_ENABLED=true
+TRUSTED_HOSTS=["10.0.0.0/8"]
+```
+:::
+
+## All settings
+
+| Setting | Default | Purpose |
+|---|---|---|
+| `VERSION` | `0.1.0` | application version (affects OpenAPI) |
+| `APP_TITLE` | `FastSoyAdmin` | OpenAPI title |
+| `APP_DESCRIPTION` | `Description` | OpenAPI description |
+| `APP_DEBUG` | `false` | enables `/openapi.json` + Swagger UI |
+| `SECRET_KEY` | dev built-in | JWT signing key + Sqids alphabet seed (**must change in prod**) |
+| `CORS_ORIGINS` | `["*"]` | allowed origins |
+| `CORS_ALLOW_CREDENTIALS` | `true` | — |
+| `CORS_ALLOW_METHODS` | `["*"]` | — |
+| `CORS_ALLOW_HEADERS` | `["*"]` | — |
+| `DB_URL` | `sqlite://app_system.sqlite3?busy_timeout=5000` | Tortoise URL; see [Switching DB](/en/backend/database) |
+| `TORTOISE_ORM` | auto-built | **don't set manually**; multi-line JSON in `.env` is fragile |
+| `REDIS_URL` | `redis://redis:6379/0` | Redis URL |
+| `JWT_ALGORITHM` | `HS256` | — |
+| `JWT_ACCESS_TOKEN_EXPIRE_MINUTES` | `720` | access token lifetime (minutes) |
+| `JWT_REFRESH_TOKEN_EXPIRE_MINUTES` | `10080` | refresh token lifetime (minutes) |
+| `DATETIME_FORMAT` | `"%Y-%m-%d %H:%M:%S"` | format for `to_dict`'s `fmtCreatedAt` etc. |
+| `RADAR_ENABLED` | `true` | enable fastapi-radar |
+| `GUARD_ENABLED` | `true` | enable fastapi-guard rate limiting |
+| `GUARD_RATE_LIMIT` | `100` | requests allowed per window |
+| `GUARD_RATE_LIMIT_WINDOW` | `60` | window size (seconds) |
+| `GUARD_AUTO_BAN_THRESHOLD` | `10` | violations before auto-ban |
+| `GUARD_AUTO_BAN_DURATION` | `21600` | auto-ban duration (seconds; default 6h) |
+| `PROXY_HEADERS_ENABLED` | `false` | reconcile `X-Forwarded-*` to true client IP |
+| `TRUSTED_HOSTS` | `["127.0.0.1"]` | trusted upstream list (IP / CIDR) |
+| `LOG_INFO_RETENTION` | `30 days` | log retention; supports `seconds/minutes/hours/days/weeks/months/years` |
+| `PROJECT_ROOT` | parent of `app/` | auto-derived |
+| `BASE_DIR` | `PROJECT_ROOT.parent` | auto-derived |
+| `LOGS_ROOT` | `BASE_DIR / "logs/"` | mkdir at startup |
+| `STATIC_ROOT` | `BASE_DIR / "static/"` | mkdir at startup |
+
+## Module-local config
+
+A business module can declare its own Settings in `app/business/<name>/config.py`:
 
 ```python
-class Settings(BaseSettings):
-    SECRET_KEY: str
-    DEBUG: bool = True
-    CORS_ORIGINS: list[str] = ["*"]
-    DB_PATH: str = "app_system.sqlite3"
-    REDIS_URL: str = "redis://localhost:6379/0"
-    ACCESS_TOKEN_EXPIRE: int = 720
-    REFRESH_TOKEN_EXPIRE: int = 7
+# app/business/hr/config.py
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-    model_config = SettingsConfigDict(env_file=".env")
+class HRSettings(BaseSettings):
+    HR_TAG_PER_EMPLOYEE_LIMIT: int = 5
+    DB_URL: str | None = None              # if different from main, autodiscover registers a separate connection
+
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore", env_prefix="HR_")
+
+BIZ_SETTINGS = HRSettings()
 ```
 
-## Frontend Configuration
+`env_prefix` carves out a namespace: in `.env` use `HR_TAG_PER_EMPLOYEE_LIMIT=8`, `HR_DB_URL=postgres://...`.
 
-### Common (.env)
+Business code:
 
-```bash
-# Authentication mode: static (frontend) or dynamic (backend)
+```python
+from app.business.hr.config import BIZ_SETTINGS
+limit = BIZ_SETTINGS.HR_TAG_PER_EMPLOYEE_LIMIT
+```
+
+For standalone DB behavior see [Autodiscover / standalone DB](/en/backend/core/autodiscover#business-module-standalone-database).
+
+## Frontend `.env`
+
+```dotenv
+# web/.env
+
 VITE_AUTH_ROUTE_MODE=dynamic
-
-# Default home route after login
 VITE_ROUTE_HOME=home
 
-# Response code handling
 VITE_SERVICE_SUCCESS_CODE=0000
 VITE_SERVICE_LOGOUT_CODES=2100,2101
 VITE_SERVICE_MODAL_LOGOUT_CODES=2102
 VITE_SERVICE_EXPIRED_TOKEN_CODES=2103
 
-# Icon prefixes
+VITE_SERVICE_BASE_URL=/api/v1
+VITE_OTHER_SERVICE_BASE_URL={"demo": "/demo"}
+
 VITE_ICON_PREFIX=icon
 VITE_ICON_LOCAL_PREFIX=icon-local
 ```
 
-### Test Environment (.env.test)
+See [Frontend / Request / intro](/en/guide/request/intro).
 
-```bash
-VITE_SERVICE_BASE_URL=/api/v1
-```
+## Code style
 
-### Production Environment (.env.prod)
+- `ruff.toml`: line 200, double-quote, sorted imports, rules E/F/I
+- basedpyright: standard mode, target `app/` (config in `pyproject.toml` `[tool.basedpyright]`)
+- Frontend ESLint: `@soybeanjs/eslint-config-vue`
 
-```bash
-VITE_SERVICE_BASE_URL=/api/v1
-```
+See [Commands](/en/backend/commands) and [Backend style](/en/standard/backend).
 
-## Code Quality Configuration
+## Rotating SECRET_KEY
 
-### Ruff (ruff.toml)
+`SECRET_KEY` is used for two things:
 
-```toml
-line-length = 200
-select = ["E", "F", "I"]
-quote-style = "double"
-```
+1. JWT HMAC signing → rotation **invalidates all existing JWTs** (everyone re-logs in)
+2. Sqids alphabet seed → rotation **invalidates all historical sqids** (external links / bookmarks / integrations break)
 
-### Pyright (pyproject.toml)
+If you must rotate in production:
 
-```toml
-[tool.pyright]
-include = ["app"]
-pythonVersion = "3.12"
-typeCheckingMode = "standard"
-```
+- announce + give external integrations time to migrate
+- bump an API version
+- you can keep the old SECRET_KEY around for "dual signing" temporarily (custom code required)
 
-### ESLint
+See [Sqids / rotating SECRET_KEY](/en/backend/core/sqids#rotating-secret_key).
 
-Based on `@soybeanjs/eslint-config-vue` with oxlint integration.
+## See also
+
+- [Switching DB](/en/backend/database) — full `DB_URL` syntax
+- [Deployment](/en/backend/deployment) — Nginx / Docker / proxy
+- [Monitoring](/en/backend/radar) — RADAR / GUARD details

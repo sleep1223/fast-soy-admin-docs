@@ -1,39 +1,68 @@
-# System Theme
+# Theme System
 
-The system theme implementation consists of two parts: the component library theme configuration (Naive UI) and the UnoCSS theme configuration. A unified set of theme variables controls both.
+Two parts:
 
-## Principle
+- **Component library theme** — Naive UI applies a set of semantic colors + dark mode via `n-config-provider`
+- **UnoCSS theme** — the same color scale is injected into UnoCSS so templates can `class="text-primary bg-primary-100"`
 
-1. Define theme configuration variables (colors, layout parameters, etc.)
-2. Generate component library theme variables from these configurations
-3. Generate CSS variables and pass them to UnoCSS
+One source of truth, both downstream layers stay in sync — no hard-coded colors anywhere.
 
-## Theme Structure
+## How it works
 
 ```
-src/theme/
-├── settings.ts    # Default theme configuration and override configuration
-└── vars.ts        # CSS variables corresponding to theme tokens
+src/theme/settings.ts (theme defaults)
+       │
+       ▼
+useThemeStore (Pinia)              ── user-selected color / mode
+       │
+       ├─→ generate Naive UI overrides ── inject into NConfigProvider
+       └─→ generate CSS variables + UnoCSS ── written to :root and unocss.config.ts theme.colors
 ```
 
-## Theme Colors
+Source: [src/theme/](../../../web/src/theme/) and [src/store/modules/theme/](../../../web/src/store/modules/theme/).
 
-The system provides five semantic colors, each with a palette of 10 shades:
+## Theme colors
 
-- **Primary** — Main brand color
-- **Info** — Informational elements
-- **Success** — Success states
-- **Warning** — Warning states
-- **Error** — Error states
+5 **semantic colors**, each with 11 shades (50–950):
 
-## Dark Mode
+| Semantic | Default | Use |
+|---|---|---|
+| `primary` | blue-green | primary actions / highlight |
+| `info` | blue | neutral info |
+| `success` | green | success state |
+| `warning` | orange | warning |
+| `error` | red | errors / destructive actions |
 
-Dark mode is activated by adding `class="dark"` to the `<html>` element. The theme system automatically generates corresponding dark mode colors.
+Each color auto-derives `text-{name}` / `bg-{name}` / `border-{name}` UnoCSS utilities.
 
-## Layout Modes
+## Dark mode
 
-The project supports multiple layout modes:
+- Toggle: top-right "theme mode" button (light / dark / follow system)
+- Implementation: add / remove `class="dark"` on `<html>`
+- UnoCSS uses the `dark:` prefix: `<div class="bg-white dark:bg-gray-800">`
 
-- **Vertical** — Sidebar on the left, content on the right
-- **Horizontal** — Top navigation, content below
-- **Mix** — Combined sidebar and top navigation
+## Layout modes
+
+| Mode | Use |
+|---|---|
+| Vertical | standard back-office (default) |
+| Horizontal | top nav, no sidebar |
+| Vertical-Mix | multi-level sidebar (with secondary panel) |
+| Horizontal-Mix | top nav + sidebar |
+
+Toggle: user picks in the settings drawer; `useThemeStore.layout.mode` persists to localStorage.
+
+## i18n & theme
+
+- Theme color: unrelated to i18n
+- Mode / layout: unrelated to i18n
+- Theme-related labels (e.g. "Theme color" in the drawer) use i18n keys
+
+## Where defaults live
+
+[src/theme/settings.ts](../../../web/src/theme/settings.ts) is the **project-level default** (used on first visit / after clearing local storage). The user's actual choice persists in `localStorage.themeColor` / `themeScheme` / `layout` etc.
+
+## See also
+
+- [Configuration](/en/guide/theme/config) — all theme fields
+- [UnoCSS theme](/en/guide/theme/unocss) — how to use theme colors in classes

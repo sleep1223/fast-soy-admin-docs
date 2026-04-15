@@ -1,76 +1,90 @@
-# Dynamic Route
+# Dynamic Routes
 
-FastSoyAdmin supports two route permission modes:
+FastSoyAdmin uses **dynamic routing** by default: menus / route meta are delivered by the backend per role and mounted into vue-router after login. This is safer and more flexible than the "frontend-defined + roles meta filter" static mode.
 
-## Static Route Mode
+## Mode selection
 
-Set `VITE_AUTH_ROUTE_MODE=static` in `.env`.
+```dotenv
+# web/.env
+VITE_AUTH_ROUTE_MODE=dynamic       # default; recommended
+# VITE_AUTH_ROUTE_MODE=static      # only for simple cases without back-office mgmt
+```
 
-Routes are defined in the frontend. The `roles` field in route meta controls access:
+| Mode | Route source | Permission filter | Suitable |
+|---|---|---|---|
+| `dynamic` | backend `GET /api/v1/route/user-routes` | backend pre-filters | standard back-office |
+| `static` | frontend `views/` + `meta.roles` | frontend filters using `userInfo.roles` | simple / offline demo |
+
+::: warning Static mode isn't safe
+In `static` mode, "permission" is just UI hiding — direct URL access still renders. Backend APIs must reject. Use `dynamic` in production with the backend's `DependPermission`.
+:::
+
+## Workflow
+
+```
+┌──────────────────────────────────────────────────┐
+│ 1. POST /api/v1/auth/login                        │
+│ 2. Save token + refreshToken in localStorage     │
+│ 3. GET /api/v1/auth/user-info                    │
+│      → roles, buttons, mustChangePassword         │
+│ 4. GET /api/v1/route/constant-routes              │
+│      → public routes (login / 403 / 404 / 500 / home) │
+│ 5. GET /api/v1/route/user-routes                  │
+│      → menu tree visible to current user + home   │
+│ 6. Frontend transforms and mounts to vue-router   │
+│ 7. Navigate to home or `redirect` query           │
+└──────────────────────────────────────────────────┘
+```
+
+Implementation in [src/router/guard/route.ts](../../../web/src/router/guard/route.ts) and backend [RBAC](/en/backend/rbac).
+
+## How the backend decides visible routes
+
+- At startup the leader worker writes each role's `menu_ids` to Redis `role:{code}:menus`
+- On `GET /user-routes`:
+  - `R_SUPER` → all `constant=False` menus
+  - others → union of the user's roles' `menu_ids`, then back-fill parents
+- Convert to a tree and return; frontend mounts to router
+
+## Where route meta comes from
+
+| meta | Source |
+|---|---|
+| `title` / `i18nKey` | `Menu.menu_name` / `Menu.i18n_key` |
+| `icon` / `localIcon` | `Menu.icon` + `Menu.icon_type` |
+| `order` | `Menu.order` |
+| `keepAlive` / `multiTab` / `hideInMenu` / `activeMenu` | same-named backend fields |
+| `constant` | `Menu.constant` (public route) |
+| `href` | `Menu.href` (external link) |
+| `component` | `Menu.component` (e.g. `view.manage_user`) |
+
+## Force-refresh dynamic routes
+
+After admin changes roles / menus, to take effect **immediately** for the user:
 
 ```typescript
-{
-  name: 'manage_user',
-  path: '/manage/user',
-  meta: {
-    title: 'User Management',
-    roles: ['R_SUPER', 'R_ADMIN']  // Only these roles can access
-  }
-}
+import { useRouteStore } from '@/store/modules/route';
+
+const routeStore = useRouteStore();
+await routeStore.initAuthRoute();    // re-fetch and remount
 ```
 
-If `roles` is empty or not set, the route is accessible to all authenticated users.
+Or have the user re-login.
 
-## Dynamic Route Mode
+::: tip Backend cache impact
+Route data comes from Redis (loaded at startup). After backend CUD, you must call `load_role_permissions(redis, role_code=...)` to incrementally refresh — otherwise the frontend still fetches stale data. See backend [Cache](/en/backend/cache).
+:::
 
-Set `VITE_AUTH_ROUTE_MODE=dynamic` in `.env`.
+## Super admin
 
-Routes are fetched from the backend API `GET /api/v1/route/routes`. The backend returns only the routes the current user has permission to access, based on their roles.
+`R_SUPER` has every non-constant menu + every button + `data_scope=all`. Any `R_SUPER` user after login:
 
-### How It Works
+- Route tree = `Menu.filter(constant=False)`
+- Buttons = `Button.all()`
+- API checks bypassed
 
-1. User logs in and receives a JWT token
-2. Frontend calls `GET /route/routes` with the token
-3. Backend checks user's roles → role's menus → builds route tree
-4. Frontend receives the route tree and registers routes dynamically
-5. Menu is generated from the route tree
+## See also
 
-### Backend Route Response Format
-
-```json
-{
-  "code": "0000",
-  "data": {
-    "home": "home",
-    "routes": [
-      {
-        "name": "manage",
-        "path": "/manage",
-        "component": "layout.base",
-        "meta": {
-          "title": "manage",
-          "i18nKey": "route.manage",
-          "icon": "carbon:cloud-service-management",
-          "order": 9
-        },
-        "children": [
-          {
-            "name": "manage_user",
-            "path": "/manage/user",
-            "component": "view.manage_user",
-            "meta": {
-              "title": "manage_user",
-              "i18nKey": "route.manage_user",
-              "icon": "ic:round-manage-accounts"
-            }
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-### Super Admin
-
-The role `R_SUPER` bypasses all permission checks and has access to all routes.
+- [Route structure](/en/guide/router/structure)
+- [Route guard](/en/guide/router/guard)
+- Backend: [Auth](/en/backend/auth) / [RBAC](/en/backend/rbac)

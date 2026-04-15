@@ -1,40 +1,33 @@
 # Code Standards
 
-FastSoyAdmin follows strict code standards for both frontend and backend to ensure consistency and maintainability.
+Each topic has its own page:
 
-## Frontend Standards
+- [Naming conventions](/en/standard/naming) — files / classes / functions / paths / role / button / route names
+- [Vue style](/en/standard/vue) — SFC script order, template rules
+- [Backend style](/en/standard/backend) — enforced checklist (response, schema, API, CRUD, permissions, models)
 
-- Based on [SoybeanJS ESLint Config](https://github.com/soybeanjs/eslint-config)
-- ESLint + oxlint for linting
-- simple-git-hooks for pre-commit checks
-- Conventional Commits for commit messages
-- vue-tsc for TypeScript type checking
+## Toolchain
 
-## Backend Standards
+| Concern | Tool | Command |
+|---|---|---|
+| Backend lint / format | Ruff (line 200, double-quote, rules E/F/I) | `make fmt` / `make lint` |
+| Backend types | basedpyright (standard mode) | `make typecheck` |
+| Backend tests | pytest | `make test` |
+| Frontend lint | ESLint (`@soybeanjs/eslint-config-vue`) + oxlint | `make web-lint` |
+| Frontend types | vue-tsc | `make web-typecheck` |
+| Full stack | — | `make check-all` |
+| Pre-commit hook | simple-git-hooks | auto-installed via `cd web && pnpm install` |
 
-- [Ruff](https://docs.astral.sh/ruff/) for linting and formatting
-- [Pyright](https://microsoft.github.io/pyright/) for type checking
-- Line length: 200 characters
-- Double quotes for strings
-- Rules: E (pycodestyle), F (pyflakes), I (isort)
-
-## Gate Checks
-
-Always run these checks before submitting code:
-
-### Backend
+## Pre-commit gate
 
 ```bash
-ruff check app/        # Lint
-ruff format app/       # Format
-pyright app            # Type check
-pytest tests/ -v       # Tests
+make check-all
 ```
 
-### Frontend
+Or run only the side you touched: `make check` / `make web-check`.
 
-```bash
-cd web
-pnpm lint              # ESLint + oxlint
-pnpm typecheck         # vue-tsc type check
-```
+## Recommended VS Code setup
+
+- Backend: install [Charliermarsh.ruff](https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff) + [DetachHead.basedpyright](https://marketplace.visualstudio.com/items?itemName=detachhead.basedpyright)
+- Frontend: install [Vue.volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) + [dbaeumer.vscode-eslint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+- Auto-fix on save: `"editor.codeActionsOnSave": { "source.fixAll": "explicit" }`
