@@ -66,7 +66,7 @@ PROXY_HEADERS_ENABLED=true
 TRUSTED_HOSTS=["10.0.0.0/8"]   # 信任的上游
 ```
 
-否则 fastapi-guard 看到的所有请求都来自 nginx 容器 IP，会触发误封。详见 [部署](../../backend/deployment.md)。
+否则 [fastapi-guard](https://fastapi-guard.com/) 看到的所有请求都来自 nginx 容器 IP，会触发误封。详见 [部署](../../backend/deployment.md)。
 :::
 
 ## 多后端 / 多服务

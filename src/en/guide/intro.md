@@ -16,7 +16,7 @@ The repo is a monorepo: `/app` is the backend, `/web` is the frontend, `/deploy`
 - **Code generators** — `make cli-init / cli-gen / cli-gen-web` end-to-end from a model to frontend + backend CRUD
 - **Redis-accelerated** — role permissions / constant routes / token_version cached, falls back to DB on outage
 - **State machine / event bus / Sqid IDs** — framework-level primitives
-- **Production-ready** — fastapi-radar tracing + fastapi-guard rate limit + multi-worker init lock
+- **Production-ready** — in-house Radar tracing + [fastapi-guard](https://fastapi-guard.com/) rate limit + multi-worker init lock
 - **Docker one-shot deploy** — Nginx + FastAPI + Redis
 
 ## How to read these docs

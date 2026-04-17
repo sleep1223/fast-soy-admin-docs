@@ -16,7 +16,7 @@
 - **代码生成器** — `make cli-init / cli-gen / cli-gen-web` 端到端从模型生成前后端 CRUD
 - **Redis 加速** — 角色权限 / 常量路由 / token_version 全部走缓存，故障时降级到数据库
 - **状态机 / 事件总线 / Sqids ID** — 框架级基础设施
-- **生产可用** — fastapi-radar 全栈追踪 + fastapi-guard 限流 + 多 worker 启动锁
+- **生产可用** — 内置 Radar 全栈追踪 + [fastapi-guard](https://fastapi-guard.com/) 限流 + 多 worker 启动锁
 - **Docker 一键部署** — Nginx + FastAPI + Redis
 
 ## 文档怎么读

@@ -28,7 +28,7 @@ JWT_REFRESH_TOKEN_EXPIRE_MINUTES=10080      # 7 days
 # ---- Monitoring ----
 RADAR_ENABLED=true
 
-# ---- Rate limit (fastapi-guard) ----
+# ---- Rate limit (fastapi-guard, https://fastapi-guard.com/) ----
 GUARD_ENABLED=true
 GUARD_RATE_LIMIT=100
 GUARD_RATE_LIMIT_WINDOW=60
@@ -79,8 +79,8 @@ TRUSTED_HOSTS=["10.0.0.0/8"]
 | `JWT_ACCESS_TOKEN_EXPIRE_MINUTES` | `720` | access token lifetime (minutes) |
 | `JWT_REFRESH_TOKEN_EXPIRE_MINUTES` | `10080` | refresh token lifetime (minutes) |
 | `DATETIME_FORMAT` | `"%Y-%m-%d %H:%M:%S"` | format for `to_dict`'s `fmtCreatedAt` etc. |
-| `RADAR_ENABLED` | `true` | enable fastapi-radar |
-| `GUARD_ENABLED` | `true` | enable fastapi-guard rate limiting |
+| `RADAR_ENABLED` | `true` | enable in-house Radar monitoring (request/SQL/exception dashboard, self-built) |
+| `GUARD_ENABLED` | `true` | enable [fastapi-guard](https://fastapi-guard.com/) rate limiting |
 | `GUARD_RATE_LIMIT` | `100` | requests allowed per window |
 | `GUARD_RATE_LIMIT_WINDOW` | `60` | window size (seconds) |
 | `GUARD_AUTO_BAN_THRESHOLD` | `10` | violations before auto-ban |

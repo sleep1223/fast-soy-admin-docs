@@ -2,12 +2,12 @@
 
 后端内置两套生产可用的监控/防护：
 
-- **fastapi-radar** — 请求 / SQL 查询 / 异常 / 系统指标 全栈追踪（含一个 Web Dashboard）
-- **fastapi-guard** — 限流 + 自动封禁（防爬虫 / 暴力破解）
+- **Radar（内置）** — 自研的请求 / SQL 查询 / 异常 / 系统指标 全栈追踪（含一个 Web Dashboard），源码位于 [`app/system/radar/`](../../../app/system/radar/)，**不是**第三方库
+- **[fastapi-guard](https://fastapi-guard.com/)** — 第三方限流 + 自动封禁（防爬虫 / 暴力破解）
 
-源码：[`app/system/radar/`](../../../app/system/radar/)、配置在 [`app/core/config.py`](../../../app/core/config.py) 与 [`app/core/init_app.py`](../../../app/core/init_app.py)。
+配置在 [`app/core/config.py`](../../../app/core/config.py) 与 [`app/core/init_app.py`](../../../app/core/init_app.py)。
 
-## fastapi-radar
+## Radar（内置）
 
 捕获每次请求的：
 
@@ -16,7 +16,7 @@
 - 该请求触发的异常
 - 业务侧主动埋的日志（`radar_log(...)`）
 
-数据写入 radar 自带的轻量数据库（与主库分离），通过菜单"系统管理 / 性能监控"下五个页面查看：
+数据写入 Radar 自带的轻量数据库（与主库分离），通过菜单"系统管理 / 性能监控"下五个页面查看：
 
 | 路径 | 内容 |
 |---|---|
@@ -34,6 +34,8 @@ RADAR_ENABLED=true       # 默认 true
 ```
 
 关闭后 `setup_radar` / `startup_radar` 都会跳过，前端菜单仍在但接口返回空数据。
+
+> 变量名里的 `radar` 是模块名，与 PyPI 上的同名第三方库**无关**——本项目监控实现完全自研。
 
 ### radar_log — 业务埋点
 
@@ -68,9 +70,9 @@ radar_log("仅 radar，不落文件日志", log_to_file=False)
 | 高频度调试日志 | 用 `log.debug(...)` 不上 radar |
 | 请求 / SQL 自动捕获，不需要手写 | radar 已经做了，别重复 |
 
-## fastapi-guard
+## [fastapi-guard](https://fastapi-guard.com/)
 
-请求级别的限流 + 自动封禁。
+第三方请求级别的限流 + 自动封禁。
 
 ```bash
 # .env
@@ -125,7 +127,7 @@ log.info("..."); log.warning("..."); log.error("..."); log.exception("...")
 
 ## guard_core 日志噪音抑制
 
-`fastapi-guard` 的内部库 `guard_core` 会自己加 StreamHandler 并输出冗长 INFO，[`create_app`](../../../app/__init__.py) 启动时会清掉它的 handler 并把级别提到 WARNING，不影响业务日志。
+[fastapi-guard](https://fastapi-guard.com/) 的内部库 `guard_core` 会自己加 StreamHandler 并输出冗长 INFO，[`create_app`](../../../app/__init__.py) 启动时会清掉它的 handler 并把级别提到 WARNING，不影响业务日志。
 
 ## 相关
 

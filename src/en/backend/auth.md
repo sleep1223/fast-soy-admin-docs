@@ -211,7 +211,7 @@ radar_log("login success", data={"userName": user.user_name, "userId": user.id})
 radar_log("permission denied", level="ERROR", data={"method": method, "path": path})
 ```
 
-Writes into fastapi-radar (separate DB), visible on the `/manage/radar/*` pages. See [Monitoring (Radar)](/en/backend/radar).
+Writes into the in-house Radar monitoring DB (separate from main), visible on the `/manage/radar/*` pages. See [Monitoring (Radar)](/en/backend/radar).
 
 ## See also
 

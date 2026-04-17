@@ -9,14 +9,14 @@
 | [FastAPI](https://fastapi.tiangolo.com/) ≥ 0.121 | 异步 Web 框架 |
 | [Pydantic v2](https://docs.pydantic.dev/) | 请求/响应校验与序列化 |
 | [Tortoise ORM](https://tortoise.github.io) ≥ 0.25 | 异步 ORM（vendored 副本位于 `/tortoise-orm/`） |
-| Tortoise 内置迁移 | 手动执行（不在启动时自动迁移） |
+| [Tortoise 内置迁移](https://tortoise.github.io/migration.html) | 手动执行（不在启动时自动迁移） |
 | [Redis](https://redis.io/) | 缓存（fastapi-cache2）+ 多 worker 启动锁 + 角色权限热数据 |
 | [Argon2](https://argon2-cffi.readthedocs.io/) | 密码哈希 |
 | [PyJWT](https://pyjwt.readthedocs.io/) | JWT 令牌 |
 | [Sqids](https://sqids.org/) | 资源 ID 编码（对外不暴露自增 int） |
 | [Granian](https://github.com/emmett-framework/granian) | ASGI 服务器（含反代 X-Forwarded-* 还原） |
-| fastapi-radar | 内置请求/SQL/异常 Dashboard |
-| fastapi-guard | 限流 / 自动封禁 |
+| Radar（内置） | 自研的请求/SQL/异常 Dashboard，位于 `app/system/radar/` |
+| [fastapi-guard](https://fastapi-guard.com/) | 限流 / 自动封禁 |
 | [Ruff](https://docs.astral.sh/ruff/) | Lint + format（行宽 200，双引号） |
 | [basedpyright](https://github.com/DetachHead/basedpyright) | 静态类型检查（standard 模式） |
 
@@ -50,7 +50,7 @@ app/
 │   ├── services/          # 多模型编排（auth/captcha/user/init_helper/monitor）
 │   ├── models/            # admin.py（User/Role/Menu/Api/Button） + dictionary.py
 │   ├── schemas/           # admin/users/login/dictionary
-│   ├── radar/             # fastapi-radar 集成（开发者埋点）
+│   ├── radar/             # 内置 Radar 监控（请求/SQL/异常/埋点 Dashboard）
 │   ├── security.py        # Argon2 + JWT 工具
 │   └── init_data.py       # 系统菜单/角色/用户/字典种子
 ├── business/              # 业务模块（autodiscover 自动加载）
@@ -100,7 +100,7 @@ models / schemas
 2. 删除上一次启动遗留的 init 锁，进入 `_run_init_data`：
    - 多 worker 通过 Redis `SET NX EX` 抢 leader，非 leader 等待 `_INIT_DONE_KEY`
    - leader 顺序执行：`init_menus` → `refresh_api_list`（FastAPI 路由 ↔ Api 表全量对账）→ `init_users` → 各业务模块 `init_data.init()` → `refresh_all_cache`
-3. 启动 fastapi-radar、fastapi-guard
+3. 启动内置 Radar 监控、fastapi-guard
 4. yield（应用就绪）
 5. 关闭：shutdown radar，关闭 Redis 连接
 

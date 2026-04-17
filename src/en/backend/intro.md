@@ -9,14 +9,14 @@ The backend is built with **FastAPI**, using a layered, modular architecture. Co
 | [FastAPI](https://fastapi.tiangolo.com/) ≥ 0.121 | Async web framework |
 | [Pydantic v2](https://docs.pydantic.dev/) | Request / response validation & serialization |
 | [Tortoise ORM](https://tortoise.github.io) ≥ 0.25 | Async ORM (vendored copy at `/tortoise-orm/`) |
-| Tortoise built-in migrations | Manual (not auto-run at startup) |
+| [Tortoise built-in migrations](https://tortoise.github.io/migration.html) | Manual (not auto-run at startup) |
 | [Redis](https://redis.io/) | Cache (fastapi-cache2) + multi-worker init lock + RBAC hot data |
 | [Argon2](https://argon2-cffi.readthedocs.io/) | Password hashing |
 | [PyJWT](https://pyjwt.readthedocs.io/) | JWT |
 | [Sqids](https://sqids.org/) | Public-facing resource ID encoding (no exposed auto-increment ints) |
 | [Granian](https://github.com/emmett-framework/granian) | ASGI server (with `X-Forwarded-*` proxy reconciliation) |
-| fastapi-radar | Built-in request / SQL / exception dashboard |
-| fastapi-guard | Rate limit / auto-ban |
+| Radar (in-house) | Self-built request / SQL / exception dashboard under `app/system/radar/` |
+| [fastapi-guard](https://fastapi-guard.com/) | Rate limit / auto-ban |
 | [Ruff](https://docs.astral.sh/ruff/) | Lint + format (line 200, double-quote) |
 | [basedpyright](https://github.com/DetachHead/basedpyright) | Static typing (standard mode) |
 
@@ -50,7 +50,7 @@ app/
 │   ├── services/          # multi-model orchestration (auth/captcha/user/init_helper/monitor)
 │   ├── models/            # admin.py (User/Role/Menu/Api/Button) + dictionary.py
 │   ├── schemas/           # admin/users/login/dictionary
-│   ├── radar/             # fastapi-radar integration (dev-side instrumentation)
+│   ├── radar/             # In-house Radar monitoring (request/SQL/exception/instrumentation)
 │   ├── security.py        # Argon2 + JWT helpers
 │   └── init_data.py       # System menus / roles / users / dictionary seeds
 ├── business/              # Business modules (autodiscovered)
@@ -100,7 +100,7 @@ models / schemas
 2. Delete leftover init lock from previous run, enter `_run_init_data`:
    - With multiple workers, contend for leader via Redis `SET NX EX`; non-leaders wait for `_INIT_DONE_KEY`
    - Leader runs in order: `init_menus` → `refresh_api_list` (FastAPI routes ↔ Api table reconciliation) → `init_users` → each business module's `init_data.init()` → `refresh_all_cache`
-3. Start fastapi-radar, fastapi-guard
+3. Start in-house Radar monitoring and fastapi-guard
 4. yield (app ready)
 5. Shutdown: stop radar, close Redis
 

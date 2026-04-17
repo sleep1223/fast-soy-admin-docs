@@ -66,7 +66,7 @@ PROXY_HEADERS_ENABLED=true
 TRUSTED_HOSTS=["10.0.0.0/8"]   # trusted upstreams
 ```
 
-Otherwise fastapi-guard sees every request from the nginx container's IP and bans it. See [Deployment](/en/backend/deployment).
+Otherwise [fastapi-guard](https://fastapi-guard.com/) sees every request from the nginx container's IP and bans it. See [Deployment](/en/backend/deployment).
 :::
 
 ## Multi-backend / multi-service

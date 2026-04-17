@@ -132,7 +132,7 @@ radar_log("员工状态变更", data={"empId": emp.id, "to": "active"})
 radar_log("权限拒绝", level="ERROR", data={...})
 ```
 
-写入 fastapi-radar，可在 `/manage/radar/*` 五个页面查看。详见 [监控（Radar）](./radar.md)。
+写入内置 Radar 监控，可在 `/manage/radar/*` 五个页面查看。详见 [监控（Radar）](./radar.md)。
 
 ### 安全
 

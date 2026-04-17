@@ -43,7 +43,7 @@ uv run uvicorn app:app --host 0.0.0.0 --port 9999 --workers 4
 ```
 
 ::: warning Behind a reverse proxy
-Set `PROXY_HEADERS_ENABLED=true` and `TRUSTED_HOSTS` so granian reconciles `X-Forwarded-For` / `X-Forwarded-Proto` and the real client IP reaches fastapi-guard's rate limiting. Otherwise every request looks like it comes from the proxy IP and gets banned.
+Set `PROXY_HEADERS_ENABLED=true` and `TRUSTED_HOSTS` so granian reconciles `X-Forwarded-For` / `X-Forwarded-Proto` and the real client IP reaches [fastapi-guard](https://fastapi-guard.com/)'s rate limiting. Otherwise every request looks like it comes from the proxy IP and gets banned.
 :::
 
 ### Frontend

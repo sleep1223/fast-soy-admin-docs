@@ -44,7 +44,7 @@ Business code should never `from app.system.xxx import ...` (except for the few 
    - `BackgroundTaskMiddleware` — injects FastAPI's `BackgroundTasks` into `CTX_BG_TASKS`
    - `RequestIDMiddleware` — injects `X-Request-ID` to response headers and `CTX_X_REQUEST_ID`
    - `RadarMiddleware` (conditional) — captures request / SQL / exception to Radar
-   - `fastapi-guard` (conditional) — rate limit / auto-ban
+   - [`fastapi-guard`](https://fastapi-guard.com/) (conditional) — rate limit / auto-ban
 2. **Routing** — business routes uniformly under `/api/v1/business/<name>`; system routes under `/api/v1/{auth,route,system-manage}`
 3. **Dependency injection**
    - `DependAuth` — JWT decode → check token version → load user + role/button permissions into ContextVars

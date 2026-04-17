@@ -2,12 +2,12 @@
 
 The backend ships two production-ready monitoring / protection systems:
 
-- **fastapi-radar** — request / SQL / exception / system metric tracing (with a Web Dashboard)
-- **fastapi-guard** — rate limit + auto-ban (anti-scraping / brute force)
+- **Radar (in-house)** — self-built request / SQL / exception / system metric tracing with a Web Dashboard, located at `app/system/radar/`. **Not** a third-party library.
+- **[fastapi-guard](https://fastapi-guard.com/)** — third-party rate limit + auto-ban (anti-scraping / brute force)
 
-Source: `app/system/radar/`, configured in `app/core/config.py` and `app/core/init_app.py`.
+Configured in `app/core/config.py` and `app/core/init_app.py`.
 
-## fastapi-radar
+## Radar (in-house)
 
 Captures per request:
 
@@ -16,7 +16,7 @@ Captures per request:
 - exceptions raised
 - developer-instrumented logs (`radar_log(...)`)
 
-Data lands in radar's lightweight DB (separate from the main DB), browsable from the menu "System / Performance":
+Data lands in Radar's lightweight DB (separate from the main DB), browsable from the menu "System / Performance":
 
 | Path | Content |
 |---|---|
@@ -34,6 +34,8 @@ RADAR_ENABLED=true       # default true
 ```
 
 When false, `setup_radar` / `startup_radar` skip; the menu still exists but endpoints return empty data.
+
+> The module name `radar` is unrelated to the PyPI package of the same name — this project's monitoring is 100% in-house.
 
 ### radar_log — instrumentation
 
@@ -68,9 +70,9 @@ Effect:
 | High-volume debug | `log.debug(...)`, not radar |
 | Auto-captured request / SQL | radar already does it; don't duplicate |
 
-## fastapi-guard
+## [fastapi-guard](https://fastapi-guard.com/)
 
-Per-request rate limit + auto-ban.
+Third-party per-request rate limit + auto-ban.
 
 ```bash
 # .env
@@ -125,7 +127,7 @@ log.info("..."); log.warning("..."); log.error("..."); log.exception("...")
 
 ## guard_core noise suppression
 
-`fastapi-guard`'s internal `guard_core` library installs its own StreamHandler with verbose INFO output. `create_app` clears its handlers and bumps the level to WARNING so business logs aren't drowned.
+[fastapi-guard](https://fastapi-guard.com/)'s internal `guard_core` library installs its own StreamHandler with verbose INFO output. `create_app` clears its handlers and bumps the level to WARNING so business logs aren't drowned.
 
 ## See also
 

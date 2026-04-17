@@ -212,7 +212,7 @@ radar_log("用户登录成功", data={"userName": user.user_name, "userId": user
 radar_log("权限拒绝", level="ERROR", data={"method": method, "path": path})
 ```
 
-写入 fastapi-radar 数据库（独立连接），可在 `/manage/radar/*` 五个页面查看。详见 [监控（Radar）](./radar.md)。
+写入内置 Radar 监控的数据库（独立连接），可在 `/manage/radar/*` 五个页面查看。详见 [监控（Radar）](./radar.md)。
 
 ## 相关
 

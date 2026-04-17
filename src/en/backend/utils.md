@@ -132,7 +132,7 @@ radar_log("employee state changed", data={"empId": emp.id, "to": "active"})
 radar_log("permission denied", level="ERROR", data={...})
 ```
 
-Writes to fastapi-radar; visible at `/manage/radar/*`. See [Monitoring (Radar)](/en/backend/radar).
+Writes to the in-house Radar monitoring; visible at `/manage/radar/*`. See [Monitoring (Radar)](/en/backend/radar).
 
 ### Security
 

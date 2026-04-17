@@ -11,7 +11,7 @@ hero:
   actions:
     - theme: brand
       text: 快速开始
-      link: /zh/guide/intro
+      link: /guide/intro
     - theme: alt
       text: GitHub
       link: https://github.com/sleep1223/fast-soy-admin

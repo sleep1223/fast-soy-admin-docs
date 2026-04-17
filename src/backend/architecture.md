@@ -44,7 +44,7 @@
    - `BackgroundTaskMiddleware` — 把 FastAPI 的 `BackgroundTasks` 注入 `CTX_BG_TASKS`
    - `RequestIDMiddleware` — 注入 `X-Request-ID` 到响应头与 `CTX_X_REQUEST_ID`
    - `RadarMiddleware`（条件启用） — 捕获请求/SQL/异常到 Radar Dashboard
-   - `fastapi-guard`（条件启用） — 限流 / 自动封禁
+   - [`fastapi-guard`](https://fastapi-guard.com/)（条件启用） — 限流 / 自动封禁
 2. **路由分发** — 业务模块路由统一前缀 `/api/v1/business/<name>`，系统模块挂在 `/api/v1/{auth,route,system-manage}` 下
 3. **依赖注入**
    - `DependAuth` — JWT 解码 → 校验 token 版本号 → 加载用户与角色/按钮权限到 ContextVars
