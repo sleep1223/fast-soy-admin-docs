@@ -2,7 +2,7 @@
 
 The backend ships two production-ready monitoring / protection systems:
 
-- **Radar (in-house)** — self-built request / SQL / exception / system metric tracing with a Web Dashboard, located at `app/system/radar/`. **Not** a third-party library.
+- **Radar (in-house)** — request / SQL / exception / system-metric tracing with a Web Dashboard, implemented in this project with reference to fastapi-radar; source at `app/system/radar/`.
 - **[fastapi-guard](https://fastapi-guard.com/)** — third-party rate limit + auto-ban (anti-scraping / brute force)
 
 Configured in `app/core/config.py` and `app/core/init_app.py`.
@@ -35,7 +35,7 @@ RADAR_ENABLED=true       # default true
 
 When false, `setup_radar` / `startup_radar` skip; the menu still exists but endpoints return empty data.
 
-> The module name `radar` is unrelated to the PyPI package of the same name — this project's monitoring is 100% in-house.
+> This project's Radar module is implemented with reference to fastapi-radar.
 
 ### radar_log — instrumentation
 

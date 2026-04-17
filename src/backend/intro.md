@@ -15,7 +15,7 @@
 | [PyJWT](https://pyjwt.readthedocs.io/) | JWT 令牌 |
 | [Sqids](https://sqids.org/) | 资源 ID 编码（对外不暴露自增 int） |
 | [Granian](https://github.com/emmett-framework/granian) | ASGI 服务器（含反代 X-Forwarded-* 还原） |
-| Radar（内置） | 自研的请求/SQL/异常 Dashboard，位于 `app/system/radar/` |
+| Radar（内置） | 参考 fastapi-radar 实现的请求/SQL/异常 Dashboard，位于 `app/system/radar/` |
 | [fastapi-guard](https://fastapi-guard.com/) | 限流 / 自动封禁 |
 | [Ruff](https://docs.astral.sh/ruff/) | Lint + format（行宽 200，双引号） |
 | [basedpyright](https://github.com/DetachHead/basedpyright) | 静态类型检查（standard 模式） |

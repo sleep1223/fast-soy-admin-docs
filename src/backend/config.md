@@ -79,7 +79,7 @@ TRUSTED_HOSTS=["10.0.0.0/8"]
 | `JWT_ACCESS_TOKEN_EXPIRE_MINUTES` | `720` | access token 有效期（分钟） |
 | `JWT_REFRESH_TOKEN_EXPIRE_MINUTES` | `10080` | refresh token 有效期（分钟） |
 | `DATETIME_FORMAT` | `"%Y-%m-%d %H:%M:%S"` | `to_dict` 输出 `fmtCreatedAt` 等格式化字段时使用 |
-| `RADAR_ENABLED` | `true` | 启用内置 Radar 监控（请求/SQL/异常 dashboard，自研） |
+| `RADAR_ENABLED` | `true` | 启用内置 Radar 监控（请求/SQL/异常 dashboard，参考 fastapi-radar 实现） |
 | `GUARD_ENABLED` | `true` | 启用 [fastapi-guard](https://fastapi-guard.com/) 限流 |
 | `GUARD_RATE_LIMIT` | `100` | 每窗口内允许请求数 |
 | `GUARD_RATE_LIMIT_WINDOW` | `60` | 限流窗口大小（秒） |

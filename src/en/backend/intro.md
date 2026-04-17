@@ -15,7 +15,7 @@ The backend is built with **FastAPI**, using a layered, modular architecture. Co
 | [PyJWT](https://pyjwt.readthedocs.io/) | JWT |
 | [Sqids](https://sqids.org/) | Public-facing resource ID encoding (no exposed auto-increment ints) |
 | [Granian](https://github.com/emmett-framework/granian) | ASGI server (with `X-Forwarded-*` proxy reconciliation) |
-| Radar (in-house) | Self-built request / SQL / exception dashboard under `app/system/radar/` |
+| Radar (in-house) | Request / SQL / exception dashboard implemented with reference to fastapi-radar; lives under `app/system/radar/` |
 | [fastapi-guard](https://fastapi-guard.com/) | Rate limit / auto-ban |
 | [Ruff](https://docs.astral.sh/ruff/) | Lint + format (line 200, double-quote) |
 | [basedpyright](https://github.com/DetachHead/basedpyright) | Static typing (standard mode) |

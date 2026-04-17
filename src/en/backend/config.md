@@ -79,7 +79,7 @@ TRUSTED_HOSTS=["10.0.0.0/8"]
 | `JWT_ACCESS_TOKEN_EXPIRE_MINUTES` | `720` | access token lifetime (minutes) |
 | `JWT_REFRESH_TOKEN_EXPIRE_MINUTES` | `10080` | refresh token lifetime (minutes) |
 | `DATETIME_FORMAT` | `"%Y-%m-%d %H:%M:%S"` | format for `to_dict`'s `fmtCreatedAt` etc. |
-| `RADAR_ENABLED` | `true` | enable in-house Radar monitoring (request/SQL/exception dashboard, self-built) |
+| `RADAR_ENABLED` | `true` | enable in-house Radar monitoring (request/SQL/exception dashboard; implemented with reference to fastapi-radar) |
 | `GUARD_ENABLED` | `true` | enable [fastapi-guard](https://fastapi-guard.com/) rate limiting |
 | `GUARD_RATE_LIMIT` | `100` | requests allowed per window |
 | `GUARD_RATE_LIMIT_WINDOW` | `60` | window size (seconds) |

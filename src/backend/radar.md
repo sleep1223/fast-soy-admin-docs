@@ -2,7 +2,7 @@
 
 后端内置两套生产可用的监控/防护：
 
-- **Radar（内置）** — 自研的请求 / SQL 查询 / 异常 / 系统指标 全栈追踪（含一个 Web Dashboard），源码位于 [`app/system/radar/`](../../../app/system/radar/)，**不是**第三方库
+- **Radar（内置）** — 参考 fastapi-radar 实现的请求 / SQL 查询 / 异常 / 系统指标 全栈追踪（含一个 Web Dashboard），源码位于 [`app/system/radar/`](../../../app/system/radar/)
 - **[fastapi-guard](https://fastapi-guard.com/)** — 第三方限流 + 自动封禁（防爬虫 / 暴力破解）
 
 配置在 [`app/core/config.py`](../../../app/core/config.py) 与 [`app/core/init_app.py`](../../../app/core/init_app.py)。
@@ -35,7 +35,7 @@ RADAR_ENABLED=true       # 默认 true
 
 关闭后 `setup_radar` / `startup_radar` 都会跳过，前端菜单仍在但接口返回空数据。
 
-> 变量名里的 `radar` 是模块名，与 PyPI 上的同名第三方库**无关**——本项目监控实现完全自研。
+> 本项目参考 fastapi-radar 实现。
 
 ### radar_log — 业务埋点
 
