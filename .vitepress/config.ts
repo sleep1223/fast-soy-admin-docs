@@ -163,7 +163,8 @@ export default defineConfig({
             { text: '数据模型（System）', link: '/backend/models' },
             { text: '模型 Mixin', link: '/backend/mixins' },
             { text: '切换数据库', link: '/backend/database' },
-            { text: '缓存', link: '/backend/cache' }
+            { text: '缓存', link: '/backend/cache' },
+            { text: '高并发业务', link: '/backend/concurrency' }
           ]
         },
         {
