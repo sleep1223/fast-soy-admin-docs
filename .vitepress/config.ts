@@ -5,6 +5,7 @@ import en from './locales/en.js';
 const algoliaAppId = process.env.ALGOLIA_APP_ID;
 const algoliaSearchKey = process.env.ALGOLIA_SEARCH_API_KEY;
 const algoliaIndexName = process.env.ALGOLIA_INDEX_NAME;
+const algoliaAssistantId = process.env.ALGOLIA_ASSISTANT_ID;
 
 const search: DefaultTheme.Config['search'] = algoliaAppId && algoliaSearchKey && algoliaIndexName
   ? {
@@ -13,6 +14,15 @@ const search: DefaultTheme.Config['search'] = algoliaAppId && algoliaSearchKey &
         appId: algoliaAppId,
         apiKey: algoliaSearchKey,
         indexName: algoliaIndexName,
+        ...(algoliaAssistantId
+          ? {
+              mode: 'hybrid' as const,
+              askAi: {
+                assistantId: algoliaAssistantId,
+                sidePanel: true
+              }
+            }
+          : {}),
         locales: {
           root: {
             placeholder: '搜索文档',
