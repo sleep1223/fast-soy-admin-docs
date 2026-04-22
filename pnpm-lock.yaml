@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  vitepress@2.0.0-alpha.17:
+    hash: 1abacae3d03e165980e4facea16ba664fa5d2f52058c2b65dc20e37db8228cb4
+    path: patches/vitepress@2.0.0-alpha.17.patch
+
 importers:
 
   .:
@@ -17,7 +22,7 @@ importers:
         version: 5.9.3
       vitepress:
         specifier: 2.0.0-alpha.17
-        version: 2.0.0-alpha.17(postcss@8.5.8)(typescript@5.9.3)
+        version: 2.0.0-alpha.17(patch_hash=1abacae3d03e165980e4facea16ba664fa5d2f52058c2b65dc20e37db8228cb4)(postcss@8.5.8)(typescript@5.9.3)
       vue-tsc:
         specifier: ^3.2.1
         version: 3.2.6(typescript@5.9.3)
@@ -1417,7 +1422,7 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  vitepress@2.0.0-alpha.17(postcss@8.5.8)(typescript@5.9.3):
+  vitepress@2.0.0-alpha.17(patch_hash=1abacae3d03e165980e4facea16ba664fa5d2f52058c2b65dc20e37db8228cb4)(postcss@8.5.8)(typescript@5.9.3):
     dependencies:
       '@docsearch/css': 4.6.2
       '@docsearch/js': 4.6.2
