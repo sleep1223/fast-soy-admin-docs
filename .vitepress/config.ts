@@ -19,6 +19,7 @@ const search: DefaultTheme.Config['search'] = algoliaAppId && algoliaSearchKey &
               mode: 'hybrid' as const,
               askAi: {
                 assistantId: algoliaAssistantId,
+                agentStudio: true,
                 sidePanel: true
               }
             }
