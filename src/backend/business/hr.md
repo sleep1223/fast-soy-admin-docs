@@ -20,6 +20,7 @@ HR 模块管理三类资源：
 | 系统管理（HR 总管 / 部门主管） | `/hr/departments/*`、`/hr/employees/*`、`/hr/tags/*` | [api/manage.py](../../../app/business/hr/api/manage.py) |
 | 部门主管查看下属 | `/hr/department/employees`、`/hr/department/employees/{id}/tags` | [api/dept.py](../../../app/business/hr/api/dept.py) |
 | 普通员工自助 | `/hr/my/profile`、`/hr/my/tags`、`/hr/my/department` | [api/my.py](../../../app/business/hr/api/my.py) |
+| 公开数据展示（常量路由 Demo） | `/hr/public/showcase` | [api/public.py](../../../app/business/hr/api/public.py) |
 
 ## 目录结构（业务模块约定）
 
@@ -430,6 +431,64 @@ else:
 ### 4. 缓存与失效
 
 部门统计在 [services.py:get_department_stats](../../../app/business/hr/services.py) 中走 Redis 缓存（key `hr_dept_stats:all`，5 分钟 TTL），员工数据变更时通过 `invalidate_dept_stats(redis)` 主动失效。这是业务模块**自带缓存**的标准模式。
+
+### 5. 公开接口（常量路由示例）
+
+`api/public.py` 暴露了一组**不经过鉴权**的端点，用于前端的常量路由（`/showcase`）——未登录即可访问，只返回聚合统计，不含任何敏感字段。
+
+```python
+# app/business/hr/api/public.py
+router = APIRouter(prefix="/hr/public", tags=["HR公开展示"])
+
+@router.get("/showcase", summary="[公开] HR 数据展示总览")
+async def showcase_overview():
+    return Success(data={
+        "totals": {"department": ..., "employee": ..., "tag": ...},
+        "employeeStatus": {...},
+        "departments": [{"name": ..., "code": ..., "employeeCount": ...}],
+    })
+```
+
+对应前端：
+
+- 视图：[web/src/views/showcase/index.vue](../../../web/src/views/showcase/index.vue)
+- API 调用：`fetchGetHrShowcase()`（[web/src/service/api/hr-manage.ts](../../../web/src/service/api/hr-manage.ts)）
+- 路由配置：`web/src/router/elegant/routes.ts` 中 `name: 'showcase'` + `meta.constant: true` + `component: 'layout.blank$view.showcase'`
+- 常量路由白名单：`web/build/plugins/router.ts` 的 `constantRoutes` 中加入了 `'showcase'`
+
+#### 后端也要种一条 `Menu` 记录（重要）
+
+**默认 `VITE_AUTH_ROUTE_MODE=dynamic`**，前端启动时会调用 `GET /api/v1/route/constant-routes` 从 Redis 拉常量路由，数据源是 `Menu.filter(constant=True, hide_in_menu=True)`（详见 [load_constant_routes](../../../app/core/cache.py)）。只在前端声明 `meta.constant: true` 是不够的——不种 `Menu`，后端返回空，前端挂不上路由，访问会 404。
+
+所以 `init_data.py` 里必须配套一条：
+
+```python
+# app/business/hr/init_data.py
+async def _init_menu_data() -> None:
+    await ensure_menu(
+        menu_name="HR数据展示",
+        route_name="showcase",
+        route_path="/showcase",
+        component="layout.blank$view.showcase",
+        menu_type="1",
+        constant=True,
+        hide_in_menu=True,
+        order=100,
+    )
+    # ...后续其他菜单
+```
+
+启动流水线：`init()` → 写入 `Menu` 记录 → `refresh_all_cache()` → `load_constant_routes()` 重写 Redis `constant_routes` key → 前端下次启动拉到。**新增常量路由后必须重启一次后端**。
+
+> 如果是 `VITE_AUTH_ROUTE_MODE=static`（前端自带全部路由声明），则只需前端那一侧的改动；但本仓库默认是 dynamic，别漏。
+
+**公开接口的铁律：**
+
+1. **不要**在 router 或 endpoint 上挂 `DependAuth` / `DependPermission`
+2. **不要**返回包含 PII 的字段（`phone` / `email` / `employee_no` / `user_id`）
+3. **不要**返回可用于枚举探测的精确列表（如"所有员工姓名"）——只返回聚合计数
+4. 路径统一放在 `/<module>/public/*` 前缀下，便于 nginx / WAF 侧做 IP 限流策略
+5. 若数据可能较贵，建议搭配 Redis 缓存（参考 `get_department_stats`）
 
 ## 用 HR 模块作为新模块的参考
 

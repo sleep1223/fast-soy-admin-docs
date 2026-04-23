@@ -65,8 +65,52 @@ afterEach  (title.ts)               # document.title = i18n(meta.title)
 | `login` | 登录页 |
 | `403 / 404 / 500` | 错误页 |
 | `home` | 首页（可见但通常需要登录后才能访问 — `home` 不是 constant） |
+| `showcase` | HR 公开数据展示 Demo（`/showcase`）— 调用 `GET /api/v1/business/hr/public/showcase` |
 
 后端 `Menu.constant=True` 会在启动时由 `load_constant_routes` 写到 Redis `constant_routes`；前端启动时拉一次，挂到 router。
+
+### 新增一个常量路由
+
+以 `/showcase`（HR 公开数据展示）为例——**前后端都要动**，缺一不可：
+
+#### 1. 前端页面 + 白名单
+
+- 在 [web/src/views/showcase/index.vue](../../../web/src/views/showcase/index.vue) 写页面（展示类页面用 `layout.blank` 更干净）。
+- 把路由名加进 [web/build/plugins/router.ts](../../../web/build/plugins/router.ts) 的 `constantRoutes` 数组：
+
+  ```ts
+  const constantRoutes: RouteKey[] = ['login', '403', '404', '500', 'showcase'];
+  ```
+
+  `onRouteMetaGen` 会给它自动注入 `meta.constant = true`。启动 dev server 后 Elegant Router 会自动写回 [routes.ts](../../../web/src/router/elegant/routes.ts) / [imports.ts](../../../web/src/router/elegant/imports.ts) / [typings/elegant-router.d.ts](../../../web/src/typings/elegant-router.d.ts)。
+
+#### 2. 后端 `Menu` 种子（dynamic 模式必须）
+
+默认 `VITE_AUTH_ROUTE_MODE=dynamic` 时，前端启动会调用 `GET /api/v1/route/constant-routes` 从后端拉取，后端数据源是 `Menu.filter(constant=True, hide_in_menu=True)`。
+
+**只在前端声明 `meta.constant: true` 会 404**——必须同时在 `init_data.py` 种一条 Menu：
+
+```python
+# app/business/<module>/init_data.py
+await ensure_menu(
+    menu_name="HR数据展示",
+    route_name="showcase",
+    route_path="/showcase",
+    component="layout.blank$view.showcase",
+    menu_type="1",
+    constant=True,
+    hide_in_menu=True,
+    order=100,
+)
+```
+
+然后**重启后端**：`init()` → 写 Menu → `refresh_all_cache()` → `load_constant_routes()` 刷新 Redis `constant_routes`。
+
+> `static` 模式（`VITE_AUTH_ROUTE_MODE=static`）下前端自带全部路由声明，不需要 2 这一步。但本仓库默认 dynamic。
+
+#### 3. 公开接口
+
+接口放在 `/<module>/public/*` 前缀下，**不要**挂 `DependAuth / DependPermission`，**不要**返回 PII。详见 [HR 模块 · 公开接口](../../backend/business/hr.md#_5-公开接口-常量路由示例)。
 
 ## meta.roles（仅静态路由）
 
