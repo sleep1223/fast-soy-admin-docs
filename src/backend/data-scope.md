@@ -142,6 +142,13 @@ async def _list(obj_in: EmployeeSearch, request: Request):
     return SuccessExtra(data={"records": records}, total=total, current=obj_in.current, size=obj_in.size)
 ```
 
+## 与接口级权限的关系
+
+`data_scope` 管的是"同一接口下能看到哪些行"；接口本身"能不能调"由 `DependPermission` 按 `(method, APIRoute.path_format)` 精确判定。两层互补、独立：
+
+- `DependPermission` 的键是 FastAPI 匹配到的路由模板——`/resources/{id}` 和 `/resources/sync` 是两条完全独立的权限记录，不会互相蹭权限。详见 [RBAC / 匹配语义](./rbac.md#匹配语义按-path_format-精确命中)。
+- 在 `@crud.override("list")` 里拼 `build_scope_filter(...)` 时不需要再检查调用者是否有该接口的权限——`DependPermission` 已经在进入 handler 前挡住未授权访问。
+
 ## 相关
 
 - [RBAC 模型](./rbac.md)

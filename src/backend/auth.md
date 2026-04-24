@@ -142,11 +142,22 @@ async def me():
 
 1. `R_SUPER` 角色直接放行
 2. 用户无任何角色 → `2207`
-3. 汇总所有角色的 `(method, path, status)` 三元组
-4. 对当前请求 `(method.lower(), url.path)` 做匹配（`check_url` 支持 `{item_id}` 占位符）
-5. 命中且 `status == enable` → 放行；命中但 `disable` → `2200`；未命中 → `2201`
+3. 汇总所有角色的 `(method, path, status)` 三元组（`path` 即 `APIRoute.path_format`，与 `refresh_api_list()` 入库保持同一字符串空间）
+4. 以 `request.scope["route"].path_format`（FastAPI 匹配完成后回填的路由模板）为键，对 `(method.lower(), path_format)` 做**精确**查表命中
+5. 命中且 `status == enable` → 放行；命中但 `disable` → `2200`；未命中 → `2201`；`scope["route"]` 不是 `APIRoute`（理论上不会发生） → `2201`
 
 通常通过 `router.include_router(..., dependencies=[DependPermission])` 在路由分组上挂一次即可。
+
+::: tip 为什么不用正则匹配请求 URL
+早期实现把 `api_path` 里的 `{xxx}` 替换为 `[^/]+` 再用 `re.match` 去对 `request.url.path` 做匹配。这会带来两类安全问题：
+
+- **参数路径吃掉静态兄弟**：拥有 `GET /resources/{id}` 权限的用户，请求 `GET /resources/sync` 也会通过——因为 `/resources/[^/]+` 能匹到 `sync`。
+- **`re.match` 未锚定尾部**：拥有 `/users` 权限会误命中 `/users-extra`、`/users/delete-all` 等更长的 URL。
+
+现改为直接用 FastAPI 已匹配到的 `APIRoute.path_format` 做 O(1) 集合命中，和 `refresh_api_list()` 入库键完全同构——静态路由和参数路由在字符串层面天然隔离，无法互相蹭权限。
+
+前提是**让 FastAPI 先正确匹配到静态路由**：手写路由时必须把静态段（`/sync`）注册在参数段（`/{id}`）之前，或直接使用 `CRUDRouter`（内部 `_OrderedRouter` 自动把静态路径排到前面）。详见 [CRUDRouter](./crud-router.md)。
+:::
 
 ### `require_buttons(...)` — 按钮权限
 

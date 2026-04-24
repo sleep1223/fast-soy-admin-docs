@@ -86,6 +86,22 @@ B_<MODULE>_<RESOURCE>_<ACTION>
 
 `Api` 表的 `status_type=disable` 是管理员能在 Web UI 把某条接口"临时停用"的开关，命中时返回 `2200 API_DISABLED`。
 
+### 匹配语义：按 `path_format` 精确命中
+
+`api_path` 字段存的是 FastAPI 的 `APIRoute.path_format`（例如 `/api/v1/business/hr/employees/{id}`，不是某次请求的真实 URL）。`DependPermission` 在请求阶段也用 `request.scope["route"].path_format` 作为键去 Redis 集合里**精确**查表——和入库键同一字符串空间，O(1) 命中。
+
+这意味着 `/resources/{id}` 和 `/resources/sync` 是**两条完全独立**的权限记录，互不覆盖：
+
+- 只给角色授了 `/resources/{id}`，请求 `/resources/sync` → `2201 PERMISSION_DENIED`
+- 只给角色授了 `/resources/sync`，请求 `/resources/{id}` → `2201`
+
+::: warning 前提：FastAPI 要先正确匹配到路由
+权限键是"路由匹配的产物"，不是请求 URL 的正则。所以**路由注册顺序**必须让静态段优先于参数段（否则 `/sync` 会被 `/{id}` 吃掉，后续权限查的也是 `/{id}` 那条，两边都错）。
+
+- 用 [`CRUDRouter`](./crud-router.md)：内部 `_OrderedRouter` 自动把静态路径排前面，无需关心顺序
+- 手写 `APIRouter` 时，把 `@router.post("/sync")` 写在 `@router.get("/{id}")` **前面**
+:::
+
 ## 角色种子声明
 
 ```python
