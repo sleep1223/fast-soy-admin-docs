@@ -71,7 +71,7 @@ afterEach  (title.ts)               # document.title = i18n(meta.title)
 
 ### 新增一个常量路由
 
-以 `/showcase`（HR 公开数据展示）为例——**前后端都要动**，缺一不可：
+以 `/showcase`（HR 公开数据展示）为例——**前后端都要动**，缺一不可（在线 Demo：<https://fast-soy-admin.sleep0.de/showcase>）：
 
 #### 1. 前端页面 + 白名单
 

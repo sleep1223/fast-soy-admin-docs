@@ -25,7 +25,7 @@ docker compose logs -f app      # backend only
 
 ```bash
 git pull
-docker compose down && docker compose up -d
+docker compose down && docker compose up -d --build   # add --build for code changes (or `make rebuild`)
 ```
 
 ## Manual deployment

@@ -65,8 +65,48 @@ navigation ─────→ │  meta.constant?  │ ─Yes→ pass
 | `login` | login |
 | `403 / 404 / 500` | error pages |
 | `home` | home (typically requires login — `home` is NOT constant) |
+| `showcase` | HR public data showcase demo (`/showcase`) — calls `GET /api/v1/business/hr/public/showcase` |
 
 The backend writes `Menu.constant=True` rows into Redis `constant_routes` via `load_constant_routes`; the frontend fetches once at startup.
+
+### Adding a new constant route
+
+Using `/showcase` (HR public data showcase) as the example — **both frontend and backend must be updated**, neither can be skipped (live demo: <https://fast-soy-admin.sleep0.de/showcase>):
+
+#### 1. Frontend page + whitelist
+
+- Write the page at [web/src/views/showcase/index.vue](../../../web/src/views/showcase/index.vue) (display-only pages look cleaner under `layout.blank`).
+- Add the route name to the `constantRoutes` array in [web/build/plugins/router.ts](../../../web/build/plugins/router.ts):
+
+  ```ts
+  const constantRoutes: RouteKey[] = ['login', '403', '404', '500', 'showcase'];
+  ```
+
+  `onRouteMetaGen` automatically injects `meta.constant = true`. After the dev server starts, Elegant Router writes back [routes.ts](../../../web/src/router/elegant/routes.ts) / [imports.ts](../../../web/src/router/elegant/imports.ts) / [typings/elegant-router.d.ts](../../../web/src/typings/elegant-router.d.ts).
+
+#### 2. Backend `Menu` seed (required in dynamic mode)
+
+With the default `VITE_AUTH_ROUTE_MODE=dynamic`, the frontend calls `GET /api/v1/route/constant-routes` at startup; the backend source is `Menu.filter(constant=True, hide_in_menu=True)`.
+
+**Declaring `meta.constant: true` only on the frontend will 404** — you must also seed a Menu row in `init_data.py`:
+
+```python
+# app/business/<module>/init_data.py
+await ensure_menu(
+    menu_name="HR Showcase",
+    route_name="showcase",
+    route_path="/showcase",
+    component="layout.blank$view.showcase",
+    menu_type="1",
+    constant=True,
+    hide_in_menu=True,
+    order=100,
+)
+```
+
+Then **restart the backend**: `init()` → write Menu → `refresh_all_cache()` → `load_constant_routes()` refreshes Redis `constant_routes`.
+
+> In `static` mode (`VITE_AUTH_ROUTE_MODE=static`) the frontend ships all route declarations itself, so step 2 is unnecessary. This repo defaults to dynamic.
 
 ## meta.roles (static mode only)
 

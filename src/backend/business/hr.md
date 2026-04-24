@@ -434,7 +434,7 @@ else:
 
 ### 5. 公开接口（常量路由示例）
 
-`api/public.py` 暴露了一组**不经过鉴权**的端点，用于前端的常量路由（`/showcase`）——未登录即可访问，只返回聚合统计，不含任何敏感字段。
+`api/public.py` 暴露了一组**不经过鉴权**的端点，用于前端的常量路由（`/showcase`）——未登录即可访问，只返回聚合统计，不含任何敏感字段。在线 Demo：<https://fast-soy-admin.sleep0.de/showcase>。
 
 ```python
 # app/business/hr/api/public.py

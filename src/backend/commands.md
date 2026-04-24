@@ -66,6 +66,7 @@ make help
 | 原始命令 | Make 命令 | 作用 |
 |---|---|---|
 | `docker compose up -d` | `make up` | 启动全栈（nginx :1880 + fastapi :9999 + redis） |
+| `docker compose up -d --build` | `make rebuild` | 重建镜像并重建容器（代码 / Dockerfile 变更后使用） |
 | `docker compose down` | `make down` | 停止并移除容器 |
 | `docker compose logs -f` | `make logs` | 实时查看所有服务日志 |
 

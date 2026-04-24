@@ -20,6 +20,7 @@ Three sets of endpoints:
 | Admin (HR director / dept manager) | `/hr/departments/*`, `/hr/employees/*`, `/hr/tags/*` | `api/manage.py` |
 | Department manager — view subordinates | `/hr/department/employees`, `/hr/department/employees/{id}/tags` | `api/dept.py` |
 | Self-service for employees | `/hr/my/profile`, `/hr/my/tags`, `/hr/my/department` | `api/my.py` |
+| Public showcase (constant route demo) | `/hr/public/showcase` | `api/public.py` |
 
 ## Directory layout (module convention)
 
@@ -430,6 +431,56 @@ Then in a transaction: create the system user (random password + `must_change_pa
 ### 4. Cache & invalidation
 
 Department stats in `services.py`'s `get_department_stats` use Redis cache (key `hr_dept_stats:all`, 5-min TTL). When employee data changes, `invalidate_dept_stats(redis)` actively clears it. This is the standard pattern for **module-local caching**.
+
+### 5. Public endpoint (constant route example)
+
+`api/public.py` exposes endpoints that **bypass auth entirely**, used by the frontend's constant route (`/showcase`) — accessible without login, returning only aggregated stats with no sensitive fields. Live demo: <https://fast-soy-admin.sleep0.de/showcase>.
+
+```python
+# app/business/hr/api/public.py
+router = APIRouter(prefix="/hr/public", tags=["HR Public Showcase"])
+
+@router.get("/showcase", summary="[Public] HR data overview")
+async def showcase_overview():
+    return Success(data={
+        "totals": {"department": ..., "employee": ..., "tag": ...},
+        "employeeStatus": {...},
+        "departments": [{"name": ..., "code": ..., "employeeCount": ...}],
+    })
+```
+
+Frontend counterparts:
+
+- View: [web/src/views/showcase/index.vue](../../../web/src/views/showcase/index.vue)
+- API call: `fetchGetHrShowcase()` ([web/src/service/api/hr-manage.ts](../../../web/src/service/api/hr-manage.ts))
+- Route config: `web/src/router/elegant/routes.ts` with `name: 'showcase'` + `meta.constant: true` + `component: 'layout.blank$view.showcase'`
+- Constant route whitelist: `'showcase'` is added to `constantRoutes` in `web/build/plugins/router.ts`
+
+#### Backend must also seed a `Menu` row (important)
+
+By default `VITE_AUTH_ROUTE_MODE=dynamic`. The frontend calls `GET /api/v1/route/constant-routes` at startup and pulls constant routes from Redis; the data source is `Menu.filter(constant=True, hide_in_menu=True)` (see [load_constant_routes](../../../app/core/cache.py)). Declaring `meta.constant: true` only on the frontend isn't enough — without a `Menu` row, the backend returns empty, the frontend can't mount the route, and the page 404s.
+
+So `init_data.py` must include:
+
+```python
+# app/business/hr/init_data.py
+async def _init_menu_data() -> None:
+    await ensure_menu(
+        menu_name="HR Showcase",
+        route_name="showcase",
+        route_path="/showcase",
+        component="layout.blank$view.showcase",
+        menu_type="1",
+        constant=True,
+        hide_in_menu=True,
+        order=100,
+    )
+    # ...other menus
+```
+
+Startup pipeline: `init()` → write the `Menu` row → `refresh_all_cache()` → `load_constant_routes()` rewrites the Redis `constant_routes` key → frontend picks it up next startup. **Restart the backend after adding a constant route.**
+
+> Under `VITE_AUTH_ROUTE_MODE=static` (frontend ships all route declarations itself) only the frontend-side change is needed; this repo defaults to dynamic, don't skip the backend step.
 
 ## Use HR as a template for new modules
 
