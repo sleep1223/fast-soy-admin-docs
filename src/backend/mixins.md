@@ -153,5 +153,7 @@ class TenantMixin:
 ## 相关
 
 - [数据模型 / System](./models.md) — User / Role / Menu / Api / Button / Dictionary 完整字段
+- [后端规范 / 模型 / 外键访问](../standard/backend.md#外键访问规范) — `<name>_id: int` 注解、prefetch 坑点
+- [ORM 速查](./orm-cookbook.md) — 一对多 / 多对多 / 聚合 / 自定义函数 / 事务
 - [CRUDBase](./crud.md) — `soft_remove` / `get_tree` 等方法
 - [Sqids](./core/sqids.md) — 主键 / 外键怎么变成 sqid

@@ -82,7 +82,48 @@ return JSONResponse({"code": Code.FAIL, "msg": "失败"})
 - ✅ 字段加 `description="..."`（CLI 生成 schema 时会用作 i18n 中文名，截断到第一个句号）
 - ✅ 类的 docstring 写中文资源名（`"""部门"""`），用作 API summary 前缀
 - ✅ `Meta.table` 用 `biz_<module>_<entity>` 前缀（系统模型在 `app/system/models/` 下用语义化表名）
-- ❌ 不要在 `models.py` 写业务逻辑——校验放 schema、副作用放 service
+- ✅ **每个 `ForeignKeyField` / `OneToOneField` 上方显式声明 `<name>_id: int`（或 `int | None`）类型注解**——见下方
+- ❌ 不要在 `models.py` 写业务逻辑——字段级校验放 schema、跨模型编排 / 事务 / 事件 / 缓存放 service
+
+### 外键访问规范
+
+Tortoise 的 FK 字段在运行时会自动派生一个 `<name>_id` 属性（同步访问、零查询，对应 DB 列）；`<name>` 本身是**异步懒加载**的关系对象。两者**不是一回事**：
+
+```python
+# models.py
+class Employee(BaseModel, AuditMixin):
+    # ✅ 显式声明 _id 类型注解，让 pyright / IDE 能看到该属性
+    user_id: int | None
+    user: fields.ForeignKeyNullableRelation = fields.ForeignKeyField(
+        "app_system.User", null=True, on_delete=fields.SET_NULL, related_name="employee",
+    )
+    department_id: int
+    department: fields.ForeignKeyRelation["Department"] = fields.ForeignKeyField(
+        "app_system.Department", related_name="employees",
+    )
+```
+
+使用时按需求选择：
+
+| 需求 | 正确写法 | 错误写法 |
+|---|---|---|
+| 只要 ID（比较、日志、传给另一个模型的 FK 字段） | `emp.department_id` | `(await emp.department).id` — 多一次查询 |
+| 要关系对象的字段（`dept.name`） | 先 `prefetch_related("department")` 再读 `emp.department.name` | `emp.department.name` — 懒加载，循环中触发 N+1 |
+| 单对象场景、无批量 | `dept = await emp.department` | — |
+| M2M / 反向关系 | `prefetch_related("by_role_menus")` 后遍历；或显式 `.all()` | 直接 `for m in role.by_role_menus` — `RelatedManager` 不是可迭代对象 |
+
+::: danger 创建 / 更新时不要把未 prefetch 的关系对象当值传
+```python
+# ❌ 如果 other.department 没有 prefetch，这一行会触发查询；
+#    更糟的是 Tortoise 老版本会把 coroutine 对象赋值给 FK，写入时抛 TypeError
+new_emp = await Employee.create(department=other.department)
+
+# ✅ 总是传 _id
+new_emp = await Employee.create(department_id=other.department_id)
+```
+
+这就是为什么 `_id: int` 注解是强制的——把"用 ID 安全路径"放到开发者眼前，IDE 自动补全也会优先提示。
+:::
 
 ## 8. 业务模块边界
 
