@@ -122,17 +122,30 @@ web/
 │       ├── <entity>-search.vue                # 搜索表单
 │       └── <entity>-operate-drawer.vue        # 新增/编辑抽屉
 └── src/locales/langs/_generated/inventory/
-    ├── zh-cn.ts                               # i18n 片段（待合并）
-    └── en-us.ts                               # i18n 片段（待合并）
+    ├── zh-cn.md                               # i18n 中文片段（待合并）
+    ├── en-us.md                               # i18n 英文片段（待合并）
+    └── app.d.ts.md                            # I18n.Schema.page 类型扩展（待合并）
 ```
 
 `web/src/service/api/index.ts` 会自动追加 `export * from './inventory-manage';`（幂等）。
 
-生成后自动跑 `oxfmt` + `eslint --fix`。
+生成后会对新增/追加的 `.ts / .tsx / .vue / .d.ts` 文件自动跑 `oxfmt` + `eslint --fix`（`.md` 片段不参与格式化）。
 
-### 5. 合并 i18n 片段（手动）
+### 5. 合并 i18n 片段（手动，三处）
 
-打开生成的 `web/src/locales/langs/_generated/inventory/zh-cn.ts` 和 `en-us.ts`，按文件头注释的指示，把 `route` 片段和 `page` 片段粘贴到 `web/src/locales/langs/zh-cn.ts` 和 `en-us.ts` 对应位置。
+生成物用 `.md` 扩展名、且**不会**被 pnpm 构建直接加载，需要手动把片段拷贝到真正的源文件：
+
+| 生成文件 | 合并到 | 合并到哪段 |
+|---|---|---|
+| `_generated/inventory/zh-cn.md` | `web/src/locales/langs/zh-cn.ts` | `route` / `page` 对象 |
+| `_generated/inventory/en-us.md` | `web/src/locales/langs/en-us.ts` | `route` / `page` 对象 |
+| `_generated/inventory/app.d.ts.md` | `web/src/typings/app.d.ts` | `App.I18n.Schema.page` 子树 |
+
+::: warning 必须合并 `app.d.ts.md`
+不合并会导致生成代码里的 `$t('page.inventory...')` 编译报错（`Argument of type ... is not assignable to parameter of type I18nKey`）。`route` 命名空间在 Elegant Router 首次启动时自动补齐 `elegant-router.d.ts`，**不需要**手动改类型；但 `page` 命名空间没有这个对账机制，必须手动扩展。
+:::
+
+> 历史遗留说明：早期版本把片段写成 `.ts`，会被 ESLint 的 `no-empty-file` 规则判为错误，且 `app.d.ts` 扩展片段缺失。现统一走 `.md`，规避所有工具链。
 
 合并完后可删除 `_generated/inventory/` 目录。
 
