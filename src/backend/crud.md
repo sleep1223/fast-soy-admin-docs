@@ -1,6 +1,6 @@
 # CRUDBase
 
-`CRUDBase` 是单资源 CRUD 的通用基类，所有 controller 通过继承（或直接实例化）使用。它**不做跨模型副作用**——多模型编排、事务、缓存请放在 `services/`。
+`CRUDBase` 是单模型 CRUD 的通用基类，所有 controller 通过继承（或直接实例化）使用。它**只负责单张表的增删改查**——跨模型编排、事务、缓存更新、事件派发、外部 IO 统一放在 `services/`。
 
 源码：[app/core/crud.py](../../../app/core/crud.py)。
 

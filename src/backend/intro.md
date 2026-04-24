@@ -82,7 +82,7 @@ models / schemas
 |---|---|---|
 | `api/` | URL 接线、依赖（鉴权）、调 service/controller 的薄包装 | 业务规则、跨模型、事务 |
 | `services/` | 事务、跨模型、Redis、状态机、审计、跨模块事件 | HTTP（Request/Response） |
-| `controllers/` | `XxxController(CRUDBase)`、`build_search` | 多模型副作用 |
+| `controllers/` | `XxxController(CRUDBase)`、`build_search`；单模型 CRUD | 跨模型编排、事务、缓存、事件派发、外部 IO |
 | `models/` | 表字段、索引、关系、Mixin | 业务校验 |
 | `schemas/` | `XxxCreate / XxxUpdate / XxxSearch`，字段级校验 | 跨资源 |
 

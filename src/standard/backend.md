@@ -63,7 +63,7 @@ return JSONResponse({"code": Code.FAIL, "msg": "失败"})
 |---|---|---|
 | `api/` | URL 接线、依赖、`Success`/`Fail` | 业务规则、跨模型、事务 |
 | `services/` | 事务、跨模型、缓存、状态机、事件 | 触发 HTTP（Request/Response） |
-| `controllers/` | 单资源 CRUD（继承 `CRUDBase`）、`build_search` | 多模型副作用、副业务逻辑 |
+| `controllers/` | 单模型 CRUD（继承 `CRUDBase`）、`build_search` | 跨模型编排、事务、缓存、事件派发、外部 IO |
 | `models/` | 表字段、索引、关系、Mixin | 业务校验逻辑 |
 | `schemas/` | DTO 与字段级校验 | 跨资源逻辑 |
 
