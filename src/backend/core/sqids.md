@@ -4,7 +4,7 @@
 
 - URL 不泄露顺序信息（对业务量、推算其他资源的 ID 都有阻断作用）
 - 看起来像短而紧凑的 ID，比 UUID 友好
-- 可双向编解码，本质仍是 int，不引入新的存储成本
+- 可编解码，本质仍是 int，不引入新的存储成本
 
 源码：[`app/core/sqids.py`](../../../app/core/sqids.py)、[`app/core/types.py`](../../../app/core/types.py)。
 
@@ -22,7 +22,6 @@ from app.utils import encode_id, decode_id
 
 encode_id(42)         # → "Yc7vN3kE"
 decode_id("Yc7vN3kE") # → 42
-decode_id(42)         # → 42  （传入 int 时原样返回，便于双向兼容）
 decode_id("foo")      # → ValueError: invalid sqid: 'foo'
 ```
 
@@ -49,22 +48,6 @@ async def _(item_id: SqidPath):         # FastAPI 路径参数
     obj = await dept_controller.get(id=item_id)
     return Success(data=await obj.to_dict())
 ```
-
-### 兼容数字 ID（迁移期）
-
-`_sqid_to_int` 同时接受 `int` / 纯数字字符串 / sqid 三种形式：
-
-```python
-def _sqid_to_int(v: Any) -> int:
-    if isinstance(v, int):
-        return v
-    s = str(v)
-    if s.lstrip("-").isdigit():     # "123" 或 "-1"
-        return int(s)
-    return decode_id(s)              # 真 sqid
-```
-
-迁移期允许前端/旧测试发数字 id，避免一次性 break。迁移完成后可在此处收紧。
 
 ## Model.to_dict 自动编码
 
