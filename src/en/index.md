@@ -45,3 +45,17 @@ features:
     title: Code Quality
     details: Frontend ESLint + oxlint, backend Ruff + basedpyright. Strict types across the stack.
 ---
+
+## Screenshots
+
+![Home - Chinese](/screenshots/home-zh.png)
+
+![Home - English](/screenshots/home-en.png)
+
+![Radar - Dashboard](/screenshots/radar-dashboard.png)
+
+![Radar - Requests](/screenshots/radar-requests.png)
+
+![Radar - SQL](/screenshots/radar-sql.png)
+
+![Radar - Exceptions](/screenshots/radar-exceptions.png)

@@ -45,3 +45,17 @@ features:
     title: 代码质量
     details: 前端 ESLint + oxlint，后端 Ruff + basedpyright，全栈严格类型检查。
 ---
+
+## 界面预览
+
+![首页-中文](/screenshots/home-zh.png)
+
+![首页-英文](/screenshots/home-en.png)
+
+![性能监控-仪表盘](/screenshots/radar-dashboard.png)
+
+![性能监控-请求列表](/screenshots/radar-requests.png)
+
+![性能监控-SQL查询](/screenshots/radar-sql.png)
+
+![性能监控-异常列表](/screenshots/radar-exceptions.png)
