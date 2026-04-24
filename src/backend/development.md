@@ -70,8 +70,9 @@ class Product(BaseModel, AuditMixin):
     stock = fields.IntField(default=0, description="库存数量")
     status = fields.CharEnumField(enum_type=StatusType, default=StatusType.enable, description="状态")
 
+    warehouse_id: int
     warehouse: fields.ForeignKeyRelation["Warehouse"] = fields.ForeignKeyField(
-        "models.Warehouse", related_name="products", description="所属仓库"
+        "app_system.Warehouse", related_name="products", description="所属仓库"
     )
 
     class Meta:
