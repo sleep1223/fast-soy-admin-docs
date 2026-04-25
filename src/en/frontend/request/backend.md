@@ -46,8 +46,8 @@ Driven by `web/.env`:
 | Code | Default | Behavior |
 |---|---|---|
 | `VITE_SERVICE_SUCCESS_CODE` | `0000` | success, return data |
-| `VITE_SERVICE_LOGOUT_CODES` | `2100,2101` | clear token + go to login |
-| `VITE_SERVICE_MODAL_LOGOUT_CODES` | `2102` | modal → confirm → clear token + go to login |
+| `VITE_SERVICE_LOGOUT_CODES` | `2100,2101,2104,2105` | clear token + go to login |
+| `VITE_SERVICE_MODAL_LOGOUT_CODES` | `2102,2106` | modal → confirm → clear token + go to login |
 | `VITE_SERVICE_EXPIRED_TOKEN_CODES` | `2103` | auto-refresh + replay |
 | Other non-`0000` | — | default error toast (`window.$message`) |
 
@@ -57,10 +57,11 @@ Full backend codes: [Response codes](/en/backend/codes).
 
 Backend has "kill old tokens immediately" mechanism: on password change, impersonation exit, forced logout, it `INCR`s `token_version:{uid}`; old tokens fail with `2106 SESSION_INVALIDATED` on next request.
 
-`2106` isn't in the default mapping — frontend will toast it as a generic error. To handle it precisely (e.g. silent logout instead of toast), add it to `VITE_SERVICE_LOGOUT_CODES`:
+`2106` is now part of `VITE_SERVICE_MODAL_LOGOUT_CODES` by default, so the frontend confirms via modal then logs out. For silent logout (no modal), move it from `VITE_SERVICE_MODAL_LOGOUT_CODES` into `VITE_SERVICE_LOGOUT_CODES`:
 
 ```dotenv
-VITE_SERVICE_LOGOUT_CODES=2100,2101,2106
+VITE_SERVICE_LOGOUT_CODES=2100,2101,2104,2105,2106
+VITE_SERVICE_MODAL_LOGOUT_CODES=2102
 ```
 
 ## must_change_password

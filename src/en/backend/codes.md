@@ -58,7 +58,7 @@ Source: `app/core/code.py`. The frontend `.env` maps a few codes to behaviors (l
 | `2105` | `NOT_REFRESH_TOKEN` | Provided token is not a refresh token | — |
 | `2106` | `SESSION_INVALIDATED` | `token_version` was incremented; old token invalid | Redirect to login |
 
-> Frontend `.env`: `VITE_SERVICE_LOGOUT_CODES=2100,2101`, `VITE_SERVICE_MODAL_LOGOUT_CODES=2102`, `VITE_SERVICE_EXPIRED_TOKEN_CODES=2103`.
+> Frontend `.env`: `VITE_SERVICE_LOGOUT_CODES=2100,2101,2104,2105`, `VITE_SERVICE_MODAL_LOGOUT_CODES=2102,2106`, `VITE_SERVICE_EXPIRED_TOKEN_CODES=2103`.
 
 ### 22xx — Authorization
 
@@ -156,7 +156,7 @@ return Fail(code=Code.OLD_PASSWORD_WRONG, msg="old password wrong")
 | Frontend `.env` | Default | Behavior |
 |---|---|---|
 | `VITE_SERVICE_SUCCESS_CODE` | `0000` | Treat as success, extract `data` |
-| `VITE_SERVICE_LOGOUT_CODES` | `2100,2101` | Force logout |
-| `VITE_SERVICE_MODAL_LOGOUT_CODES` | `2102` | Modal then logout |
+| `VITE_SERVICE_LOGOUT_CODES` | `2100,2101,2104,2105` | Force logout |
+| `VITE_SERVICE_MODAL_LOGOUT_CODES` | `2102,2106` | Modal then logout |
 | `VITE_SERVICE_EXPIRED_TOKEN_CODES` | `2103` | Auto-refresh + retry |
 | Others | — | Show `msg` as error |

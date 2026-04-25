@@ -23,8 +23,8 @@ VITE_SERVICE_BASE_URL=/api/v1                    # business base
 VITE_OTHER_SERVICE_BASE_URL={"demo":"/demo"}     # other services (multi-backend)
 
 VITE_SERVICE_SUCCESS_CODE=0000                    # success code
-VITE_SERVICE_LOGOUT_CODES=2100,2101              # force logout
-VITE_SERVICE_MODAL_LOGOUT_CODES=2102             # modal then logout
+VITE_SERVICE_LOGOUT_CODES=2100,2101,2104,2105              # force logout
+VITE_SERVICE_MODAL_LOGOUT_CODES=2102,2106             # modal then logout
 VITE_SERVICE_EXPIRED_TOKEN_CODES=2103            # auto-refresh
 ```
 
@@ -81,8 +81,8 @@ Implementation: [src/service/request/index.ts](../../../web/src/service/request/
 |---|---|
 | Auto-attach `Authorization: Bearer <token>` | every request |
 | Auto-refresh token + replay | code in `VITE_SERVICE_EXPIRED_TOKEN_CODES` (default `2103`) |
-| Force logout | code in `VITE_SERVICE_LOGOUT_CODES` (default `2100,2101`) |
-| Modal then logout | code in `VITE_SERVICE_MODAL_LOGOUT_CODES` (default `2102`) |
+| Force logout | code in `VITE_SERVICE_LOGOUT_CODES` (default `2100,2101,2104,2105`) |
+| Modal then logout | code in `VITE_SERVICE_MODAL_LOGOUT_CODES` (default `2102,2106`) |
 | Default error toast | other non-success codes |
 | Promise reject | network / 5xx / parse error |
 

@@ -46,8 +46,8 @@ config.headers.Authorization = `Bearer ${token}`;
 | 码 | 默认 | 行为 |
 |---|---|---|
 | `VITE_SERVICE_SUCCESS_CODE` | `0000` | 成功，返回 data |
-| `VITE_SERVICE_LOGOUT_CODES` | `2100,2101` | 清 token + 跳登录 |
-| `VITE_SERVICE_MODAL_LOGOUT_CODES` | `2102` | 弹窗 → 用户确认 → 清 token + 跳登录 |
+| `VITE_SERVICE_LOGOUT_CODES` | `2100,2101,2104,2105` | 清 token + 跳登录 |
+| `VITE_SERVICE_MODAL_LOGOUT_CODES` | `2102,2106` | 弹窗 → 用户确认 → 清 token + 跳登录 |
 | `VITE_SERVICE_EXPIRED_TOKEN_CODES` | `2103` | 自动刷新 + 重放 |
 | 其他非 `0000` | — | 弹默认错误消息（`window.$message`） |
 
@@ -57,10 +57,11 @@ config.headers.Authorization = `Bearer ${token}`;
 
 后端有"立即让旧 token 失效"机制：修改密码、模拟登录恢复、强制下线时 `INCR token_version:{uid}`，旧 token 在下一次请求时返回 `2106 SESSION_INVALIDATED`。
 
-`2106` 没在默认码映射里——前端会按"其他错误"弹消息。如果想精确处理（如静默登出而非弹消息），把 `2106` 加到 `VITE_SERVICE_LOGOUT_CODES`：
+默认 `2106` 已纳入 `VITE_SERVICE_MODAL_LOGOUT_CODES`，前端会弹窗提示后跳登录。若希望静默登出（不弹窗），将其从 `VITE_SERVICE_MODAL_LOGOUT_CODES` 移除并追加到 `VITE_SERVICE_LOGOUT_CODES`：
 
 ```dotenv
-VITE_SERVICE_LOGOUT_CODES=2100,2101,2106
+VITE_SERVICE_LOGOUT_CODES=2100,2101,2104,2105,2106
+VITE_SERVICE_MODAL_LOGOUT_CODES=2102
 ```
 
 ## must_change_password

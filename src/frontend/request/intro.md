@@ -23,8 +23,8 @@ VITE_SERVICE_BASE_URL=/api/v1                    # 业务请求 base
 VITE_OTHER_SERVICE_BASE_URL={"demo":"/demo"}     # 其他 service（多后端）
 
 VITE_SERVICE_SUCCESS_CODE=0000                    # 视为成功的码
-VITE_SERVICE_LOGOUT_CODES=2100,2101              # 直接登出
-VITE_SERVICE_MODAL_LOGOUT_CODES=2102             # 弹窗后登出
+VITE_SERVICE_LOGOUT_CODES=2100,2101,2104,2105              # 直接登出
+VITE_SERVICE_MODAL_LOGOUT_CODES=2102,2106             # 弹窗后登出
 VITE_SERVICE_EXPIRED_TOKEN_CODES=2103            # 自动刷新 token
 ```
 
@@ -81,8 +81,8 @@ interface RequestOption {
 |---|---|
 | 自动加 `Authorization: Bearer <token>` | 全部请求 |
 | 自动刷新 token + 重放原请求 | 业务码命中 `VITE_SERVICE_EXPIRED_TOKEN_CODES`（默认 `2103`） |
-| 直接登出 | 业务码命中 `VITE_SERVICE_LOGOUT_CODES`（默认 `2100,2101`） |
-| 弹窗后登出 | 业务码命中 `VITE_SERVICE_MODAL_LOGOUT_CODES`（默认 `2102`） |
+| 直接登出 | 业务码命中 `VITE_SERVICE_LOGOUT_CODES`（默认 `2100,2101,2104,2105`） |
+| 弹窗后登出 | 业务码命中 `VITE_SERVICE_MODAL_LOGOUT_CODES`（默认 `2102,2106`） |
 | 弹默认错误消息 | 其他非成功业务码 |
 | Promise reject | 网络错误 / 5xx / 解析失败 |
 
