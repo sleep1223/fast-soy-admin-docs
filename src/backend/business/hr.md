@@ -13,13 +13,13 @@ HR 模块管理三类资源：
 - **标签**（`Tag`，员工技能/特长字典，分类引用系统字典 `tag_category`）
 - **员工**（`Employee`，含状态机：`pending → onboarding → active → resigned`）
 
-并暴露三套接口：
+并暴露四套接口：
 
 | 角色场景 | 路由 | 文件 |
 |---|---|---|
-| 系统管理（HR 总管 / 部门主管） | `/hr/departments/*`、`/hr/employees/*`、`/hr/tags/*` | [api/manage.py](../../../app/business/hr/api/manage.py) |
-| 部门主管查看下属 | `/hr/department/employees`、`/hr/department/employees/{id}/tags` | [api/dept.py](../../../app/business/hr/api/dept.py) |
-| 普通员工自助 | `/hr/my/profile`、`/hr/my/tags`、`/hr/my/department` | [api/my.py](../../../app/business/hr/api/my.py) |
+| 系统管理（HR 总管） | `/hr/departments/*`、`/hr/employees/*`、`/hr/tags/*` | [api/manage.py](../../../app/business/hr/api/manage.py) |
+| 部门主管管理下属 | `/hr/team/employees/*`、`/hr/team/stats` | [api/team.py](../../../app/business/hr/api/team.py) |
+| 普通员工自助 | `/hr/my/profile`、`/hr/my/avatar`、`/hr/my/tags`、`/hr/my/department` | [api/my.py](../../../app/business/hr/api/my.py) |
 | 公开数据展示（常量路由 Demo） | `/hr/public/showcase` | [api/public.py](../../../app/business/hr/api/public.py) |
 
 ## 目录结构（业务模块约定）
@@ -34,13 +34,14 @@ app/business/hr/
 ├── schemas.py         # Pydantic schema（继承 SchemaBase）
 ├── controllers.py     # CRUDBase 子类（单资源 CRUD）
 ├── services.py        # 多模型编排、缓存、状态机
-├── cache_utils.py     # 模块自有的缓存失效辅助
+├── events.py          # 模块事件订阅
 ├── init_data.py       # async def init() — 菜单 / 角色 / 按钮 / 种子
 └── api/
     ├── __init__.py    # 必须导出汇总后的 router
-    ├── manage.py      # 系统管理路由
-    ├── dept.py        # 部门主管路由
-    └── my.py          # 员工自助路由
+    ├── manage.py      # 系统管理路由（HR 总管）
+    ├── team.py        # 部门主管路由（管理下属）
+    ├── my.py          # 员工自助路由
+    └── public.py      # 公开常量路由示例
 ```
 
 `autodiscover` 在启动时扫描 `app/business/<name>/`，按以下约定加载（详见 [app/core/autodiscover.py](../../../app/core/autodiscover.py)）：
@@ -430,7 +431,7 @@ else:
 
 ### 4. 缓存与失效
 
-部门统计在 [services.py:get_department_stats](../../../app/business/hr/services.py) 中走 Redis 缓存（key `hr_dept_stats:all`，5 分钟 TTL），员工数据变更时通过 `invalidate_dept_stats(redis)` 主动失效。这是业务模块**自带缓存**的标准模式。
+业务模块**自带缓存**的标准模式：键命名 `<module>_<resource>:<scope>`，读时 miss → 查询 → 写入并设置 TTL，数据变更时主动 `redis.delete(...)` 失效。仓库内可参考的实现为字典选项缓存（[`app/system/api/dictionary.py`](../../../app/system/api/dictionary.py)，键形如 `dict_options:<type>`）。
 
 ### 5. 公开接口（常量路由示例）
 
@@ -488,7 +489,7 @@ async def _init_menu_data() -> None:
 2. **不要**返回包含 PII 的字段（`phone` / `email` / `employee_no` / `user_id`）
 3. **不要**返回可用于枚举探测的精确列表（如"所有员工姓名"）——只返回聚合计数
 4. 路径统一放在 `/<module>/public/*` 前缀下，便于 nginx / WAF 侧做 IP 限流策略
-5. 若数据可能较贵，建议搭配 Redis 缓存（参考 `get_department_stats`）
+5. 若数据可能较贵，建议搭配 Redis 缓存（参考字典选项实现 [`app/system/api/dictionary.py`](../../../app/system/api/dictionary.py)）
 
 ## 用 HR 模块作为新模块的参考
 

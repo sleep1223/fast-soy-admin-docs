@@ -13,13 +13,13 @@ HR manages three resources:
 - **Tag** (`Tag`, employee skill / interest dictionary; category references the system dictionary `tag_category`)
 - **Employee** (`Employee`, with state machine: `pending → onboarding → active → resigned`)
 
-Three sets of endpoints:
+Four sets of endpoints:
 
 | Audience | Routes | File |
 |---|---|---|
-| Admin (HR director / dept manager) | `/hr/departments/*`, `/hr/employees/*`, `/hr/tags/*` | `api/manage.py` |
-| Department manager — view subordinates | `/hr/department/employees`, `/hr/department/employees/{id}/tags` | `api/dept.py` |
-| Self-service for employees | `/hr/my/profile`, `/hr/my/tags`, `/hr/my/department` | `api/my.py` |
+| Admin (HR director) | `/hr/departments/*`, `/hr/employees/*`, `/hr/tags/*` | `api/manage.py` |
+| Department manager — manage subordinates | `/hr/team/employees/*`, `/hr/team/stats` | `api/team.py` |
+| Self-service for employees | `/hr/my/profile`, `/hr/my/avatar`, `/hr/my/tags`, `/hr/my/department` | `api/my.py` |
 | Public showcase (constant route demo) | `/hr/public/showcase` | `api/public.py` |
 
 ## Directory layout (module convention)
@@ -34,13 +34,14 @@ app/business/hr/
 ├── schemas.py         # Pydantic schemas (extend SchemaBase)
 ├── controllers.py     # CRUDBase subclasses (single-resource CRUD)
 ├── services.py        # multi-model orchestration, cache, FSM
-├── cache_utils.py     # per-module cache invalidation helpers
+├── events.py          # module event subscriptions
 ├── init_data.py       # async def init() — menus / roles / buttons / seeds
 └── api/
     ├── __init__.py    # must export the aggregated router
-    ├── manage.py      # admin routes
-    ├── dept.py        # dept-manager routes
-    └── my.py          # self-service routes
+    ├── manage.py      # admin routes (HR director)
+    ├── team.py        # dept-manager routes (manage subordinates)
+    ├── my.py          # self-service routes
+    └── public.py      # public constant-route demo
 ```
 
 `autodiscover` scans `app/business/<name>/` at startup with these rules (see `app/core/autodiscover.py`):
@@ -430,7 +431,7 @@ Then in a transaction: create the system user (random password + `must_change_pa
 
 ### 4. Cache & invalidation
 
-Department stats in `services.py`'s `get_department_stats` use Redis cache (key `hr_dept_stats:all`, 5-min TTL). When employee data changes, `invalidate_dept_stats(redis)` actively clears it. This is the standard pattern for **module-local caching**.
+Standard pattern for **module-local caching**: name keys `<module>_<resource>:<scope>`; on read, miss → query → write with TTL; on data change, invalidate explicitly via `redis.delete(...)`. The live in-repo reference is the dictionary-options cache ([`app/system/api/dictionary.py`](../../../app/system/api/dictionary.py), keys like `dict_options:<type>`).
 
 ### 5. Public endpoint (constant route example)
 
