@@ -170,6 +170,54 @@ async def _update(item_id: SqidPath, obj_in: UserUpdate, request: Request):
 `emp_crud` 没传 `create_schema` 时，CRUDRouter 不会注册 `POST /employees`。这正好让你能在同一 router 上手写 `@router.post("/employees")` 而不被覆盖——HR 模块的员工创建就是这样。
 :::
 
+## 适用边界 — 别让 CRUDRouter 上瘾
+
+`CRUDRouter` 是给**贫血资源**用的——字典、标签、部门、分类这种纯 CRUD 表。聚合根（用户、角色、订单、工单等带状态、带副作用的资源）**不要硬塞进 CRUDRouter**。
+
+::: danger 触发改写信号
+满足以下任一条件，立刻把该资源改写为显式 `@router.post(...)` + `services/`，不要继续 `@crud.override`：
+
+- override 数 ≥ 3（标准 6 路由覆盖一半，抽象已无收益）
+- 任一 override 内出现 `in_transaction` / `redis` / 跨模型写
+- 资源是聚合根或带状态机
+- 写操作有副作用（发通知、写审计、触发事件、失效缓存）
+:::
+
+### `@crud.override` 内禁止出现
+
+下面这些必须下沉到 `services/`，api 层只做"参数转发 + 包响应"：
+
+- `in_transaction(...)` —— 事务编排是 service 的事
+- `request.app.state.redis` / 任何 Redis 客户端调用
+- 跨模型的 `create` / `update` / `delete`（含 `m2m.add` / `m2m.clear`）
+- 调用其他模块的 service / 发事件 / 写审计
+
+### 正确范式
+
+```python
+# services/users.py
+async def create_user_with_roles(redis, user_in: UserCreate) -> User:
+    if await user_controller.get_by_email(user_in.user_email):
+        raise BizError(code=Code.DUPLICATE_USER_EMAIL, msg="该邮箱已被注册")
+    async with in_transaction(get_db_conn(User)):
+        user = await user_controller.create(obj_in=user_in)
+        await user_controller.update_roles_by_code(user, user_in.by_user_role_code_list)
+    return user
+
+# api/users.py
+@crud.override("create")
+async def _create_user(user_in: UserCreate, request: Request):
+    user = await create_user_with_roles(request.app.state.redis, user_in)
+    return Success(msg="创建成功", data={"createdId": encode_id(user.id)})
+```
+
+仓库内参考实现：
+
+- [`app/system/api/users.py`](https://github.com/sleep1223/fast-soy-admin/blob/main/app/system/api/users.py) ＋ [`app/system/services/user.py`](https://github.com/sleep1223/fast-soy-admin/blob/main/app/system/services/user.py)
+- [`app/system/api/apis.py`](https://github.com/sleep1223/fast-soy-admin/blob/main/app/system/api/apis.py) ＋ [`app/system/services/api.py`](https://github.com/sleep1223/fast-soy-admin/blob/main/app/system/services/api.py)
+
+> 这条约定也作为 PR review checklist 第 15 条强制执行，见 [架构总览 / 强制约定清单](./architecture.md)。
+
 ## 在 router 上加额外端点
 
 `crud.router` 是普通 `APIRouter`，标准 6 路由之外的端点直接挂：

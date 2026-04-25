@@ -56,6 +56,8 @@ return JSONResponse({"code": Code.FAIL, "msg": "失败"})
 - ✅ 标准 6 路由之外的端点直接挂在 `crud.router` 上
 - ❌ 不要直接操作 `router.routes.append(...)` 绕过 `_OrderedRouter` 排序
 - ❌ Controller / Service 中**不要** import `fastapi.Request` / `Response`——HTTP 相关只在 api 层
+- ❌ `@crud.override` 内**禁止**出现 `in_transaction` / `request.app.state.redis` / 跨模型写 / 事件 / 审计——必须下沉到 `services/`，api 层只做参数转发与响应封装
+- ❌ 当某资源 override 数 ≥ 3，或该资源是聚合根（带状态、带副作用），**应改为**显式 `@router.post(...)` + `services/`，不要硬塞 `CRUDRouter`（CRUDRouter 只服务贫血资源；详见 [CRUDRouter / 适用边界](../backend/crud-router.md#适用边界-别让-crudrouter-上瘾)）
 
 ## 5. 分层职责
 

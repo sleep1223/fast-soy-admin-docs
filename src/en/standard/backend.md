@@ -56,6 +56,8 @@ See full convention in [API conventions](/en/backend/api).
 - ✅ Mount endpoints beyond the standard 6 directly on `crud.router`
 - ❌ Don't mutate `router.routes.append(...)` — bypasses `_OrderedRouter` sorting
 - ❌ Controllers / services don't `import fastapi.Request` — HTTP only at the api layer
+- ❌ Inside `@crud.override`, **forbid** `in_transaction` / `request.app.state.redis` / cross-model writes / events / audit — push these down into `services/`; the api layer only forwards arguments and wraps responses
+- ❌ When a resource has ≥ 3 overrides, or is an aggregate root (stateful, side-effect-heavy), **switch to** explicit `@router.post(...)` + `services/` — don't force-fit `CRUDRouter` (it serves only anemic resources)
 
 ## 5. Layer responsibilities
 
