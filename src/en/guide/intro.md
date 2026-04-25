@@ -57,7 +57,7 @@ The repo is a monorepo: `/app` is the backend, `/web` is the frontend, `/deploy`
 
 - [Live preview](https://fast-soy-admin.sleep0.de/)
 - [GitHub](https://github.com/sleep1223/fast-soy-admin)
-- [API docs (Apifox)](https://apifox.com/apidoc/shared-7cd78102-46eb-4701-88b1-3b49c006504b)
+- [API docs (Apidog)](https://fast-soy-admin.apidog.io)
 - [SoybeanAdmin (frontend upstream)](https://github.com/soybeanjs/soybean-admin)
 - [FastAPI](https://fastapi.tiangolo.com/)
 - [Tortoise ORM](https://tortoise.github.io)

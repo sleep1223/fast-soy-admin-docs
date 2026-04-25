@@ -2,7 +2,7 @@
 
 所有 system / business 模块的 HTTP 接口都遵循同一套约定。这是强制规范，偏离前请讨论。
 
-完整在线 API 参考：[Apifox 文档](https://apifox.com/apidoc/shared-7cd78102-46eb-4701-88b1-3b49c006504b)。本文档覆盖**约定**与**关键端点速查**。
+完整在线 API 参考：[Apidog 文档](https://fast-soy-admin.apidog.io)。本文档覆盖**约定**与**关键端点速查**。
 
 ## 路由前缀
 

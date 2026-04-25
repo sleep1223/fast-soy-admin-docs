@@ -17,7 +17,7 @@ const enConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
         text: 'Links',
         items: [
           { text: 'Preview', link: 'https://fast-soy-admin.sleep0.de/' },
-          { text: 'API Docs (Apifox)', link: 'https://apifox.com/apidoc/shared-7cd78102-46eb-4701-88b1-3b49c006504b' },
+          { text: 'API Docs (Apidog)', link: 'https://fast-soy-admin.apidog.io' },
           { text: 'SoybeanAdmin', link: 'https://github.com/soybeanjs/soybean-admin' },
           { text: 'SoybeanAdmin Docs', link: 'https://docs.soybeanjs.cn' },
           { text: 'FastAPI', link: 'https://fastapi.tiangolo.com/' },

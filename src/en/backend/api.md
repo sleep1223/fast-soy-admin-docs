@@ -2,7 +2,7 @@
 
 All system / business endpoints follow the same convention. Treat this as enforced; deviations require discussion.
 
-Full online API reference: [Apifox](https://apifox.com/apidoc/shared-7cd78102-46eb-4701-88b1-3b49c006504b). This page covers **conventions** + **key endpoint cheat sheet**.
+Full online API reference: [Apidog](https://fast-soy-admin.apidog.io). This page covers **conventions** + **key endpoint cheat sheet**.
 
 ## Route prefixes
 
