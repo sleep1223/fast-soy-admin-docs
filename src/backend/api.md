@@ -178,7 +178,7 @@ router = dept_crud.router
 | 用户 | `/users` | `create / update` 走 `@override` 注入密码哈希 + 角色关联 |
 | 角色 | `/roles` | 含 `GET /roles/{id}/menus`、`PATCH /roles/{id}/menus` 等子资源 |
 | 菜单 | `/menus` | 含 `GET /menus/tree`、`GET /menus/pages` |
-| API | `/apis` | 含 `POST /apis/refresh`（手动触发对账） |
+| API | `/apis` | **只读**（仅 `list / get / tree / tags`），由启动时 `refresh_api_list()` 全量对账维护 |
 | 字典 | `/dictionaries` | 含 `GET /dictionaries/{type}/options`（带 5 分钟 Redis 缓存） |
 
 ### 业务模块（`/api/v1/business/<name>`）

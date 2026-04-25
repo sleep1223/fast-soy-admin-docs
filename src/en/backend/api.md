@@ -178,7 +178,7 @@ Each follows the standard 6-route convention:
 | Users | `/users` | `create / update` are `@override`d for password hashing + role association |
 | Roles | `/roles` | Includes `GET /roles/{id}/menus`, `PATCH /roles/{id}/menus`, etc. |
 | Menus | `/menus` | Includes `GET /menus/tree`, `GET /menus/pages` |
-| APIs | `/apis` | Includes `POST /apis/refresh` (manual reconcile) |
+| APIs | `/apis` | **Read-only** (`list / get / tree / tags` only); records are reconciled by `refresh_api_list()` at startup |
 | Dictionary | `/dictionaries` | Includes `GET /dictionaries/{type}/options` (5-min Redis cache) |
 
 ### Business modules (`/api/v1/business/<name>`)
