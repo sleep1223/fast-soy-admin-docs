@@ -8,6 +8,125 @@
 
 本页梳理 FastSoyAdmin 里可用的三把武器——**事务**、**乐观锁（含状态机）**、**Redis 分布式锁**——以及它们分别对应哪种场景。
 
+## 部署拓扑：进程与线程
+
+项目用 [Granian](https://github.com/emmett-framework/granian) 作为 ASGI 服务器（见 `run.py`），支持三种并发拓扑。选哪种直接决定上面的工具够不够用。
+
+### 1) 单进程多线程（`workers=1, threads=N` 或 `blocking_threads=N`）
+
+改 `run.py` 的 `main()`：
+
+```python
+server = Granian(
+    target="app:app",
+    address="0.0.0.0",
+    port=9999,
+    workers=1,                   # ← 单进程
+    threads=1,                   # 事件循环线程数，保持 1
+    blocking_threads=16,         # ← 阻塞调用卸载线程数
+    interface=Interfaces.ASGI,
+    log_level=LogLevels.info,
+    # 下面这些"健壮性 / 内存保护"参数仍可填, 但只有崩溃后整进程 respawn 有效
+    respawn_failed_workers=True,
+    workers_lifetime=3600 * 4,
+    workers_max_rss=512,
+    workers_kill_timeout=30,
+    backpressure=64,
+    backlog=1024,
+)
+```
+
+- **一个进程 + 一个 asyncio 事件循环**，`blocking_threads` 用于把阻塞调用卸载到线程池（`asyncio.to_thread`、`run_in_executor`）。
+- 进程内共享内存，Python 对象、模块级 `dict`、`asyncio.Lock` / `Semaphore`、应用 `state` 全部可见。
+- 适合：**开发机 / 小流量单机**、本地调试 `python run.py`。
+- 并发注意：GIL 仍在，CPU 密集任务不会因多线程变快；事件循环只有一条，`await` 链中任何一处阻塞都会拖垮全 worker。**别在事件循环里跑 CPU 重活**——丢 `asyncio.to_thread`。
+- 本页列的 `asyncio.Semaphore`、乐观锁、事务全部开箱即用，**不需要 Redis 分布式锁**。
+- ⚠️ **不能自动杀死阻塞进程**：见 [进程级健壮性的前置条件](#进程级健壮性的前置条件)。
+
+### 2) 多进程单线程（`workers=N, threads=1`）— 项目默认
+
+`run.py` 现有写法即是此模式，读环境变量 `WORKERS`，默认 `min(cpu, 4)`：
+
+```python
+workers = int(os.getenv("WORKERS", min(multiprocessing.cpu_count(), 4)))
+server = Granian(
+    target="app:app",
+    workers=workers,             # ← 多进程
+    # threads 默认 1, 不传即可
+    ...
+)
+```
+
+部署时只需 `WORKERS=8 python run.py` 调整进程数。
+
+- **N 个 worker 进程 × 每进程一个事件循环**，是 Python 下最常见的"绕过 GIL"水平扩展姿势。
+- 进程间**不共享内存**：
+  - 模块级变量、`app.state`、`asyncio.Lock` **跨 worker 无效**；
+  - Redis / 数据库是**唯一**的共享状态源；
+  - 定时任务、一次性初始化必须借助 [Redis leader worker 选举](./init-data.md)，否则 N 个 worker 会并发触发 N 次。
+- 适合：**生产部署**。容器多副本场景也都是这种拓扑（每容器 N worker）。
+- 并发注意：
+  - "同一条记录被同时改"在多 worker 下是**常态**，乐观锁 / `select_for_update` / `F` 表达式必须用对；
+  - 想做"只有一个 worker 跑"的逻辑（定时对账、批量导入）一律走 **Redis 分布式锁**；
+  - 进程启动顺序不确定，不要依赖"第一个 worker 做初始化"——用 leader 选举。
+- ✅ **可以自动杀死阻塞 worker**：`workers_kill_timeout` / `workers_max_rss` / `workers_lifetime` 在此拓扑下真正生效。
+
+### 3) 多进程多线程（`workers=N, threads=M`）
+
+在默认基础上再加线程：
+
+```python
+server = Granian(
+    target="app:app",
+    workers=workers,             # ← 多进程
+    threads=1,                   # 事件循环线程保持 1
+    blocking_threads=16,         # ← 每个 worker 额外的阻塞卸载线程
+    runtime_threads=1,           # 默认即可
+    ...
+)
+```
+
+- 前两者的叠加：**N 进程 × 每进程 1 个事件循环 + M 个线程**。
+- 线程一般仍是 **blocking offload** 用途（阻塞 IO、CPU 卸载），事件循环依旧只有一条/进程。
+- 适合：业务里混了相当比例的**同步阻塞调用**（老的 requests / 同步 DB 驱动 / CPU bound），需要在不膨胀进程数的前提下再压一点吞吐。
+- 并发注意：
+  - 同一 worker 内的线程共享 Python 对象，但**不共享事件循环**，不要在线程里直接 `await`——用 `loop.call_soon_threadsafe` / `asyncio.run_coroutine_threadsafe` 回到主循环；
+  - Tortoise / asyncpg 的连接池**不是**线程安全地让你跨线程共享——让 DB 调用留在事件循环里，只把纯 CPU / 同步 IO 丢到线程池；
+  - 跨进程协调仍然只能靠 Redis / DB，和 (2) 一致。
+- ✅ **可以自动杀死阻塞 worker**（同 2）。单个线程卡死不会独立被回收，但整进程 RSS / 生命周期 / kill_timeout 依然按进程粒度生效。
+
+### 进程级健壮性的前置条件
+
+`run.py` 里这几个参数只在 **`workers >= 2`** 时真正有意义：
+
+| 参数 | 作用 | 为什么需要多进程 |
+|---|---|---|
+| `respawn_failed_workers=True` | worker 崩溃自动重启 | 单 worker 崩了整个服务就挂了，"重启"再快也有服务中断 |
+| `workers_kill_timeout=30` | worker **卡死**（事件循环被阻塞、无响应心跳）超 30s 强制 kill | 单 worker 被 kill = 整个服务 down；多进程下仅影响它一个，其它继续接流量 |
+| `workers_lifetime=3600*4` | 每 4h 回收一次，防内存泄漏 | 单 worker 回收时有数秒不可用窗口；多进程下 Granian 滚动回收，服务无感 |
+| `workers_max_rss=512` | 单 worker RSS 超限自动重启 | 同上 |
+
+换句话说，**"自动杀死阻塞进程"这件事本身就需要多进程**——Python 没有办法在同一进程内把一个卡死的线程/协程强制 kill 掉（没有安全的"线程终止"API，GIL 也不允许中断已持有 GIL 的 C 扩展）。唯一可靠的兜底是**由父进程 SIGKILL 子进程并重启**，这就必须 `workers >= 2`，否则被杀的就是你自己。
+
+所以开发机 `workers=1` 时：
+
+- 请求卡死 → 只能自己手动 Ctrl+C 重启；
+- 内存涨到 2GB → 不会被回收，得自己重启；
+- 进程 panic → `respawn_failed_workers` 会重启它，但重启窗口内服务不可用。
+
+**生产部署务必保持多进程（至少 `workers=2`）**，这是 `run.py` 那套自愈参数生效的前提。
+
+### 选型速查
+
+| 你在做什么 | 推荐拓扑 | 不够用时升级为 |
+|---|---|---|
+| 本地开发 / 调试 | 单进程多线程（`workers=1`） | — |
+| 生产单机 / 多副本容器 | **多进程单线程（默认）** | 有阻塞卸载需求 → 多进程多线程 |
+| 业务含较多同步阻塞 IO / CPU 任务 | 多进程多线程 | 仍瓶颈 → 拆独立 worker 服务 |
+| 想跑定时任务 / 单次初始化 | 任何多 worker 拓扑 + **Redis leader / 分布式锁** | — |
+
+一句话：**只要 `workers > 1`，进程内的任何同步原语（`asyncio.Lock`、模块级计数器、`app.state`）都不再可信；共享状态必须落到 DB 或 Redis。**
+
 ## 先选对工具
 
 | 场景 | 推荐手段 | 说明 |
