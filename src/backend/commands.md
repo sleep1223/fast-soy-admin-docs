@@ -37,7 +37,7 @@ make help
 |---|---|---|
 | `uv run python -m app.cli init <MOD>` | `make cli-init MOD=xxx` | 创建业务模块骨架（只含 `models.py`） |
 | `uv run python -m app.cli gen <MOD>` | `make cli-gen MOD=xxx` | 解析 `models.py`，生成后端 schemas/controllers/api 等 |
-| `uv run python -m app.cli gen-web <MOD>` | `make cli-gen-web MOD=xxx [CN=中文名]` | 解析 `models.py`，生成前端 service/typings/views/i18n 片段 |
+| `uv run python -m app.cli gen-web <MOD>` | `make cli-gen-web MOD=xxx [CN=中文名]` | 解析 `models.py`，生成前端 service/typings/views/i18n（自动合并到 `_generated/<mod>/`，无需手动改 `zh-cn.ts` / `app.d.ts`） |
 | — | `make cli-gen-all MOD=xxx [CN=中文名]` | 一次跑完 cli-gen + cli-gen-web |
 
 详细使用流程见 [开发指南](./development.md)。

@@ -122,19 +122,29 @@ web/
 │       ├── <entity>-search.vue                # search form
 │       └── <entity>-operate-drawer.vue        # add / edit drawer
 └── src/locales/langs/_generated/inventory/
-    ├── zh-cn.ts                               # i18n fragment (to merge)
-    └── en-us.ts                               # i18n fragment (to merge)
+    ├── zh-cn.ts                               # i18n messages (auto-merged, no manual step)
+    ├── en-us.ts                               # i18n messages (auto-merged)
+    └── types.d.ts                             # GeneratedPages augmentation (auto via declaration merging)
 ```
 
 `web/src/service/api/index.ts` auto-appends `export * from './inventory-manage';` (idempotent).
 
 Auto runs `oxfmt` + `eslint --fix`.
 
-### 5. Merge i18n fragments (manual)
+### 5. i18n is auto-merged
 
-Open `web/src/locales/langs/_generated/inventory/{zh-cn,en-us}.ts` and follow the header comments to paste the `route` and `page` fragments into `web/src/locales/langs/{zh-cn,en-us}.ts`.
+The three files under `_generated/<module>/` are consumed by the frontend toolchain; no manual edits to the global language packs are required.
 
-After merging, you can remove `_generated/inventory/`.
+| File | Consumer | Effect |
+|---|---|---|
+| `zh-cn.ts` / `en-us.ts` | [`web/src/locales/locale.ts`](https://github.com/sleep1223/fast-soy-admin/blob/dev/web/src/locales/locale.ts) deep-merges them into the matching messages via `import.meta.glob` | Injects `route.<module>` and `page.<module>` |
+| `types.d.ts` | Augments `App.I18n.GeneratedPages` via TypeScript declaration merging | Makes `$t('page.<module>.<entity>.xxx')` checkable by `vue-tsc` |
+
+Type contract:
+
+- `App.I18n.Schema.page` is intersected with `_MergePages<GeneratedPages>`; a new module only needs `interface GeneratedPages { <module>: {...} }` to extend the key space.
+- Base packs `zh-cn.ts` / `en-us.ts` are typed as `App.I18n.BaseSchema` (`Schema` minus `GeneratedPages`), so new modules never force edits to the base files.
+- `App.I18n.Schema.route` is `Partial<Record<I18nRouteKey, string>>`. Route keys are derived by Elegant Router from `views/`; their translations are supplied by `_generated/<module>/zh-cn.ts`.
 
 ### 6. Resolve TODOs
 

@@ -123,32 +123,29 @@ web/
 │       ├── <entity>-search.vue                # 搜索表单
 │       └── <entity>-operate-drawer.vue        # 新增/编辑抽屉
 └── src/locales/langs/_generated/inventory/
-    ├── zh-cn.md                               # i18n 中文片段（待合并）
-    ├── en-us.md                               # i18n 英文片段（待合并）
-    └── app.d.ts.md                            # I18n.Schema.page 类型扩展（待合并）
+    ├── zh-cn.ts                               # i18n 中文消息（自动合并，无需手动操作）
+    ├── en-us.ts                               # i18n 英文消息（自动合并）
+    └── types.d.ts                             # GeneratedPages 类型扩展（declare 合并自动生效）
 ```
 
 `web/src/service/api/index.ts` 会自动追加 `export * from './inventory-manage';`（幂等）。
 
-生成后会对新增/追加的 `.ts / .tsx / .vue / .d.ts` 文件自动跑 `oxfmt` + `eslint --fix`（`.md` 片段不参与格式化）。
+生成后会对新增/追加的 `.ts / .tsx / .vue / .d.ts` 文件自动跑 `oxfmt` + `eslint --fix`。
 
-### 5. 合并 i18n 片段（手动，三处）
+### 5. i18n 自动合并
 
-生成物用 `.md` 扩展名、且**不会**被 pnpm 构建直接加载，需要手动把片段拷贝到真正的源文件：
+`_generated/<module>/` 下三个文件由前端工程链自动消费，无需手动编辑全局语言包：
 
-| 生成文件 | 合并到 | 合并到哪段 |
+| 文件 | 消费方 | 作用 |
 |---|---|---|
-| `_generated/inventory/zh-cn.md` | `web/src/locales/langs/zh-cn.ts` | `route` / `page` 对象 |
-| `_generated/inventory/en-us.md` | `web/src/locales/langs/en-us.ts` | `route` / `page` 对象 |
-| `_generated/inventory/app.d.ts.md` | `web/src/typings/app.d.ts` | `App.I18n.Schema.page` 子树 |
+| `zh-cn.ts` / `en-us.ts` | [`web/src/locales/locale.ts`](https://github.com/sleep1223/fast-soy-admin/blob/dev/web/src/locales/locale.ts) 通过 `import.meta.glob` 深合并入对应语言的 messages | 注入 `route.<module>` 与 `page.<module>` 子树 |
+| `types.d.ts` | TypeScript declaration merging 注入 `App.I18n.GeneratedPages` | 使 `$t('page.<module>.<entity>.xxx')` 受 `vue-tsc` 校验 |
 
-::: warning 必须合并 `app.d.ts.md`
-不合并会导致生成代码里的 `$t('page.inventory...')` 编译报错（`Argument of type ... is not assignable to parameter of type I18nKey`）。`route` 命名空间在 Elegant Router 首次启动时自动补齐 `elegant-router.d.ts`，**不需要**手动改类型；但 `page` 命名空间没有这个对账机制，必须手动扩展。
-:::
+类型层契约：
 
-> 历史遗留说明：早期版本把片段写成 `.ts`，会被 ESLint 的 `no-empty-file` 规则判为错误，且 `app.d.ts` 扩展片段缺失。现统一走 `.md`，规避所有工具链。
-
-合并完后可删除 `_generated/inventory/` 目录。
+- `App.I18n.Schema.page` 与 `_MergePages<GeneratedPages>` 取交集，新增模块仅需通过 `interface GeneratedPages { <module>: {...} }` 扩张键空间。
+- 基础语言包 `zh-cn.ts` / `en-us.ts` 标注为 `App.I18n.BaseSchema`（即 `Schema` 排除 `GeneratedPages` 部分），新增模块不会要求基础文件补字段。
+- `App.I18n.Schema.route` 为 `Partial<Record<I18nRouteKey, string>>`，路由键由 Elegant Router 自 `views/` 推导，对应翻译由 `_generated/<module>/zh-cn.ts` 提供。
 
 ### 6. 处理 TODO
 
