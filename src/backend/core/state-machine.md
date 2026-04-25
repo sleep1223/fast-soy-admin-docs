@@ -109,11 +109,11 @@ except TransitionError as e:
 # app/core/code.py 末尾
 class Code:
     ...
-    # 27xx HR
-    HR_INVALID_TRANSITION = "2707"
+    # 40xx HR
+    HR_INVALID_TRANSITION = "4007"
 
-    # 28xx 订单
-    ORDER_INVALID_TRANSITION = "2807"
+    # 41xx 订单
+    ORDER_INVALID_TRANSITION = "4107"
 ```
 
 然后业务里：

@@ -10,9 +10,9 @@ Source: `app/core/code.py`. The frontend `.env` maps a few codes to behaviors (l
 |---|---|
 | `0000` | Success |
 | `1000–1999` | System internal error (caught exceptions, validation failure) |
-| `2000–2999` | Business logic error (auth, permission, conflict, business failure) |
+| `2000–2999` | Framework-builtin business errors (auth, permission, conflict, Schema required, etc.) |
 | `3000–3999` | Framework-reserved (currently unused) |
-| `4000–9999` | Project-defined (framework doesn't use them) |
+| `4000–9999` | Project / business-module codes (module codes **must** start at `4000`; never reuse `2xxx`) |
 
 ## 0000 — Success
 
@@ -118,24 +118,24 @@ Source: `app/core/code.py`. The frontend `.env` maps a few codes to behaviors (l
 | `2607` | `ROUTE_NAME_REQUIRED` | Route name required |
 | `2608` | `ROUTE_PATH_REQUIRED` | Route path required |
 
-### 27xx — HR business (sample of module-specific codes)
-
-| Code | Constant | Meaning |
-|---|---|---|
-| `2700` | `HR_DEPARTMENT_REQUIRED` | Super-admin must specify department on employee create |
-| `2701` | `HR_MANAGER_REQUIRED` | Only department managers may create employees |
-| `2702` | `HR_CREATE_FORBIDDEN` | No permission to create employee |
-| `2703` | `HR_TAGS_EXCEED_LIMIT` | Employee tag count over limit |
-| `2704` | `HR_EMPLOYEE_NOT_IN_DEPT` | Employee not in current manager's department |
-| `2705` | `HR_USER_NOT_EMPLOYEE` | Current user is not bound to an employee |
-| `2706` | `HR_MANAGER_ONLY` | Only department managers may perform this |
-| `2707` | `HR_INVALID_TRANSITION` | Disallowed state transition |
-
-> Module convention: append your module's range at the end of `app/core/code.py` (e.g. `28xx`, `29xx`). One unique code per failure scenario — never re-use `2400`.
-
 ## 4000–9999 — Project-defined
 
 Project-specific codes. The framework doesn't touch them; the frontend doesn't auto-pop errors — handle as you wish.
+
+> Module convention: business module codes must start at `4000` (do **not** occupy the `2xxx` system range). Append your module's range at the end of `app/core/code.py` (e.g. `41xx`, `42xx`). One unique code per failure scenario — never re-use `2400`.
+
+### 40xx — HR business (sample of module-specific codes)
+
+| Code | Constant | Meaning |
+|---|---|---|
+| `4000` | `HR_DEPARTMENT_REQUIRED` | Super-admin must specify department on employee create |
+| `4001` | `HR_MANAGER_REQUIRED` | Only department managers may create employees |
+| `4002` | `HR_CREATE_FORBIDDEN` | No permission to create employee |
+| `4003` | `HR_TAGS_EXCEED_LIMIT` | Employee tag count over limit |
+| `4004` | `HR_EMPLOYEE_NOT_IN_DEPT` | Employee not in current manager's department |
+| `4005` | `HR_USER_NOT_EMPLOYEE` | Current user is not bound to an employee |
+| `4006` | `HR_MANAGER_ONLY` | Only department managers may perform this |
+| `4007` | `HR_INVALID_TRANSITION` | Disallowed state transition |
 
 ## Raising
 

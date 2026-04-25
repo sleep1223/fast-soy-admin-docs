@@ -109,11 +109,11 @@ Different modules use different code ranges:
 # end of app/core/code.py
 class Code:
     ...
-    # 27xx HR
-    HR_INVALID_TRANSITION = "2707"
+    # 40xx HR
+    HR_INVALID_TRANSITION = "4007"
 
-    # 28xx Order
-    ORDER_INVALID_TRANSITION = "2807"
+    # 41xx Order
+    ORDER_INVALID_TRANSITION = "4107"
 ```
 
 Then in business code wrap conditionally — or just reuse `Code.HR_INVALID_TRANSITION` if you don't care about the segment.
