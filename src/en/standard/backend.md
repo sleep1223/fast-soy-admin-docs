@@ -131,7 +131,7 @@ make check        # all three above
 - ✅ Module-local hot data (stats / options) follow "read → miss → query → write with TTL"
 - ✅ **Actively invalidate** cache keys on data change (module's `cache_utils.py`)
 - ❌ Don't slap `@cache(...)` on paginated / multi-param endpoints
-- ✅ Business key naming: `<module>_<resource>:<scope>` (e.g. `hr_dept_stats:all`)
+- ✅ Business key naming: `<module>_<resource>:<scope>` (e.g. `dict_options:tag_category`)
 
 See [Cache](/en/backend/cache).
 

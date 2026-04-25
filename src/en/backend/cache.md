@@ -49,34 +49,34 @@ Redis unavailable, loading permissions from database for user 123
 
 ## Module-local cache
 
-For module hotspots (stats / options / aggregations), read/write Redis directly:
+For module hotspots (stats / options / aggregations), read/write Redis directly. The snippet below illustrates the pattern (not actual repository code):
 
 ```python
-# app/business/hr/services.py
+# app/business/<module>/services.py
 import json
 
-DEPT_STATS_KEY = "hr_dept_stats:all"
-DEPT_STATS_TTL = 5 * 60  # 5 minutes
+STATS_KEY = "<module>_<resource>:all"
+STATS_TTL = 5 * 60  # 5 minutes
 
-async def get_department_stats(redis):
-    cached = await redis.get(DEPT_STATS_KEY)
+async def get_stats(redis):
+    cached = await redis.get(STATS_KEY)
     if cached:
         return json.loads(cached)
 
-    rows = await Employee.annotate(...).group_by("department_id").values(...)
-    await redis.set(DEPT_STATS_KEY, json.dumps(rows, ensure_ascii=False), ex=DEPT_STATS_TTL)
+    rows = await Model.annotate(...).group_by("xxx_id").values(...)
+    await redis.set(STATS_KEY, json.dumps(rows, ensure_ascii=False), ex=STATS_TTL)
     return rows
 ```
 
-**Actively invalidate** on data change (typically in the module's `cache_utils.py`):
+**Actively invalidate** on data change:
 
 ```python
-# app/business/hr/cache_utils.py
-async def invalidate_dept_stats(redis):
-    await redis.delete("hr_dept_stats:all")
+# app/business/<module>/cache_utils.py (if needed)
+async def invalidate_stats(redis):
+    await redis.delete(STATS_KEY)
 ```
 
-Dictionary options follow the same pattern (`app/system/api/dictionary.py`):
+A live in-repo reference using the same pattern is the dictionary-options cache (`app/system/api/dictionary.py`):
 
 ```python
 @router.get("/dictionaries/{dict_type}/options")
@@ -114,7 +114,7 @@ The cache key is parameter-derived; many filter combinations easily blow Redis. 
 
 - System permission: `role:{code}:*` / `user:{uid}:*` (no module prefix)
 - Module-local: `<module>_<resource>:<scope>` (module prefix required to avoid collisions)
-  - Examples: `hr_dept_stats:all`, `dict_options:tag_category`, `crm_lead_cnt:dept_42`
+  - Examples: `dict_options:tag_category`, `crm_lead_cnt:dept_42`
 - Lock / coordination: `app:<purpose>` (`app:init_lock`, `app:init_done`)
 
 ## Multi-worker init lock

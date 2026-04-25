@@ -90,7 +90,7 @@ common.<key>                   # global
 | Scope | Template | Example |
 |---|---|---|
 | System-level permission | `role:{code}:*` / `user:{uid}:*` | `role:R_HR_ADMIN:apis` |
-| Business module | `<module>_<resource>:<scope>` | `hr_dept_stats:all` / `dict_options:tag_category` |
+| Business module | `<module>_<resource>:<scope>` | `dict_options:tag_category` |
 | Startup coordination | `app:<purpose>` | `app:init_lock` / `app:init_done` |
 
 ## Event name

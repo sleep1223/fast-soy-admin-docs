@@ -90,7 +90,7 @@ common.<key>                   # 全局通用
 | 范围 | 模板 | 示例 |
 |---|---|---|
 | 系统级权限 | `role:{code}:*` / `user:{uid}:*` | `role:R_HR_ADMIN:apis` |
-| 业务模块自有 | `<module>_<resource>:<scope>` | `hr_dept_stats:all` / `dict_options:tag_category` |
+| 业务模块自有 | `<module>_<resource>:<scope>` | `dict_options:tag_category` |
 | 启动协调 | `app:<purpose>` | `app:init_lock` / `app:init_done` |
 
 ## 事件名

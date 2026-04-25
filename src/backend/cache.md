@@ -49,34 +49,34 @@ Redis unavailable, loading permissions from database for user 123
 
 ## 业务模块自有缓存
 
-模块需要的"统计 / 选项 / 聚合"类小热点，直接读写 Redis：
+模块内的"统计 / 选项 / 聚合"类小热点直接读写 Redis。下例为通用模式（非仓库现存代码）：
 
 ```python
-# app/business/hr/services.py
+# app/business/<module>/services.py
 import json
 
-DEPT_STATS_KEY = "hr_dept_stats:all"
-DEPT_STATS_TTL = 5 * 60  # 5 分钟
+STATS_KEY = "<module>_<resource>:all"
+STATS_TTL = 5 * 60  # 5 分钟
 
-async def get_department_stats(redis):
-    cached = await redis.get(DEPT_STATS_KEY)
+async def get_stats(redis):
+    cached = await redis.get(STATS_KEY)
     if cached:
         return json.loads(cached)
 
-    rows = await Employee.annotate(...).group_by("department_id").values(...)
-    await redis.set(DEPT_STATS_KEY, json.dumps(rows, ensure_ascii=False), ex=DEPT_STATS_TTL)
+    rows = await Model.annotate(...).group_by("xxx_id").values(...)
+    await redis.set(STATS_KEY, json.dumps(rows, ensure_ascii=False), ex=STATS_TTL)
     return rows
 ```
 
-业务变更时**主动失效**（一般放在模块的 `cache_utils.py`）：
+业务变更时**主动失效**：
 
 ```python
-# app/business/hr/cache_utils.py
-async def invalidate_dept_stats(redis):
-    await redis.delete("hr_dept_stats:all")
+# app/business/<module>/cache_utils.py（如需要）
+async def invalidate_stats(redis):
+    await redis.delete(STATS_KEY)
 ```
 
-字典选项也用同样模式（[`app/system/api/dictionary.py`](../../../app/system/api/dictionary.py)）：
+仓库内现存同模式参考 —— 字典选项缓存（[`app/system/api/dictionary.py`](../../../app/system/api/dictionary.py)）：
 
 ```python
 @router.get("/dictionaries/{dict_type}/options")
@@ -114,7 +114,7 @@ key 由参数序列化生成，分页 + 过滤组合多时容易把 Redis 撑爆
 
 - 系统级权限：`role:{code}:*` / `user:{uid}:*`（不带模块前缀）
 - 业务模块自有：`<module>_<resource>:<scope>`（带模块名前缀，避免冲突）
-  - 例：`hr_dept_stats:all`、`dict_options:tag_category`、`crm_lead_cnt:dept_42`
+  - 例：`dict_options:tag_category`、`crm_lead_cnt:dept_42`
 - 锁 / 协调键：`app:<purpose>`（例：`app:init_lock`、`app:init_done`）
 
 ## 启动时多 worker 锁

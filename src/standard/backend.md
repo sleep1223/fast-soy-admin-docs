@@ -172,7 +172,7 @@ make check        # 上面三条一次跑完
 - ✅ 业务自有的小热点（统计 / 选项）按"读 → miss → 查 → 写带 TTL"模式手写
 - ✅ 数据变更时**主动失效**对应 key（业务模块的 `cache_utils.py`）
 - ❌ 不要给带分页 / 多参数的接口加全局 `@cache(...)` 装饰器
-- ✅ 业务 key 命名：`<module>_<resource>:<scope>`（如 `hr_dept_stats:all`）
+- ✅ 业务 key 命名：`<module>_<resource>:<scope>`（如 `dict_options:tag_category`）
 
 详见 [缓存](../backend/cache.md)。
 
