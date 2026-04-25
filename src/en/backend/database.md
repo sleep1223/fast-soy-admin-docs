@@ -46,21 +46,37 @@ Full URL syntax: [Tortoise ORM docs](https://tortoise.github.io/setup.html#db-ur
 
 ## Driver install
 
-Only SQLite is bundled by default. For other engines:
+Only SQLite is bundled by default (via Tortoise's built-in `aiosqlite`). Other engines are shipped as optional extras in `pyproject.toml`:
+
+```toml
+[project.optional-dependencies]
+mysql = ["tortoise-orm[asyncmy]>=1.1.7"]
+postgres = ["tortoise-orm[asyncpg]>=1.1.7"]
+mssql = ["tortoise-orm[asyncodbc]>=1.1.7"]
+oracle = ["tortoise-orm[asyncodbc]>=1.1.7"]
+```
+
+Install the matching extra when you switch databases:
 
 ::: code-group
 ```bash [PostgreSQL]
-uv add asyncpg              # or psycopg (sync fallback)
+uv sync --extra postgres    # asyncpg
 ```
 
 ```bash [MySQL / MariaDB]
-uv add asyncmy              # recommended; aiomysql also works
+uv sync --extra mysql       # asyncmy
 ```
 
 ```bash [SQL Server]
-uv add asyncodbc            # also needs OS-level ODBC Driver 18
+uv sync --extra mssql       # asyncodbc, also needs OS-level ODBC Driver 18
+```
+
+```bash [Oracle]
+uv sync --extra oracle      # asyncodbc
 ```
 :::
+
+Stack multiple `--extra` flags if you need more than one, e.g. `uv sync --extra postgres --extra mysql`.
 
 ## Container deployment
 

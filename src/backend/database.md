@@ -46,21 +46,37 @@ make mm             # makemigrations + migrate
 
 ## 驱动安装
 
-`pyproject.toml` 里默认只装了 SQLite 需要的依赖。使用其他引擎时装对应驱动：
+`pyproject.toml` 默认只带 SQLite（走 Tortoise 内置的 `aiosqlite`），其他引擎通过 optional extras 选装：
+
+```toml
+[project.optional-dependencies]
+mysql = ["tortoise-orm[asyncmy]>=1.1.7"]
+postgres = ["tortoise-orm[asyncpg]>=1.1.7"]
+mssql = ["tortoise-orm[asyncodbc]>=1.1.7"]
+oracle = ["tortoise-orm[asyncodbc]>=1.1.7"]
+```
+
+切换数据库时一并安装对应 extra：
 
 ::: code-group
 ```bash [PostgreSQL]
-uv add asyncpg              # 或 psycopg (同步 fallback)
+uv sync --extra postgres    # asyncpg
 ```
 
 ```bash [MySQL / MariaDB]
-uv add asyncmy              # 推荐，也可 aiomysql
+uv sync --extra mysql       # asyncmy
 ```
 
 ```bash [SQL Server]
-uv add asyncodbc            # 另需 OS 层安装 ODBC Driver 18
+uv sync --extra mssql       # asyncodbc，另需 OS 层安装 ODBC Driver 18
+```
+
+```bash [Oracle]
+uv sync --extra oracle      # asyncodbc
 ```
 :::
+
+需要同时装多个时叠加 `--extra`，例如 `uv sync --extra postgres --extra mysql`。
 
 ## 容器部署切换
 
