@@ -1,6 +1,6 @@
 # 请求
 
-前端的 HTTP 层基于 [Alova](https://alova.js.org/)（业务请求）+ Axios（部分场景兼容），统一封装在 [src/service/](../../../web/src/service/) 下。所有业务模块用同一套配置：自动加 token、自动刷 token、自动按业务码路由到登出 / 弹窗 / 错误提示。
+HTTP 层基于 [Alova](https://alova.js.org/)（业务请求）+ Axios（兼容场景），统一封装在 [src/service/](../../../web/src/service/)。所有模块共用一套：自动加 token、自动刷 token、按业务码自动路由到登出 / 弹窗 / 错误提示。
 
 ## 目录结构
 

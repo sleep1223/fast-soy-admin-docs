@@ -1,6 +1,6 @@
 # Dynamic Routes
 
-FastSoyAdmin uses **dynamic routing** by default: menus / route meta are delivered by the backend per role and mounted into vue-router after login. This is safer and more flexible than the "frontend-defined + roles meta filter" static mode.
+**Dynamic routing** by default: menus / route meta are delivered by the backend per role and mounted into vue-router after login. Safer and more flexible than the "frontend-defined + roles filter" static mode.
 
 ## Mode selection
 

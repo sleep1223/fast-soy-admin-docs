@@ -1,14 +1,14 @@
 # 开发指南
 
-本文档介绍从零新增一个业务模块的完整流程。FastSoyAdmin 提供了一套 CLI 代码生成器，只需要编写 `models.py`，其余 schemas、controllers、API、前端 views、i18n 片段等都可以自动生成。
+从零新增业务模块的完整流程。CLI 只要求你写 `models.py`，schemas、controllers、API、前端 views、i18n 全自动生成。
 
 ## 先决条件
 
-所有命令都以项目根目录作为工作目录。首次使用请安装依赖并初始化数据库：
+所有命令在项目根目录执行。首次使用先装依赖、建表：
 
 ```bash
-make install-all    # 一次性安装后端 + 前端依赖
-make initdb         # 首次初始化数据库（之后不再需要）
+make install-all    # 后端 + 前端依赖
+make initdb         # 首次建表 + 基础数据
 ```
 
 ## 创建新模块：以 `inventory`（库存管理）为例

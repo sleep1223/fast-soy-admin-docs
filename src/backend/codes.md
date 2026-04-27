@@ -1,8 +1,8 @@
 # 响应码
 
-所有接口（含 200 / 4xx / 5xx）统一返回 `{"code": "xxxx", "msg": "...", "data": ...}`，HTTP 状态码恒为 200，业务结果由 `code` 字段承载。
+所有接口返回 `{"code": "xxxx", "msg": "...", "data": ...}`，HTTP 状态恒为 200，业务结果由 `code` 字段承载。
 
-源码：[app/core/code.py](../../../app/core/code.py)。前端 `.env` 通过 `VITE_SERVICE_*` 把若干码映射成"登出 / 弹窗 / 自动刷新 token / 静默失败"等行为。
+源码：[app/core/code.py](../../../app/core/code.py)。前端 `.env` 的 `VITE_SERVICE_*` 把若干码映射为"登出 / 弹窗 / 自动刷新 token / 静默失败"等行为。
 
 ## 码段划分
 

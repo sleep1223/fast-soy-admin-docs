@@ -1,6 +1,6 @@
 # 后端简介
 
-后端基于 **FastAPI** 构建，分层、模块化。代码组织以"系统模块"和"业务模块"两类清晰区隔，业务模块通过自动发现机制注册，互相之间不允许反向依赖。
+基于 **FastAPI** 的分层模块化后端。代码分"系统模块"和"业务模块"两类，业务模块自动发现注册，禁止反向依赖。
 
 ## 技术栈
 
@@ -88,23 +88,23 @@ models / schemas
 
 ## system / business 单向依赖
 
-- `app.system.*` 不知道 `app.business.*` 的存在，只在启动时通过 `autodiscover` 调用业务模块的 `init()` 与 `router`。
-- 业务模块**不得反向 import** `app.system.*` 之外的兄弟业务模块。需要跨模块联动时通过 [事件总线](./core/events.md) 解耦。
-- 业务模块的 import 入口推荐统一走 [`app.utils`](./utils.md)，这是稳定的对外 API。
+- `app.system.*` 不感知 `app.business.*`，仅启动时由 `autodiscover` 调用业务模块的 `init()` 与 `router`
+- 业务模块**禁止**反向 import `app.system.*`，**禁止**互相 import；跨模块用[事件总线](./core/events.md)
+- 业务模块统一从 [`app.utils`](./utils.md) 导入，这是稳定对外入口
 
 ## 启动流程
 
 `app/__init__.py` 的 `lifespan`：
 
-1. 初始化 Redis（`app.state.redis`）和 fastapi-cache2 后端
-2. 删除上一次启动遗留的 init 锁，进入 `_run_init_data`：
-   - 多 worker 通过 Redis `SET NX EX` 抢 leader，非 leader 等待 `_INIT_DONE_KEY`
-   - leader 顺序执行：`init_menus` → `refresh_api_list`（FastAPI 路由 ↔ Api 表全量对账）→ `init_users` → 各业务模块 `init_data.init()` → `refresh_all_cache`
-3. 启动内置 Radar 监控、fastapi-guard
+1. 初始化 Redis 与 fastapi-cache2
+2. 清理上次的 init 锁，进入 `_run_init_data`：
+   - 多 worker 通过 `SET NX EX` 抢 leader，非 leader 等待 `_INIT_DONE_KEY`
+   - leader 顺序执行：`init_menus` → `refresh_api_list` → `init_users` → 各业务模块 `init_data.init()` → `refresh_all_cache`
+3. 启动 Radar 与 fastapi-guard
 4. yield（应用就绪）
-5. 关闭：shutdown radar，关闭 Redis 连接
+5. 关闭：shutdown radar、关闭 Redis
 
-更详细的同步语义见 [启动初始化与对账](./init-data.md)。
+详细同步语义见 [启动初始化与对账](./init-data.md)。
 
 ## 接下来读什么
 

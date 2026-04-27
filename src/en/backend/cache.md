@@ -1,6 +1,6 @@
 # Cache
 
-Two backend caching scenarios with different tooling:
+Three backend caching scenarios:
 
 | Scenario | Tool | Refresh trigger |
 |---|---|---|

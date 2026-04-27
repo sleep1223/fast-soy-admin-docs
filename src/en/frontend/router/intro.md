@@ -1,9 +1,9 @@
 # System Routing
 
-FastSoyAdmin uses **dynamic routing**: menus, APIs and button permissions are owned by the backend. After login, each user receives the routes they are allowed to access based on their roles.
+**Dynamic routing**: menus, APIs and button permissions are owned by the backend; each user receives their accessible routes after login based on roles.
 
 ::: danger
-Since the `<Transition>` tag is used to support page transition animations, there can only be one root element in the `template` of the `.vue` file. Neither comments nor plain text are allowed — there must be only one root element.
+The `<Transition>` page-transition wrapper requires a single root element in every `.vue` `template` — no comments or plain text allowed.
 :::
 
 ## Route sources

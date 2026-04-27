@@ -1,10 +1,10 @@
 # Development Guide
 
-End-to-end flow for adding a new business module. FastSoyAdmin ships a CLI generator — you only write `models.py`; schemas, controllers, API, frontend views, and i18n fragments are generated for you.
+End-to-end flow for adding a business module. The CLI only asks you to write `models.py`; schemas, controllers, API, frontend views and i18n are generated.
 
 ## Prerequisites
 
-All commands are run from the project root. First-time setup:
+Run all commands from the project root. First-time setup:
 
 ```bash
 make install-all    # backend + frontend deps

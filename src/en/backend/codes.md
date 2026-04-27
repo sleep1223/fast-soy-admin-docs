@@ -1,8 +1,8 @@
 # Response Codes
 
-All endpoints (200 / 4xx / 5xx alike) return `{"code": "xxxx", "msg": "...", "data": ...}` with HTTP status fixed at 200; the business outcome is carried by `code`.
+All endpoints return `{"code": "xxxx", "msg": "...", "data": ...}` with HTTP status fixed at 200; the business outcome is carried by `code`.
 
-Source: `app/core/code.py`. The frontend `.env` maps a few codes to behaviors (logout / modal logout / auto-refresh / silent fail).
+Source: `app/core/code.py`. The frontend `.env` maps select codes to behaviors (logout / modal logout / auto-refresh / silent fail).
 
 ## Code segments
 

@@ -1,6 +1,6 @@
 # Request
 
-The frontend HTTP layer is built on [Alova](https://alova.js.org/) (business requests) + Axios (compatibility), wrapped in [src/service/](../../../web/src/service/). Every business module shares the same configuration: auto-attaches token, auto-refreshes token, routes business codes to logout / modal / error toast.
+HTTP layer built on [Alova](https://alova.js.org/) (business requests) + Axios (compat), wrapped in [src/service/](../../../web/src/service/). All modules share one config: auto-attach token, auto-refresh, route business codes to logout / modal / error toast.
 
 ## Layout
 

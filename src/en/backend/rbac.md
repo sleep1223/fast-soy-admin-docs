@@ -1,6 +1,6 @@
 # RBAC (menus / APIs / buttons)
 
-FastSoyAdmin's permission system is classic RBAC: User ↔ Role ↔ {Menu / Button / API}, with `R_SUPER` bypassing every check. This page focuses on the data model and runtime; **JWT / session invalidation** is in [Auth](/en/backend/auth); **row-level scope** is in [Data scope](/en/backend/data-scope).
+Classic RBAC: User ↔ Role ↔ {Menu / Button / API}; `R_SUPER` bypasses every check. This page covers the data model and runtime; **JWT / invalidation** is in [Auth](/en/backend/auth); **row-level scope** is in [Data scope](/en/backend/data-scope).
 
 ## Relationships
 

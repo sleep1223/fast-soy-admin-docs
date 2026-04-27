@@ -1,8 +1,8 @@
 # API Conventions
 
-All system / business endpoints follow the same convention. Treat this as enforced; deviations require discussion.
+All system / business endpoints share one enforced convention; deviations require discussion.
 
-Full online API reference: [Apidog](https://fast-soy-admin.apidog.io). This page covers **conventions** + **key endpoint cheat sheet**.
+Full API reference: [Apidog](https://fast-soy-admin.apidog.io). This page covers **conventions** and a **key endpoint cheat sheet**.
 
 ## Route prefixes
 

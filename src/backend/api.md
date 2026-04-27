@@ -1,8 +1,8 @@
 # API 约定
 
-所有 system / business 模块的 HTTP 接口都遵循同一套约定。这是强制规范，偏离前请讨论。
+所有 system / business 接口共用同一套强制约定，偏离请先讨论。
 
-完整在线 API 参考：[Apidog 文档](https://fast-soy-admin.apidog.io)。本文档覆盖**约定**与**关键端点速查**。
+完整 API 参考：[Apidog](https://fast-soy-admin.apidog.io)。本文聚焦**约定**与**关键端点速查**。
 
 ## 路由前缀
 

@@ -1,6 +1,6 @@
 # Backend Overview
 
-The backend is built with **FastAPI**, using a layered, modular architecture. Code is split into "system modules" and "business modules" with a strict one-way dependency: business modules are auto-discovered at startup and never import each other.
+A layered, modular **FastAPI** backend. Code is split into "system" and "business" modules with strict one-way dependency: business modules are autodiscovered at startup and never import each other.
 
 ## Tech stack
 
@@ -88,23 +88,23 @@ models / schemas
 
 ## system / business one-way dependency
 
-- `app.system.*` does not know about `app.business.*` — only autodiscover wires up business `init()` and `router` at startup.
-- Business modules **must not reverse-import** each other or `app.system.*` internals (except the few system services that are explicitly exposed). Cross-module communication goes through the [event bus](/en/backend/core/events).
-- The recommended business import facade is [`app.utils`](/en/backend/utils) — the stable public surface.
+- `app.system.*` is unaware of `app.business.*`; autodiscover wires up business `init()` and `router` at startup
+- Business modules **must not** reverse-import `app.system.*` (except a few explicitly exposed services) or sibling modules; cross-module talk uses the [event bus](/en/backend/core/events)
+- Business modules import from [`app.utils`](/en/backend/utils) — the stable public surface
 
 ## Startup flow
 
 `app/__init__.py` `lifespan`:
 
-1. Init Redis (`app.state.redis`) and the fastapi-cache2 backend
-2. Delete leftover init lock from previous run, enter `_run_init_data`:
-   - With multiple workers, contend for leader via Redis `SET NX EX`; non-leaders wait for `_INIT_DONE_KEY`
-   - Leader runs in order: `init_menus` → `refresh_api_list` (FastAPI routes ↔ Api table reconciliation) → `init_users` → each business module's `init_data.init()` → `refresh_all_cache`
-3. Start in-house Radar monitoring and fastapi-guard
+1. Init Redis and the fastapi-cache2 backend
+2. Clear stale init lock, enter `_run_init_data`:
+   - Workers contend for leader via Redis `SET NX EX`; non-leaders wait for `_INIT_DONE_KEY`
+   - Leader runs in order: `init_menus` → `refresh_api_list` → `init_users` → each module's `init_data.init()` → `refresh_all_cache`
+3. Start Radar and fastapi-guard
 4. yield (app ready)
 5. Shutdown: stop radar, close Redis
 
-For details see [Startup init & reconciliation](/en/backend/init-data).
+Details: [Startup init & reconciliation](/en/backend/init-data).
 
 ## Where to next
 

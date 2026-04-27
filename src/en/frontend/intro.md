@@ -1,6 +1,6 @@
 # Frontend Overview
 
-The frontend is built on [SoybeanAdmin](https://github.com/soybeanjs/soybean-admin), using Vue3 + Vite7 + TypeScript + Pinia + UnoCSS + Naive UI. `/web/` is a pnpm workspace; business code in `web/src/`, internal subpackages in `web/packages/`.
+Built on [SoybeanAdmin](https://github.com/soybeanjs/soybean-admin): Vue3 + Vite7 + TypeScript + Pinia + UnoCSS + Naive UI. `/web/` is a pnpm workspace; business code in `web/src/`, internal subpackages in `web/packages/`.
 
 ## Tech stack
 
