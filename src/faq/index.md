@@ -242,7 +242,8 @@ redis-cli get app:init_done    # 应该是 "1"
 
 ```bash
 make logs                        # 全部
-docker compose logs -f app       # 仅后端
+make logs SVC=app                # 仅后端；SVC=nginx|redis 同理，TAIL=N 指定行数
+docker compose logs -f app       # 等价的原生写法
 ```
 
 ### 更新部署

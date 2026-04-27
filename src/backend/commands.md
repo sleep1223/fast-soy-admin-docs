@@ -68,7 +68,7 @@ make help
 | `docker compose up -d` | `make up` | 启动全栈（nginx :1880 + fastapi :9999 + redis） |
 | `docker compose up -d --build` | `make rebuild` | 重建镜像并重建容器（代码 / Dockerfile 变更后使用） |
 | `docker compose down` | `make down` | 停止并移除容器 |
-| `docker compose logs -f` | `make logs` | 实时查看所有服务日志 |
+| `docker compose logs -f` | `make logs` | 实时查看所有服务日志，可选 `SVC=app\|nginx\|redis` 过滤、`TAIL=N` 指定行数 |
 
 ## 典型开发流程
 

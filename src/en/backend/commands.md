@@ -63,7 +63,7 @@ For details see [Development guide](/en/backend/development).
 | `docker compose up -d` | `make up` | Start full stack (nginx :1880 + fastapi :9999 + redis) |
 | `docker compose up -d --build` | `make rebuild` | Rebuild images and recreate containers (after code / Dockerfile changes) |
 | `docker compose down` | `make down` | Stop & remove containers |
-| `docker compose logs -f` | `make logs` | Tail all logs |
+| `docker compose logs -f` | `make logs` | Tail all logs; pass `SVC=app\|nginx\|redis` to filter, `TAIL=N` for line count |
 
 ## Typical workflow
 

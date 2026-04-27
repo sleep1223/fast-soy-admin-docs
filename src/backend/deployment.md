@@ -19,6 +19,7 @@ docker compose up -d
 ```bash
 docker compose logs -f          # 所有服务
 docker compose logs -f app      # 仅后端
+make logs                       # 等价的 Makefile 入口；可加 SVC=app|nginx|redis、TAIL=N
 ```
 
 ### 更新部署

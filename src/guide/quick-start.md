@@ -31,8 +31,9 @@ make up           # == docker compose up -d
 - **Redis** (:6379) — 缓存
 
 ```bash
-make logs         # 实时查看所有服务日志
-make down         # 停止并移除容器
+make logs                  # 实时查看所有服务日志
+make logs SVC=app          # 仅后端；可选 SVC=nginx|redis，TAIL=N 指定行数
+make down                  # 停止并移除容器
 ```
 
 ## 方式二：本地开发

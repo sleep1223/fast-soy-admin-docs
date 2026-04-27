@@ -237,7 +237,8 @@ redis-cli get app:init_done    # should be "1"
 
 ```bash
 make logs                        # all
-docker compose logs -f app       # backend only
+make logs SVC=app                # backend only; SVC=nginx|redis, TAIL=N for line count
+docker compose logs -f app       # equivalent native form
 ```
 
 ### Update deployment

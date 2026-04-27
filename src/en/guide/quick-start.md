@@ -31,8 +31,9 @@ Visit `http://localhost:1880`. Services:
 - **Redis** (:6379) — cache
 
 ```bash
-make logs         # follow all logs
-make down         # stop & remove containers
+make logs                  # follow all logs
+make logs SVC=app          # backend only; SVC=nginx|redis works too, TAIL=N for line count
+make down                  # stop & remove containers
 ```
 
 ## Option B: Local development

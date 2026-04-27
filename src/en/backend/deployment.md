@@ -19,6 +19,7 @@ docker compose up -d
 ```bash
 docker compose logs -f          # all services
 docker compose logs -f app      # backend only
+make logs                       # Makefile entry; supports SVC=app|nginx|redis, TAIL=N
 ```
 
 ### Update
