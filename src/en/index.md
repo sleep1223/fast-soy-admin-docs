@@ -22,28 +22,28 @@ hero:
 features:
   - icon: "\U0001F916"
     title: AI-Native Workflow
-    details: Ships with CLAUDE.md and llms.txt / llms-full.md so Claude Code / Cursor / Copilot get the full architecture, layering rules and API conventions up front — agents produce code that matches project conventions out of the box.
+    details: CLAUDE.md + llms.txt baked in — agents produce code that follows project conventions.
   - icon: "\U0001F680"
     title: End-to-End CLI Codegen
-    details: make cli-init scaffolds the module, make cli-gen-all turns a Tortoise model into full backend (schemas / controllers / api) + frontend (views / service / typings / i18n) CRUD in one shot.
+    details: One command turns a model into full backend + frontend CRUD.
   - icon: "\U0001F9E9"
     title: Autodiscovered Modules
-    details: Drop a package into app/business/&lt;name&gt;/ and routes, models and init data register themselves. Modules are decoupled; cross-module talk goes via the event bus, with optional per-module databases.
+    details: Drop-in modules, decoupled, event-bus communication, optional per-module DBs.
   - icon: "\U0001F512"
     title: Three-Tier RBAC + data_scope
-    details: Menu / API / button checks plus row-level all / department / self / custom data scope. Button enforcement lives in services, never in UI alone.
+    details: Menu / API / button checks plus row-level data scope.
   - icon: "\U0001F4C1"
     title: Dynamic Routing
-    details: Menus, APIs and buttons are owned by the backend; routes are issued per role at login. The frontend doesn't maintain permission distribution logic.
+    details: Routes issued per role at login; the frontend stays out of permission logic.
   - icon: "\U0001F4E1"
     title: Radar Tracing
-    details: Built-in /manage/radar/* panel for real-time request / SQL / exception / permission-deny logs, with fastapi-guard rate limiting and IP banning out of the box.
+    details: Real-time panel for request / SQL / exception / permission-deny logs.
   - icon: "\U0001F9EA"
     title: End-to-End Type Safety
-    details: basedpyright (standard) on the backend, vue-tsc on the frontend; generator i18n keys land in App.I18n.GeneratedPages via declaration merging so every $t is statically checked.
+    details: basedpyright + vue-tsc, with statically checked i18n keys.
   - icon: "\U0001F433"
     title: One-Command Docker
-    details: Docker Compose pre-wires Nginx + FastAPI + Redis. docker compose up -d and you're live; multi-worker startup is serialized by a Redis leader lock.
+    details: Nginx + FastAPI + Redis, live with compose up -d.
 ---
 
 ## Screenshots
