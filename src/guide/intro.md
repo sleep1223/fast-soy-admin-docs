@@ -9,15 +9,44 @@
 
 ## 特性
 
-- **全栈** — 端到端类型安全，统一响应格式（camelCase）
-- **完整 RBAC** — 菜单 / API / 按钮三层权限 + 行级 `data_scope`，前后端严格分离
-- **动态路由** — 路由按角色由后端实时下发，前端不维护权限分发逻辑
-- **业务模块自动发现** — `app/business/<x>/` 放进去就自动注册路由、模型、初始化数据；模块互相不耦合
-- **代码生成器** — `make cli-init / cli-gen / cli-gen-web` 端到端从模型生成前后端 CRUD
-- **Redis 加速** — 角色权限 / 常量路由 / token_version 全部走缓存，故障时降级到数据库
-- **状态机 / 事件总线 / Sqids ID** — 框架级基础设施
-- **生产可用** — 内置 Radar 全栈追踪 + [fastapi-guard](https://fastapi-guard.com/) 限流 + 多 worker 启动锁
-- **Docker 一键部署** — Nginx + FastAPI + Redis
+**AI 驱动**
+
+- **AI Coding 友好** — 仓库内置 `CLAUDE.md` + `llms.txt` / `llms-full.md`，把架构约定、分层职责、API 规范、响应码表、PR checklist 一次喂给 Claude Code / Cursor / Copilot，AI 直接按项目规范产出代码
+- **生成器即 AI 工作面** — `make cli-gen-all` 把"加一张表"压缩成单条命令，AI 只关注 `models.py` 业务建模与覆写差异，剩余 90% 模板由 CLI 完成
+
+**工程效率**
+
+- **CLI 端到端生成** — `make cli-init / cli-gen-all` 从 Tortoise 模型一键产出前后端 CRUD（schemas / controllers / api + views / service / typings / i18n）
+- **CRUDRouter + `@crud.override`** — 标准 6 路由由工厂统一生成，差异部分按需覆写，并显式划定"聚合根禁用"边界，避免抽象上瘾
+
+**可扩展架构**
+
+- **业务模块自动发现** — `app/business/<x>/` 放进去就自动注册路由、模型、初始化数据；模块互不耦合，跨模块走事件总线（`emit` / `on`）
+- **多库友好** — 业务模块可声明独立 `DB_URL` 注册成 `conn_<biz>`；事务一律 `in_transaction(get_db_conn(Model))`
+- **多 worker 启动协调** — Redis leader 锁串行执行 `init_menus → refresh_api_list → init_data → refresh_cache`，K8s 多副本无重复对账
+
+**安全与权限**
+
+- **三层 RBAC + 行级 `data_scope`** — 菜单 / API / 按钮三层鉴权，叠加 `all / department / self / custom` 数据范围；按钮权限下沉到 service
+- **菜单/角色 IaC 对账** — `ensure_menu` / `reconcile_menu_subtree` / `refresh_api_list` 三档语义，明确哪些子树代码声明、哪些允许 UI 自由创建
+- **Sqid 对外 ID** — 自增 ID 不出库，防遍历枚举
+
+**契约与类型**
+
+- **统一响应** — `{code, msg, data}` + HTTP 200 + camelCase 自动转换；业务异常 `BizError` 穿透，唯一业务码
+- **全栈类型安全** — 前端 vue-tsc，后端 basedpyright（standard），CI 强制全绿
+- **i18n 静态校验** — 生成的 i18n 经 `import.meta.glob` 自动并入，`App.I18n.GeneratedPages` 让 `$t` 键被 vue-tsc 校验
+
+**可观测与稳定性**
+
+- **内置 Radar 面板** — 实时请求 / SQL / 异常 / 权限拒绝日志
+- **fastapi-guard 限流 + IP 封禁** — 暴力破解、扫描自动拦截
+- **Redis 缓存 + 降级** — 角色权限 / 常量路由 / token_version 缓存优先，Redis 故障回落 DB
+- **状态机 / 事件总线** — 工单、审批、订单等状态流转开箱即用
+
+**部署**
+
+- **Docker 一键部署** — Nginx + FastAPI + Redis 编排好，`docker compose up -d` 即可上线
 
 ## 文档怎么读
 
