@@ -20,30 +20,30 @@ hero:
       link: https://fast-soy-admin.sleep0.de/
 
 features:
+  - icon: "\U0001F916"
+    title: AI-Native Workflow
+    details: Ships with CLAUDE.md and llms.txt / llms-full.md so Claude Code / Cursor / Copilot get the full architecture, layering rules and API conventions up front — agents produce code that matches project conventions out of the box.
   - icon: "\U0001F680"
-    title: Full-Stack
-    details: FastAPI backend + Vue3 frontend, end-to-end with unified response format and type safety.
+    title: End-to-End CLI Codegen
+    details: make cli-init scaffolds the module, make cli-gen-all turns a Tortoise model into full backend (schemas / controllers / api) + frontend (views / service / typings / i18n) CRUD in one shot.
+  - icon: "\U0001F9E9"
+    title: Autodiscovered Modules
+    details: Drop a package into app/business/&lt;name&gt;/ and routes, models and init data register themselves. Modules are decoupled; cross-module talk goes via the event bus, with optional per-module databases.
   - icon: "\U0001F512"
-    title: RBAC
-    details: Role-based menu / API / button permissions, plus row-level data_scope. JWT with auto-refresh.
-  - icon: "\U0001F3A8"
-    title: Theme System
-    details: Rich theme config, deep UnoCSS integration, dark mode and multiple layouts.
+    title: Three-Tier RBAC + data_scope
+    details: Menu / API / button checks plus row-level all / department / self / custom data scope. Button enforcement lives in services, never in UI alone.
   - icon: "\U0001F4C1"
     title: Dynamic Routing
-    details: Menus, APIs and button permissions are owned by the backend; routes are issued per user at login based on roles — true end-to-end RBAC.
-  - icon: "\U0001F30F"
-    title: i18n
-    details: Built-in vue-i18n (Chinese / English), easy to extend.
-  - icon: "\U0001F4E6"
-    title: Redis Cache
-    details: fastapi-cache2 + Redis for hot permission data, constant routes, and business caching.
+    details: Menus, APIs and buttons are owned by the backend; routes are issued per role at login. The frontend doesn't maintain permission distribution logic.
+  - icon: "\U0001F4E1"
+    title: Radar Tracing
+    details: Built-in /manage/radar/* panel for real-time request / SQL / exception / permission-deny logs, with fastapi-guard rate limiting and IP banning out of the box.
+  - icon: "\U0001F9EA"
+    title: End-to-End Type Safety
+    details: basedpyright (standard) on the backend, vue-tsc on the frontend; generator i18n keys land in App.I18n.GeneratedPages via declaration merging so every $t is statically checked.
   - icon: "\U0001F433"
-    title: Docker Deploy
-    details: One-command deploy with Docker Compose. Nginx + FastAPI + Redis, production-ready.
-  - icon: "\U0001F9F9"
-    title: Code Quality
-    details: Frontend ESLint + oxlint, backend Ruff + basedpyright. Strict types across the stack.
+    title: One-Command Docker
+    details: Docker Compose pre-wires Nginx + FastAPI + Redis. docker compose up -d and you're live; multi-worker startup is serialized by a Redis leader lock.
 ---
 
 ## Screenshots
