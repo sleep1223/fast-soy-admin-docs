@@ -99,7 +99,7 @@ const { data, getData } = useTable({
 <NButton v-if="hasAuth('B_HR_EMP_CREATE')" @click="handleAdd">新增</NButton>
 ```
 
-不建议用 `v-show`——隐藏的元素仍然占位会让 UI 错位。
+不建议用 `v-show`——隐藏元素仍占位会导致 UI 错位。
 
 ## 命名
 

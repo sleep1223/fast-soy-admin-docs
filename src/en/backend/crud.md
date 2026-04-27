@@ -1,6 +1,6 @@
 # CRUDBase
 
-`CRUDBase` is the generic base for single-resource CRUD; every controller inherits from it (or instantiates it directly). It **never produces cross-model side effects** — multi-model orchestration, transactions, and cache writes belong in `services/`.
+Generic base for single-resource CRUD; every controller inherits from it (or instantiates it directly). **Never produces cross-model side effects** — multi-model orchestration, transactions, and cache writes belong in `services/`.
 
 Source: [`app/core/crud.py`](../../../app/core/crud.py).
 
@@ -16,7 +16,7 @@ class DepartmentController(CRUDBase[Department, DepartmentCreate, DepartmentUpda
 department_controller = DepartmentController(model=Department)
 ```
 
-> Most of the time you don't need to subclass — `xxx_controller = CRUDBase(model=Xxx)` is enough. Subclass only when overriding `build_search` or similar.
+> Subclassing is rarely needed — `xxx_controller = CRUDBase(model=Xxx)` is enough. Subclass only to override `build_search` or similar.
 
 ## Method reference
 

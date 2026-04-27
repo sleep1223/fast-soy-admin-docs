@@ -1,6 +1,6 @@
 # CRUDBase
 
-`CRUDBase` 是单模型 CRUD 的通用基类，所有 controller 通过继承（或直接实例化）使用。它**只负责单张表的增删改查**——跨模型编排、事务、缓存更新、事件派发、外部 IO 统一放在 `services/`。
+`CRUDBase` 是单模型 CRUD 的通用基类，所有 controller 通过继承（或直接实例化）使用。**只负责单张表的增删改查**——跨模型编排、事务、缓存更新、事件派发、外部 IO 统一放在 `services/`。
 
 源码：[app/core/crud.py](../../../app/core/crud.py)。
 
@@ -16,7 +16,7 @@ class DepartmentController(CRUDBase[Department, DepartmentCreate, DepartmentUpda
 department_controller = DepartmentController(model=Department)
 ```
 
-> 大多数情况下不需要写 controller 子类——直接 `xxx_controller = CRUDBase(model=Xxx)` 即可。需要重写 `build_search` 等方法时再继承。
+> 多数情况下不需要写 controller 子类——直接 `xxx_controller = CRUDBase(model=Xxx)` 即可。需要重写 `build_search` 等方法时再继承。
 
 ## 完整方法列表
 

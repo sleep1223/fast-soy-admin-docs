@@ -56,15 +56,15 @@ shortcuts: [
 
 ## 主题色之外的色板
 
-UnoCSS preset 自带 Tailwind 色板（`gray / red / blue / ...`，每种 50–950）。**业务里优先用语义色**（`primary / success / warning / error / info`），让全局换肤时一并生效；只在确实需要"和主题色无关"的颜色时用具体色板。
+UnoCSS preset 自带 Tailwind 色板（`gray / red / blue / ...`，每种 50–950）。**业务里优先用语义色**（`primary / success / warning / error / info`），让全局换肤时一并生效；只在需要"和主题色无关"的颜色时用具体色板。
 
 ## 性能
 
-UnoCSS 是按需生成——只有模板里用到的 class 才会出现在最终 CSS 中。可以放心地用大量工具类，不需要担心 CSS 体积。
+UnoCSS 是按需生成——只有模板里用到的 class 才会出现在最终 CSS 中。可放心使用大量工具类，无需担心 CSS 体积。
 
 ## 调试
 
-打开 Chrome devtools 看元素的 computed style，CSS 变量都在 `:root` 层。改 `--primary-color` 立刻看到全站颜色变化（用来验证主题工具类是否真的接到 CSS 变量）。
+打开 Chrome devtools 看元素的 computed style，CSS 变量都在 `:root` 层。改 `--primary-color` 立刻看到全站颜色变化（用于验证主题工具类是否接到 CSS 变量）。
 
 ## 相关
 

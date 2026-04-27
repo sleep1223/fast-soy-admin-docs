@@ -1,6 +1,6 @@
 # 启动初始化与对账
 
-业务模块通过 `init_data.py` 声明菜单、角色、按钮、种子数据等初始内容，应用每次启动时由 autodiscover 自动调用其 `init()` 函数。本文档说明各类数据在启动时的同步语义，以及如何让业务模块成为 single-source-of-truth。
+业务模块通过 `init_data.py` 声明菜单、角色、按钮、种子数据等初始内容，应用每次启动时由 autodiscover 自动调用其 `init()` 函数。下文说明各类数据在启动时的同步语义，以及如何让业务模块成为 single-source-of-truth。
 
 ## 启动流程
 

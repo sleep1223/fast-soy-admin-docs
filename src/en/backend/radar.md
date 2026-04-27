@@ -1,6 +1,6 @@
 # Monitoring (Radar / Guard)
 
-The backend ships two production-ready monitoring / protection systems:
+Two production-ready monitoring / protection systems:
 
 - **Radar (in-house)** — request / SQL / exception / system-metric tracing with a Web Dashboard, implemented in this project with reference to fastapi-radar; source at `app/system/radar/`.
 - **[fastapi-guard](https://fastapi-guard.com/)** — third-party rate limit + auto-ban (anti-scraping / brute force)

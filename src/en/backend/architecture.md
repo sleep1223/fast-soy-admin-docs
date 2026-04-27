@@ -34,7 +34,7 @@
 | `app/utils/` | stable public facade for business code | re-exports `app/core/*` and a few `app/system/security` symbols |
 | `app/cli/` | code generators (init/gen/gen-web/initdb) | offline-only, no runtime impact |
 
-Business code should never `from app.system.xxx import ...` (except for the few services system explicitly exposes — `ensure_menu` / `ensure_role`). For cross-business communication use the [event bus](/en/backend/core/events).
+Business code should never `from app.system.xxx import ...` (except services system explicitly exposes — `ensure_menu` / `ensure_role`). For cross-business communication use the [event bus](/en/backend/core/events).
 
 ## Request lifecycle
 

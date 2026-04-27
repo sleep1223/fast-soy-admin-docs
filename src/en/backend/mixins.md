@@ -1,6 +1,6 @@
 # Model Mixins
 
-All Tortoise models should inherit `BaseModel` and mix in the mixins they need. They live in `app/core/base_model.py` and `app/core/soft_delete.py`.
+All Tortoise models should inherit `BaseModel` and mix in the mixins they need. Source: `app/core/base_model.py` and `app/core/soft_delete.py`.
 
 ```python
 # pyright: reportIncompatibleVariableOverride=false

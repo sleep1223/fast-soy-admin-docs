@@ -1,6 +1,6 @@
 # HR Module (first business module)
 
-The HR module is the first complete business module under `app/business/`, demonstrating **how a business module should be organized** in FastSoyAdmin: autodiscover, menu / role / button declarations, standard + extended `CRUDRouter` usage, state machine, row-level data scope, and frontend button gating.
+The first complete business module under `app/business/`, demonstrating **how a business module should be organized** in FastSoyAdmin: autodiscover, menu / role / button declarations, standard + extended `CRUDRouter` usage, state machine, row-level data scope, and frontend button gating.
 
 > Source: `app/business/hr/`, `web/src/views/hr/`
 > Target reader: developers adding new business modules to this repo.

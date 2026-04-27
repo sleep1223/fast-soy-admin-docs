@@ -1,6 +1,6 @@
 # Proxy
 
-Both the dev server and production Nginx reverse-proxy `/api/*` to FastAPI. **Always use the relative `/api/v1/...` path in frontend code** to avoid hard-coding backend hosts.
+Both the dev server and production Nginx reverse-proxy `/api/*` to FastAPI. **Use relative `/api/v1/...` paths in frontend code** to avoid hard-coding backend hosts.
 
 ## Development (Vite proxy)
 

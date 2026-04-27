@@ -152,4 +152,4 @@ Writes to the in-house Radar monitoring; visible at `/manage/radar/*`. See [Moni
 | `app.core.init_app.*` | framework startup only |
 | `app.system.models.*` | keep modules decoupled; expose via system services if needed |
 
-If you do need them, **import from the source path directly** — but think hard whether you're breaking the "business doesn't depend on system internals" boundary.
+If you do need them, **import from the source path directly** — but reconsider whether you're breaking the "business doesn't depend on system internals" boundary.

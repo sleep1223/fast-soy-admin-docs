@@ -1,6 +1,6 @@
 # Commands Reference
 
-The project ships a root `Makefile` wrapping all common operations. Run `make` (or `make help`) for the full list.
+A root `Makefile` wraps all common operations. Run `make` (or `make help`) for the full list.
 
 > `MOD=xxx` denotes a positional argument: e.g. `make cli-init MOD=inventory`.
 

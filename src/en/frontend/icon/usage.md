@@ -41,7 +41,7 @@ For data-driven icons:
 
 ## Renderer (JSX / TSX)
 
-For NaiveUI scenes that need a VNode (`MessageProvider`, `MenuOption.icon`, ...):
+For NaiveUI APIs that take a VNode (`MessageProvider`, `MenuOption.icon`, ...):
 
 ```typescript
 import { useSvgIconRender } from '@sa/hooks';

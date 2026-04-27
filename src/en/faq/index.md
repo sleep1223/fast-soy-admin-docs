@@ -1,6 +1,6 @@
 # FAQ
 
-Grouped by scenario: startup, modules, permissions, routing, API IDs, deployment.
+Grouped by scenario: startup, modules, permissions, routing, API IDs, and deployment.
 
 ## Startup & install
 

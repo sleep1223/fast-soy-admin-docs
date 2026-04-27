@@ -99,7 +99,7 @@ except TransitionError as e:
     return Fail(code=e.code, msg=e.msg)
 ```
 
-> Usually you **don't** catch it — let it propagate to the global handler; the frontend reacts to the code.
+> **Don't** catch it — let it propagate to the global handler; the frontend reacts to the code.
 
 ## Per-module business codes
 

@@ -1,6 +1,6 @@
 # CRUDRouter
 
-`CRUDRouter` 是把 6 条标准 REST 路由批量生成的工厂，配合 [`CRUDBase`](./crud.md) 和 [API 约定](./api.md) 使用，目标是消灭 90% 的样板代码。
+`CRUDRouter` 批量生成 6 条标准 REST 路由，配合 [`CRUDBase`](./crud.md) 和 [API 约定](./api.md) 使用，消灭 90% 的样板代码。
 
 源码：[app/core/router.py](../../../app/core/router.py)。
 

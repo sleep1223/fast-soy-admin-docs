@@ -156,7 +156,7 @@ async with in_transaction(get_db_conn(Invoice)):  # 自动选 conn_billing
 - 业务模块的 import 入口走 [`app.utils`](../utils.md)
 - 跨模块联动通过 [事件总线](./events.md)
 
-违反这些约定时，autodiscover 仍然能加载，但它换来的"模块自治"价值就丢了。
+违反这些约定时，autodiscover 仍能加载，但"模块自治"的价值会丢失。
 
 ## 相关
 

@@ -1,6 +1,6 @@
 # UnoCSS Theme
 
-Theme colors are injected as CSS variables and exposed by UnoCSS as utilities. Templates can directly write `class="text-primary bg-primary-100"`.
+Theme colors are injected as CSS variables and exposed by UnoCSS as utilities. Templates can write `class="text-primary bg-primary-100"` directly.
 
 UnoCSS config: [web/uno.config.ts](../../../web/uno.config.ts).
 
@@ -56,11 +56,11 @@ shortcuts: [
 
 ## Other palettes
 
-UnoCSS preset bundles the Tailwind palette (`gray / red / blue / ...`, each 50–950). **In business code prefer semantic colors** (`primary / success / warning / error / info`) so global re-skin propagates everywhere; only use specific palette colors when truly unrelated to the theme.
+UnoCSS preset bundles the Tailwind palette (`gray / red / blue / ...`, each 50–950). **In business code prefer semantic colors** (`primary / success / warning / error / info`) so a global re-skin propagates everywhere; use specific palette colors only when unrelated to the theme.
 
 ## Performance
 
-UnoCSS is on-demand — only classes used in templates appear in the final CSS. You can use lots of utilities without worrying about CSS size.
+UnoCSS is on-demand — only classes used in templates appear in the final CSS. Use utilities freely without worrying about CSS size.
 
 ## Debug
 

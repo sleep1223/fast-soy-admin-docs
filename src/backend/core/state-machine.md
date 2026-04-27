@@ -125,7 +125,7 @@ class _OrderTransitionError(BizError):
 # 在 transition 调用前自己包一层，或者按场景判定
 ```
 
-如果对码段不挑剔，直接复用 `Code.HR_INVALID_TRANSITION` 也可以——目前框架内置一个通用码即可。
+对码段不挑剔时，直接复用 `Code.HR_INVALID_TRANSITION`——框架内置一个通用码即可。
 
 ## 与权限的关系
 

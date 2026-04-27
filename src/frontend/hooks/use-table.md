@@ -1,6 +1,6 @@
 # useTable
 
-数据驱动的表格 Hook，**与具体 UI 库无关**——只管"调接口、维护数据 / 分页 / 加载态"。NaiveUI 适配封了三个变体在它之上。绝大多数业务直接用 `useNaivePaginatedTable`。
+数据驱动的表格 Hook，**与具体 UI 库无关**——只管"调接口、维护数据 / 分页 / 加载态"。NaiveUI 适配封了三个变体在它之上。业务一般直接用 `useNaivePaginatedTable`。
 
 源码：`web/packages/hooks/src/use-table.ts` 与 `web/src/hooks/common/table/`。
 
@@ -145,7 +145,7 @@ const {
 
 ## CLI 自动生成
 
-`make cli-gen-web MOD=xxx` 产出的列表页已经接好 `useNaivePaginatedTable` + `useTableOperate`，包括搜索表单、抽屉、操作列、批量删除。手写时也建议照抄这个模板。
+`make cli-gen-web MOD=xxx` 产出的列表页已经接好 `useNaivePaginatedTable` + `useTableOperate`，含搜索表单、抽屉、操作列、批量删除。手写时也建议照抄这个模板。
 
 ## 相关
 

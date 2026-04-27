@@ -1,6 +1,6 @@
 # Code Standards
 
-Each topic has its own page:
+Topics:
 
 - [Naming conventions](/en/standard/naming) — files / classes / functions / paths / role / button / route names
 - [Vue style](/en/standard/vue) — SFC script order, template rules

@@ -30,11 +30,11 @@ routerPushByKey('function_request', {
 routerPushByKey('manage_user', undefined, true);
 ```
 
-写错 key TypeScript 会立刻报错，比手敲路径安全得多。
+写错 key TypeScript 会立刻报错，比手敲路径安全。
 
 ## 直接跳路径
 
-少数情况下需要传字符串（例如根据后端返回动态拼路径）：
+需要传字符串时（例如根据后端返回动态拼路径）：
 
 ```ts
 routerPush('/manage/user');
@@ -58,7 +58,7 @@ redirectFromLogin();             // 登录页用：取 query.redirect 跳过去
 routerBack();                    // history.back
 ```
 
-如果当前是直接打开的某条详情链接，没有 history，会自动 fallback 到首页，避免空白。
+直接打开的某条详情链接没有 history 时，会自动 fallback 到首页，避免空白。
 
 ## 跳到当前用户首页
 
@@ -66,11 +66,11 @@ routerBack();                    // history.back
 toHome();
 ```
 
-首页路由名来自 `userInfo.role.routeHomeName`（后端按角色配的 `by_role_home`）。所以**同一个按钮**对超级管理员可能跳 `/manage/api`，对普通用户可能跳 `/home`——透明地做到了"按角色不同的默认入口"。
+首页路由名来自 `userInfo.role.routeHomeName`（后端按角色配的 `by_role_home`）。**同一个按钮**对超级管理员可能跳 `/manage/api`，对普通用户跳 `/home`——透明实现"按角色区分默认入口"。
 
 ## 在组件外调用
 
-`useRouterPush` 必须在 setup / hook 上下文中调用。需要在 service / store 等"非组件"场景跳转时直接拿 router：
+`useRouterPush` 必须在 setup / hook 上下文中调用。在 service / store 等"非组件"场景跳转时直接拿 router：
 
 ```ts
 import { router } from '@/router';

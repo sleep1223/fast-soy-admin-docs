@@ -1,6 +1,6 @@
 # Business Module Autodiscover
 
-`app/core/autodiscover.py` scans `app/business/*/` at startup and loads each module's models, routes, init function, and standalone DB config. **You never need to register a business module anywhere**.
+`app/core/autodiscover.py` scans `app/business/*/` at startup and loads each module's models, routes, init function, and standalone DB config. **Business modules need no manual registration**.
 
 ## Recognition rules
 
@@ -155,7 +155,7 @@ Autodiscover is what makes "business modules" pluggable. The complementary stron
 - The business import facade is [`app.utils`](/en/backend/utils)
 - Cross-module wiring goes through the [event bus](/en/backend/core/events)
 
-Violating these still works at runtime — but the modular value autodiscover gives you is gone.
+Violating these still works at runtime — but the modular value autodiscover provides is gone.
 
 ## See also
 

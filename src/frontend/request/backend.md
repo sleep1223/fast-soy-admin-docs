@@ -1,6 +1,6 @@
 # 对接后端
 
-请求工厂统一处理 token、自动刷新、按业务码路由错误。这里讲清楚每个机制的细节。
+请求工厂统一处理 token、自动刷新、按业务码路由错误。下面是各机制的细节。
 
 ## Token 处理
 
@@ -37,7 +37,7 @@ config.headers.Authorization = `Bearer ${token}`;
 
 ### 并发请求的去重
 
-如果多个并发请求同时拿到 `2103`，工厂内部用 mutex 保证只发一次 `refresh-token`，其他请求等同一个 promise。避免 token 被刷多次甚至刷出更老的版本。
+多个并发请求同时拿到 `2103` 时，工厂内部用 mutex 保证只发一次 `refresh-token`，其他请求等同一个 promise，避免 token 被刷多次或刷出更老的版本。
 
 ## 错误码映射
 

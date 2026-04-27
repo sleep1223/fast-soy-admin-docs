@@ -1,6 +1,6 @@
 # Backend Style
 
-This page is the **enforced checklist** for backend code — usable as a PR review checklist. Covers response, schema, API path, CRUD, permissions, exception, cache, naming.
+Enforced checklist for backend code — usable as a PR review checklist. Covers response, schema, API path, CRUD, permissions, exceptions, cache, and naming.
 
 ::: warning Not soft suggestions
 Each item below is "to fix". Deviations require explicit justification in the PR description.

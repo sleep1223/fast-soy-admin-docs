@@ -1,6 +1,6 @@
 # 路由结构
 
-前端使用 [Elegant Router](https://github.com/soybeanjs/elegant-router) 由 `src/views/` 目录的文件结构**自动生成路由**。开发时只需要按约定建文件，路由表会在保存时自动更新。
+前端使用 [Elegant Router](https://github.com/soybeanjs/elegant-router) 由 `src/views/` 目录的文件结构**自动生成路由**。按约定建文件，路由表在保存时自动更新。
 
 ## 命名约定
 
@@ -71,7 +71,7 @@ export const builtinRoutes: ElegantConstRoute[] = [
 
 ## 文件 → 路由的转换层
 
-`src/router/elegant/transform.ts` 负责把 `views/` 文件结构 + 后端下发的菜单 dict 转成 vue-router 可用的路由对象。开发时**不需要**直接动它，知道存在即可。
+`src/router/elegant/transform.ts` 负责把 `views/` 文件结构 + 后端下发的菜单 dict 转成 vue-router 可用的路由对象。开发时**不需要**直接动它。
 
 ## 与后端的关系
 
@@ -82,7 +82,7 @@ export const builtinRoutes: ElegantConstRoute[] = [
 | 当前用户能看到哪些路由 | 后端 `GET /api/v1/route/user-routes` |
 | 公共路由（登录 / 错误页） | 后端 `GET /api/v1/route/constant-routes`（启动后从 Redis 读） |
 
-也就是说：**前端定义"页面长什么样"，后端定义"谁能看到、按什么顺序、配什么图标"**。
+即：**前端定义"页面长什么样"，后端定义"谁能看到、按什么顺序、配什么图标"**。
 
 ## 相关
 

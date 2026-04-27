@@ -1,6 +1,6 @@
 # useTable
 
-A data-driven table hook, **UI-agnostic** — only fetches data and manages pagination / loading. NaiveUI variants build on top of it. Most business code uses `useNaivePaginatedTable`.
+A data-driven table hook, **UI-agnostic** — only fetches data and manages pagination / loading. NaiveUI variants build on top of it. Business code typically uses `useNaivePaginatedTable`.
 
 Source: `web/packages/hooks/src/use-table.ts` and `web/src/hooks/common/table/`.
 
@@ -145,7 +145,7 @@ Full sample: [HR employee list](../../../web/src/views/hr/employee/index.vue).
 
 ## CLI auto-generation
 
-`make cli-gen-web MOD=xxx` produces a list page wired with `useNaivePaginatedTable` + `useTableOperate`, including search form, drawer, action column, batch delete. Manual code should follow the same template.
+`make cli-gen-web MOD=xxx` produces a list page wired with `useNaivePaginatedTable` + `useTableOperate`, including search form, drawer, action column, and batch delete. Manual code should follow the same template.
 
 ## See also
 

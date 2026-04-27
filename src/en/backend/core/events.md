@@ -1,6 +1,6 @@
 # Event Bus
 
-In-process event bus for **decoupled communication between business modules**. The strong rule "system doesn't know business; business modules don't know each other" means cross-module wiring must go through this bus.
+In-process event bus for **decoupled communication between business modules**. Per the rule "system doesn't know business; business modules don't know each other", cross-module wiring must go through this bus.
 
 Source: `app/core/events.py`.
 

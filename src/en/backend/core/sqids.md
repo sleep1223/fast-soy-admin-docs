@@ -115,7 +115,7 @@ If you must rotate:
 3. Bump an API version and notify integrators
 4. Internal code is unaffected (only stores int)
 
-If you don't need external stability, "generate a stable SECRET_KEY at deploy and never rotate" is the simpler path.
+Without external stability requirements, "generate a stable SECRET_KEY at deploy and never rotate" is simpler.
 
 ## See also
 

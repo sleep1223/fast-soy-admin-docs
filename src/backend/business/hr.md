@@ -1,6 +1,6 @@
 # HR 管理（第一个子业务模块）
 
-HR 模块是 `app/business/` 下的第一个完整子业务模块，演示了业务模块在 FastSoyAdmin 中**应当如何组织**：自动发现、菜单/角色/按钮声明、CRUDRouter 的标准与扩展用法、状态机、行级数据权限、前端按钮鉴权。
+HR 模块是 `app/business/` 下第一个完整业务模块，演示业务模块在 FastSoyAdmin 中**应当如何组织**：自动发现、菜单/角色/按钮声明、CRUDRouter 的标准与扩展用法、状态机、行级数据权限、前端按钮鉴权。
 
 > 源码位置：[app/business/hr/](../../../app/business/hr/)、[web/src/views/hr/](../../../web/src/views/hr/)
 > 适合阅读对象：在本仓库新增业务模块的开发者。

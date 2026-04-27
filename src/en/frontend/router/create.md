@@ -1,6 +1,6 @@
 # Create Routes
 
-Business pages go live in three steps: create file → CLI generates → backend declares menu. **In most cases use the CLI** — manual file creation is rare.
+Business pages go live in three steps: create file → CLI generates → backend declares menu. **Prefer the CLI** — manual file creation is rare.
 
 ## Recommended: one-shot CLI
 
@@ -64,7 +64,7 @@ Add the `route_name` to the relevant role's `menus` list, restart the backend, a
 
 ### 3. Hidden routes (detail pages etc.)
 
-Routes that need to exist but don't show in the menu (typically clicked-through detail pages):
+Routes that exist but don't show in the menu (typically click-through detail pages):
 
 ```python
 {

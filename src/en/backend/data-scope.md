@@ -49,7 +49,7 @@ HR_ROLE_SEEDS = [
 ]
 ```
 
-> This rule isn't enforced by `ensure_role` (omitting keeps existing) — relies on code review. Forgetting it makes department managers see the entire company.
+> `ensure_role` doesn't enforce this (omitting keeps existing) — relies on code review. Forgetting it makes department managers see the entire company.
 
 ## Use it in business endpoints
 

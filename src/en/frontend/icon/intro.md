@@ -17,7 +17,7 @@ Both render through `<svg-icon>`; menus / routes use the same field (`icon` + `i
 
 ### Online Iconify
 
-Nothing to install — browse [icones.js.org](https://icones.js.org/), pick `mdi:home` etc., and use directly. Iconify lazy-loads from CDN.
+Nothing to install — browse [icones.js.org](https://icones.js.org/), pick `mdi:home` etc., and use directly. Iconify lazy-loads from a CDN.
 
 ### Offline Iconify
 
@@ -29,7 +29,7 @@ Vite then inlines the icons you actually use into the bundle — no network at r
 
 ### Local SVG
 
-Drop `.svg` files into [web/src/assets/svg-icon/](../../../web/src/assets/svg-icon/); they're auto-registered with names matching the file. `logo.svg` → `<svg-icon local-icon="logo" />`.
+Drop `.svg` files into [web/src/assets/svg-icon/](../../../web/src/assets/svg-icon/); they're auto-registered with names matching the filename. `logo.svg` → `<svg-icon local-icon="logo" />`.
 
 ## Prefix config
 

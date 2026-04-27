@@ -5,7 +5,7 @@ Two parts:
 - **Component library theme** — Naive UI applies a set of semantic colors + dark mode via `n-config-provider`
 - **UnoCSS theme** — the same color scale is injected into UnoCSS so templates can `class="text-primary bg-primary-100"`
 
-One source of truth, both downstream layers stay in sync — no hard-coded colors anywhere.
+One source of truth keeps both downstream layers in sync — no hard-coded colors.
 
 ## How it works
 

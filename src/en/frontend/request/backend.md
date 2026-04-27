@@ -1,6 +1,6 @@
 # Connect Backend
 
-The request factory uniformly handles tokens, auto-refresh, and routes business codes to actions. Details below.
+The request factory handles tokens, auto-refresh, and routes business codes to actions.
 
 ## Token handling
 
@@ -55,7 +55,7 @@ Full backend codes: [Response codes](/en/backend/codes).
 
 ## token_version invalidation
 
-Backend has "kill old tokens immediately" mechanism: on password change, impersonation exit, forced logout, it `INCR`s `token_version:{uid}`; old tokens fail with `2106 SESSION_INVALIDATED` on next request.
+Backend has a "kill old tokens immediately" mechanism: on password change, impersonation exit, or forced logout, it `INCR`s `token_version:{uid}`; old tokens fail with `2106 SESSION_INVALIDATED` on next request.
 
 `2106` is now part of `VITE_SERVICE_MODAL_LOGOUT_CODES` by default, so the frontend confirms via modal then logs out. For silent logout (no modal), move it from `VITE_SERVICE_MODAL_LOGOUT_CODES` into `VITE_SERVICE_LOGOUT_CODES`:
 
@@ -84,7 +84,7 @@ Business code doesn't deal with this.
 
 ## Custom error handling
 
-For endpoints where the business needs to handle failures itself (no default toast), use `createFlatRequest`:
+For endpoints that handle failures themselves (no default toast), use `createFlatRequest`:
 
 ```typescript
 import { createFlatRequest } from '@/service/request';

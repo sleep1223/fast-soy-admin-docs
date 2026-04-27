@@ -1,6 +1,6 @@
 # Route Component
 
-The backend's `Menu.component` field decides which "layout + view" combo loads the route; the frontend transform maps the string to actual components.
+The backend's `Menu.component` field decides which "layout + view" combo loads the route; the frontend transform maps the string to components.
 
 ## Component types
 
@@ -43,13 +43,13 @@ To add a global layout (e.g. dual sidebar):
 2. Add `'dual-sidebar'` to `LayoutType` in `src/typings/router.d.ts`
 3. Backend `Menu.component` uses `layout.dual-sidebar$view.xxx`
 
-Real projects rarely need this — `base` covers 95% of cases.
+Rarely needed — `base` covers 95% of cases.
 
 ## Relationship with file structure
 
 The route file structure ([Route structure](/en/frontend/router/structure)) decides **what routes exist**.
 `component` decides **what shell renders them**.
-They're independent — the same view can be reused by different layouts (rare).
+They're independent — the same view can be reused across layouts (rare).
 
 ## See also
 

@@ -122,7 +122,7 @@ async def _(obj_in: UserSearch):
 
 ## make_optional — derive Update from Create
 
-Many modules' `XxxUpdate` is "all `XxxCreate` fields, but Optional". Hand-writing it duplicates and drifts. Use `make_optional`:
+Many modules' `XxxUpdate` is "all `XxxCreate` fields, but Optional". Hand-writing duplicates and drifts. Use `make_optional`:
 
 ```python
 from app.utils import make_optional, SchemaBase

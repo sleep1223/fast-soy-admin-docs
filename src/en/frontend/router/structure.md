@@ -1,6 +1,6 @@
 # Route Structure
 
-The frontend uses [Elegant Router](https://github.com/soybeanjs/elegant-router) to **auto-generate routes** from `src/views/`. You only create files following the convention; the route table updates on save.
+The frontend uses [Elegant Router](https://github.com/soybeanjs/elegant-router) to **auto-generate routes** from `src/views/`. Create files following the convention; the route table updates on save.
 
 ## Naming convention
 
@@ -47,7 +47,7 @@ views/user/[id].vue         → /user/:id         name=user_id
 
 ## Custom / built-in routes
 
-The root `/`, login page, error pages — these "non-business" routes are declared manually in `src/router/routes/builtin.ts`. Their `meta.constant=true` makes them visible to everyone and not delivered by the backend.
+The root `/`, login page, and error pages — non-business routes — are declared manually in `src/router/routes/builtin.ts`. Their `meta.constant=true` makes them visible to everyone and not delivered by the backend.
 
 ```typescript
 export const builtinRoutes: ElegantConstRoute[] = [
@@ -69,7 +69,7 @@ export const builtinRoutes: ElegantConstRoute[] = [
 
 ## File → route transform
 
-`src/router/elegant/transform.ts` turns the `views/` structure + the backend menu dict into vue-router objects. You usually don't touch it directly.
+`src/router/elegant/transform.ts` turns the `views/` structure + the backend menu dict into vue-router objects. Rarely touched directly.
 
 ## Relationship with the backend
 

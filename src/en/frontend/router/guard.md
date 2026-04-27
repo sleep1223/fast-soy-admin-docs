@@ -130,7 +130,7 @@ See `src/store/modules/tab/`.
 
 ## Custom guards
 
-Need extra init after login (load dictionaries / user prefs)? Add it inside `route.ts`'s `initRoute`. **Don't** add a separate `router.beforeEach` — easy to clash with existing guards' execution order.
+Need extra init after login (load dictionaries / user prefs)? Add it inside `route.ts`'s `initRoute`. **Don't** add a separate `router.beforeEach` — it clashes with existing guard ordering.
 
 ## Debug
 

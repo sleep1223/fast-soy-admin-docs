@@ -17,7 +17,7 @@
 
 ### Iconify 在线
 
-什么都不用做——浏览图标库（[icones.js.org](https://icones.js.org/)）找到 `mdi:home` 之类的 key，直接用即可。Iconify 会按需从 CDN 加载。
+无需配置——在图标库（[icones.js.org](https://icones.js.org/)）找到 `mdi:home` 之类的 key 直接用。Iconify 按需从 CDN 加载。
 
 ### Iconify 离线
 
@@ -25,7 +25,7 @@
 cd web && pnpm add @iconify/json   # 下载所有图标集（一次性 ~ 90MB）
 ```
 
-之后 Vite 在构建时把用到的图标内联进 bundle，运行时不走网络。生产环境强烈推荐。
+Vite 构建时把用到的图标内联进 bundle，运行时不走网络。生产环境推荐。
 
 ### 本地 SVG
 

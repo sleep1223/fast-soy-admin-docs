@@ -1,6 +1,6 @@
 # CRUDRouter
 
-`CRUDRouter` is a factory that mass-generates the 6 standard REST routes; pair it with [`CRUDBase`](/en/backend/crud) and [API conventions](/en/backend/api). Goal: kill 90% of boilerplate.
+A factory that mass-generates the 6 standard REST routes; pair with [`CRUDBase`](/en/backend/crud) and [API conventions](/en/backend/api). Kills 90% of boilerplate.
 
 Source: `app/core/router.py`.
 
@@ -127,7 +127,7 @@ CRUDRouter(
 )
 ```
 
-**Critical**: `action_dependencies` apply to `@override("create")`-replaced routes too — so you can't accidentally "forget the permission check" when customizing.
+**Critical**: `action_dependencies` apply to `@override("create")`-replaced routes too — customization can't accidentally drop the permission check.
 
 ## Customize a route: `@crud.override`
 

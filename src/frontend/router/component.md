@@ -43,13 +43,13 @@
 2. 在 `src/typings/router.d.ts` 的 `LayoutType` 补一个 `'dual-sidebar'`
 3. 后端 `Menu.component` 用 `layout.dual-sidebar$view.xxx`
 
-实际项目里几乎不需要——`base` 已经覆盖 95% 场景。
+实际项目里几乎不需要——`base` 已覆盖大多数场景。
 
 ## 与文件结构的关系
 
 路由文件结构（[路由结构](./structure.md)）决定**有哪些路由**。
 `component` 决定**用什么外壳渲染**。
-两者独立——同一个 view 可以被不同布局复用（虽然很少）。
+两者独立——同一个 view 可被不同布局复用（少见）。
 
 ## 相关
 

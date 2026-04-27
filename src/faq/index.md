@@ -38,11 +38,11 @@ REDIS_URL=redis://localhost:6379/0
 
 `init_data.py` 调用了 [`reconcile_menu_subtree(...)`](../backend/init-data.md#菜单按钮对账reconcile_menu_subtree) — 该子树进入 IaC 模式，**只接受**通过 `init_data.py` 声明的菜单 / 按钮，Web UI 手动创建的会在下次启动时被删除。
 
-如果某子树需要允许动态创建菜单，**不要**对它调 `reconcile_menu_subtree`。
+某子树需允许动态创建菜单时，**不要**对它调 `reconcile_menu_subtree`。
 
 ### 启动日志报 `ensure_role 'XXX': missing apis [...]`
 
-声明的 `(method, path)` 在 `Api` 表里找不到对应路由——通常意味着：
+声明的 `(method, path)` 在 `Api` 表里找不到对应路由——通常因为：
 
 - 路由被重命名 / 删除，但角色 seed 的 `apis` 列表忘了同步
 - 拼写错误（注意 method 是小写：`"post"` 不是 `"POST"`）
@@ -87,7 +87,7 @@ mv app/business/inventory app/business/_inventory
 
 ### CLI 生成的代码里 `// TODO`
 
-外键 / 自定义枚举的下拉数据源无法自动推导。搜全工程 TODO，补齐 `options` 的数据源（通常是 `fetchGetXxxList` 请求）。
+外键 / 自定义枚举的下拉数据源无法自动推导。搜全工程 TODO，补齐 `options` 的数据源（一般是 `fetchGetXxxList` 请求）。
 
 ## 权限
 
@@ -153,7 +153,7 @@ await ensure_role(
 
 ### 路由不在菜单中显示
 
-检查菜单 `hide_in_menu=True`，或者后端没把这个 `route_name` 加到当前角色的 `menus`。
+检查菜单 `hide_in_menu=True`，或后端没把该 `route_name` 加到当前角色的 `menus`。
 
 ### 静态路由 vs 动态路由
 
@@ -201,7 +201,7 @@ await ensure_role(
 
 ### 容器里所有请求都被 guard 误封
 
-部署在 Nginx 之后没开反代头还原，所有请求看起来都来自 nginx 容器 IP。修：
+部署在 Nginx 之后没开反代头还原，所有请求看起来都来自 nginx 容器 IP。修复：
 
 ```dotenv
 PROXY_HEADERS_ENABLED=true

@@ -24,7 +24,7 @@
 make check-all
 ```
 
-如果只动了后端 / 前端，可分别跑 `make check` / `make web-check`。
+只动了后端 / 前端时，可分别跑 `make check` / `make web-check`。
 
 ## VS Code 推荐配置
 

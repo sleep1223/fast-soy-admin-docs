@@ -1,6 +1,6 @@
 # Startup Init & Reconciliation
 
-Business modules declare menus, roles, buttons, and seed data via `init_data.py`. On every startup, autodiscover invokes each module's `init()`. This page explains the sync semantics for each data category and how to make a module the single source of truth for its subtree.
+Business modules declare menus, roles, buttons, and seed data via `init_data.py`. On every startup, autodiscover invokes each module's `init()`. Below: the sync semantics for each data category and how to make a module the single source of truth for its subtree.
 
 ## Startup flow
 
@@ -115,7 +115,7 @@ Common causes:
 2. **Business seed data** — same for `HR_DEPARTMENT_SEEDS / HR_TAG_SEEDS / HR_EMPLOYEE_SEEDS`
 3. **Cross-subtree orphan buttons** — buttons referenced by multiple subtrees can survive cleanup of one of them
 
-These scenarios are rare and removal cascades are subtle (do you also unbind users from a deleted role?), so the framework intentionally avoids automation here — write a proper migration.
+These scenarios are rare and removal cascades are subtle (does deleting a role also unbind its users?), so the framework intentionally avoids automation here — write a proper migration.
 
 ## Summary
 

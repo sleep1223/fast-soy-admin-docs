@@ -162,7 +162,7 @@ If you must rotate in production:
 
 - announce + give external integrations time to migrate
 - bump an API version
-- you can keep the old SECRET_KEY around for "dual signing" temporarily (custom code required)
+- keep the old SECRET_KEY around for "dual signing" temporarily (custom code required)
 
 See [Sqids / rotating SECRET_KEY](/en/backend/core/sqids#rotating-secret_key).
 

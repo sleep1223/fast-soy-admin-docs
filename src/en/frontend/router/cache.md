@@ -1,6 +1,6 @@
 # Route Cache
 
-Uses Vue's `<keep-alive>` to preserve page state — switching tabs and back **doesn't recreate the component**, so search filters, scroll position, form input persist.
+Uses Vue's `<keep-alive>` to preserve page state — switching tabs and back **doesn't recreate the component**, so search filters, scroll position, and form input persist.
 
 ## Enable
 

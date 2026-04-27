@@ -30,7 +30,7 @@ routerPushByKey('function_request', {
 routerPushByKey('manage_user', undefined, true);
 ```
 
-A typo in the key → TypeScript error. Much safer than hand-typed paths.
+A typo in the key triggers a TypeScript error — safer than hand-typed paths.
 
 ## Direct path navigation
 
@@ -66,7 +66,7 @@ If a detail link was opened directly (no history), it falls back to home — no 
 toHome();
 ```
 
-The home route name comes from `userInfo.role.routeHomeName` (backend `by_role_home` per role). So **the same button** can land a super-admin on `/manage/api` and a regular user on `/home` — transparently per-role default entry.
+The home route name comes from `userInfo.role.routeHomeName` (backend `by_role_home` per role). The same button can land a super-admin on `/manage/api` and a regular user on `/home` — per-role default entry.
 
 ## Outside components
 
