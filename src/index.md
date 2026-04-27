@@ -4,7 +4,7 @@ layout: home
 hero:
   name: FastSoyAdmin
   text: 全栈后台管理模板
-  tagline: FastAPI + Vue3 + TypeScript + NaiveUI + UnoCSS
+  tagline: FastAPI · Vue3 · TypeScript · Naive UI · UnoCSS
   image:
     src: /logo.svg
     alt: FastSoyAdmin

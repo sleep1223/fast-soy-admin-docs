@@ -1,11 +1,11 @@
 # Introduction
 
-[FastSoyAdmin](https://github.com/sleep1223/fast-soy-admin) is an out-of-the-box full-stack admin template.
+[FastSoyAdmin](https://github.com/sleep1223/fast-soy-admin) is a batteries-included full-stack admin template.
 
-- **Frontend** — based on [SoybeanAdmin](https://github.com/soybeanjs/soybean-admin), Vue3 + Vite7 + TypeScript + Pinia + UnoCSS + Naive UI
-- **Backend** — FastAPI + Pydantic v2 + Tortoise ORM + Redis, layered as "system + business" with autodiscovered business modules
+- **Frontend** — based on [SoybeanAdmin](https://github.com/soybeanjs/soybean-admin); Vue3 + Vite7 + TypeScript + Pinia + UnoCSS + Naive UI
+- **Backend** — FastAPI + Pydantic v2 + Tortoise ORM + Redis; layered as "system + business" with autodiscovered modules
 
-The repo is a monorepo: `/app` is the backend, `/web` is the frontend, `/deploy` is Docker / Nginx.
+Monorepo layout: `/app` backend, `/web` frontend, `/deploy` Docker / Nginx.
 
 ## Highlights
 
@@ -52,11 +52,11 @@ The repo is a monorepo: `/app` is the backend, `/web` is the frontend, `/deploy`
 
 | Goal | Start here |
 |---|---|
-| Get the project running | [Quick start](/en/guide/quick-start) |
-| Add a new business module (most common) | [Development guide](/en/backend/development) (CLI end-to-end) |
-| Understand backend architecture / autodiscover / RBAC | [Backend / Intro](/en/backend/intro) → [Architecture](/en/backend/architecture) |
-| Understand frontend routing / requests / theme | [Frontend / Intro](/en/frontend/intro) |
-| Pre-PR conventions | [Standard / Backend](/en/standard/backend) + [Vue style](/en/standard/vue) + [Naming](/en/standard/naming) |
+| Run the project | [Quick start](/en/guide/quick-start) |
+| Add a business module | [Development guide](/en/backend/development) |
+| Backend architecture / autodiscover / RBAC | [Backend intro](/en/backend/intro) → [Architecture](/en/backend/architecture) |
+| Frontend routing / requests / theme | [Frontend intro](/en/frontend/intro) |
+| Pre-PR conventions | [Backend](/en/standard/backend) · [Vue style](/en/standard/vue) · [Naming](/en/standard/naming) |
 | Deploy | [Deployment](/en/backend/deployment) |
 | Troubleshoot | [FAQ](/en/faq/) |
 
@@ -64,22 +64,22 @@ The repo is a monorepo: `/app` is the backend, `/web` is the frontend, `/deploy`
 
 ```
 ┌─────────────────────────────────────────────────┐
-│                    Nginx (:1880)                 │
-│        Static assets + /api/* reverse proxy      │
-├─────────────────────┬───────────────────────────┤
-│   Frontend (:9527)   │     Backend (:9999)        │
-│   Vue3 + Vite7       │     FastAPI                │
-│                      │                            │
-│   Views              │     api/  (system/business)│
-│     ↓                │       ↓                    │
-│   Pinia Store        │     services/              │
-│     ↓                │       ↓                    │
-│   Service (Alova)    │     controllers (CRUDBase) │
-│     ↓                │       ↓                    │
-│   HTTP request ──────┼──→  /api/v1/*              │
-│                      │       ↓                    │
-│                      │     Tortoise / Redis       │
-└─────────────────────┴───────────────────────────┘
+│                  Nginx (:1880)                  │
+│      Static assets + /api/* reverse proxy       │
+├──────────────────────┬──────────────────────────┤
+│   Frontend (:9527)   │   Backend (:9999)        │
+│   Vue3 + Vite7       │   FastAPI                │
+│                      │                          │
+│   Views              │   api/                   │
+│     ↓                │     ↓                    │
+│   Pinia              │   services/              │
+│     ↓                │     ↓                    │
+│   Alova ─────────────┼─→ /api/v1/*              │
+│                      │     ↓                    │
+│                      │   controllers (CRUDBase) │
+│                      │     ↓                    │
+│                      │   Tortoise / Redis       │
+└──────────────────────┴──────────────────────────┘
 ```
 
 ## Resources

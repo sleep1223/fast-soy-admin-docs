@@ -4,7 +4,7 @@ layout: home
 hero:
   name: FastSoyAdmin
   text: Full-Stack Admin Template
-  tagline: FastAPI + Vue3 + TypeScript + NaiveUI + UnoCSS
+  tagline: FastAPI · Vue3 · TypeScript · Naive UI · UnoCSS
   image:
     src: /logo.svg
     alt: FastSoyAdmin
