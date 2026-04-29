@@ -7,8 +7,9 @@
 所有命令在项目根目录执行。首次使用先装依赖、建表：
 
 ```bash
-make install-all    # 后端 + 前端依赖
-make initdb         # 首次建表 + 基础数据
+make install-all     # 后端 + 前端依赖
+cp .env.example .env # 复制环境变量模板，按需修改 SECRET_KEY / DB_URL / REDIS_URL 等
+make initdb          # 首次建表 + 基础数据
 ```
 
 ## 创建新模块：以 `inventory`（库存管理）为例

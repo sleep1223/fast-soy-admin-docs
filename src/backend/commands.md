@@ -78,29 +78,32 @@ make help
 # 1. 装依赖（仅首次）
 make install-all
 
-# 2. 首次初始化数据库（仅首次）
+# 2. 复制环境变量模板，按需修改 SECRET_KEY / DB_URL / REDIS_URL 等（仅首次）
+cp .env.example .env
+
+# 3. 首次初始化数据库（仅首次）
 make initdb
 
-# 3. 创建业务模块骨架
+# 4. 创建业务模块骨架
 make cli-init MOD=inventory
 
-# 4. 编辑 app/business/inventory/models.py，定义 Tortoise 模型
+# 5. 编辑 app/business/inventory/models.py，定义 Tortoise 模型
 
-# 5. 生成后端代码（schemas / controllers / api / init_data）
+# 6. 生成后端代码（schemas / controllers / api / init_data）
 make cli-gen MOD=inventory
 
-# 6. 生成前端代码（service / typings / views / i18n 片段）
+# 7. 生成前端代码（service / typings / views / i18n 片段）
 make cli-gen-web MOD=inventory CN=库存管理
 
-# 5+6 也可一次跑完:
+# 6+7 也可一次跑完:
 # make cli-gen-all MOD=inventory CN=库存管理
 
-# 7. 执行数据库迁移
+# 8. 执行数据库迁移
 make mm
 
-# 8. 启动前后端开发服务器
+# 9. 启动前后端开发服务器
 make dev
 
-# 9. 提交前跑一遍质量检查
+# 10. 提交前跑一遍质量检查
 make check-all
 ```

@@ -39,8 +39,9 @@ make down                  # 停止并移除容器
 ## 方式二：本地开发
 
 ```bash
-make install-all  # 一次性安装后端 + 前端依赖
-make initdb       # 首次初始化数据库（之后不再需要）
+make install-all     # 一次性安装后端 + 前端依赖
+cp .env.example .env # 复制环境变量模板，按需修改 SECRET_KEY / DB_URL / REDIS_URL 等
+make initdb          # 首次初始化数据库（之后不再需要）
 make dev          # 并行启动后端(:9999) 和前端(:9527)，Ctrl+C 一起停
 ```
 
