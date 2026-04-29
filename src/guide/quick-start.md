@@ -42,7 +42,7 @@ make down                  # 停止并移除容器
 make install-all     # 一次性安装后端 + 前端依赖
 cp .env.example .env # 复制环境变量模板，按需修改 SECRET_KEY / DB_URL / REDIS_URL 等
 make initdb          # 首次初始化数据库（之后不再需要）
-make dev          # 并行启动后端(:9999) 和前端(:9527)，Ctrl+C 一起停
+make dev             # 并行启动后端(:9999) 和前端(:9527)，Ctrl+C 一起停
 ```
 
 分开启动也可以：
@@ -96,9 +96,9 @@ make check-all    # 后端 + 前端所有质量检查（提交前跑）
 细分命令：
 
 ```bash
-make fmt          # 后端 ruff fix + format
-make typecheck    # 后端 basedpyright
-make test         # 后端 pytest
-make web-lint     # 前端 eslint + oxlint
+make fmt           # 后端 ruff fix + format
+make typecheck     # 后端 basedpyright
+make test          # 后端 pytest
+make web-lint      # 前端 eslint + oxlint
 make web-typecheck # 前端 vue-tsc
 ```

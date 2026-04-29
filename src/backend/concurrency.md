@@ -169,7 +169,7 @@ async with in_transaction(conn) as outer:
     await Employee.create(...)
     try:
         async with in_transaction(conn) as inner:
-            await _send_welcome_mail(...)     # 若失败
+            await _send_welcome_mail(...)      # 若失败
     except MailError:
         pass                                   # inner 回滚，outer 继续
 ```

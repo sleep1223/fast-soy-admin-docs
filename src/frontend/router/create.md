@@ -5,7 +5,7 @@
 ## 推荐：CLI 一键生成
 
 ```bash
-make cli-init MOD=inventory                 # 创建后端模块骨架
+make cli-init MOD=inventory                  # 创建后端模块骨架
 # 编辑 app/business/inventory/models.py 定义模型
 make cli-gen-all MOD=inventory CN=库存管理   # 同时生成前后端
 make mm                                      # 数据库迁移

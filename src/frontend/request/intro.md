@@ -22,9 +22,9 @@ web/src/service/
 VITE_SERVICE_BASE_URL=/api/v1                    # 业务请求 base
 VITE_OTHER_SERVICE_BASE_URL={"demo":"/demo"}     # 其他 service（多后端）
 
-VITE_SERVICE_SUCCESS_CODE=0000                    # 视为成功的码
-VITE_SERVICE_LOGOUT_CODES=2100,2101,2104,2105              # 直接登出
-VITE_SERVICE_MODAL_LOGOUT_CODES=2102,2106             # 弹窗后登出
+VITE_SERVICE_SUCCESS_CODE=0000                   # 视为成功的码
+VITE_SERVICE_LOGOUT_CODES=2100,2101,2104,2105    # 直接登出
+VITE_SERVICE_MODAL_LOGOUT_CODES=2102,2106        # 弹窗后登出
 VITE_SERVICE_EXPIRED_TOKEN_CODES=2103            # 自动刷新 token
 ```
 

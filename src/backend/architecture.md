@@ -59,11 +59,11 @@
 
 ```
 create_app()
-  ├─ register_db(app)                  # Tortoise.init(config=TORTOISE_ORM)
-  ├─ register_exceptions(app)          # BizError / DoesNotExist / IntegrityError / ValidationError 处理器
+  ├─ register_db(app)                       # Tortoise.init(config=TORTOISE_ORM)
+  ├─ register_exceptions(app)               # BizError / DoesNotExist / IntegrityError / ValidationError 处理器
   ├─ register_routers(app, prefix="/api")   # 系统模块 /api/v1/...
-  ├─ discover_business_routers()       # /api/v1/business/<name>/...
-  └─ setup_radar(app)                  # 可选
+  ├─ discover_business_routers()            # /api/v1/business/<name>/...
+  └─ setup_radar(app)                       # 可选
 
 lifespan(app)
   ├─ init_redis() → app.state.redis

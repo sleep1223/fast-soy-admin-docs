@@ -57,8 +57,8 @@ async def transition_employee(emp_id: int, to_state: str):
 ```python
 async def transition(
     self,
-    obj: Any,                                 # Tortoise 模型实例
-    to_state: str,                            # 目标状态值
+    obj: Any,                                      # Tortoise 模型实例
+    to_state: str,                                 # 目标状态值
     state_field: str = "status",
     actor_id: int | None = None,
     log_fn: Callable[..., None] | None = None,

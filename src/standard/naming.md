@@ -62,8 +62,8 @@ R_<UPPER>                           # 角色编码
 ## 路由名（菜单 route_name）
 
 ```
-<module>            # 顶级目录
-<module>_<page>     # 二级页面
+<module>               # 顶级目录
+<module>_<page>        # 二级页面
 <module>_<page>_<sub>  # 三级
 ```
 
