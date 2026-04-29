@@ -157,3 +157,155 @@ server {
     }
 }
 ```
+
+## 上线前安全清单
+
+模板默认携带方便本地开发的演示数据（预填账号、明文 `123456`、占位短信网关）。**上线前必须逐项清理**，否则等同于把后台公开。建议在第一次发版前一次性做完，并写进运维 runbook。
+
+### 1. 移除登录页快捷登录与默认填充账号
+
+文件：[`web/src/views/_builtin/login/modules/pwd-login.vue`](https://github.com/sleep1223/fast-soy-admin/blob/main/web/src/views/_builtin/login/modules/pwd-login.vue)
+
+需要改两处：
+
+**a. 清空 `model` 默认值**（避免输入框预填管理员账号 / 密码）：
+
+```ts
+// before
+const model: FormModel = reactive({
+  userName: 'Soybean',
+  password: '123456'
+});
+
+// after
+const model: FormModel = reactive({
+  userName: '',
+  password: ''
+});
+```
+
+**b. 删除快捷登录按钮区**（`accounts` 数组 + `handleAccountLogin` + 模板里渲染这些按钮的 `NSpace`）。生产环境绝不能在 UI 上暴露任何账号。
+
+校验：
+
+```bash
+cd web && pnpm dev   # 打开登录页确认账号框为空、底部无快捷登录按钮
+grep -RnE "Soybean|Super|Admin|123456" web/src/views/_builtin/login   # 应无业务命中
+```
+
+### 2. 删除 / 禁用模板内置用户
+
+模板的 [`app/system/init_data.py`](https://github.com/sleep1223/fast-soy-admin/blob/main/app/system/init_data.py) 在首次启动时会创建以下账号（密码全部是 `123456`）：
+
+| 用户名 | 角色 | 密码 | 用途 |
+|---|---|---|---|
+| Soybean | R_SUPER | 123456 | 演示超管 |
+| Super | R_SUPER | 123456 | 演示超管 |
+| Admin | R_ADMIN | 123456 | 演示管理员 |
+| User | R_USER | 123456 | 演示普通用户 |
+
+**生产推荐：保留 1 个真实超管，其他全部删除。** 步骤：
+
+1. **创建你自己的超管**（推荐先做这一步，避免锁死后台）：用任一 `Soybean / Super` 登录 → 系统管理 → 用户管理 → 新增 → 设置强密码 → 角色勾选 `R_SUPER`。
+2. **退出登录，用新账号登录**，验证权限正常。
+3. **逐个删除模板账号**：用户管理列表里删除 `Soybean / Super / Admin / User`（或先批量「禁用」观察一周再删）。
+4. **如果不打算让访客自助注册**：把前端 [`pwd-login.vue`](https://github.com/sleep1223/fast-soy-admin/blob/main/web/src/views/_builtin/login/modules/pwd-login.vue) 底部的 `register` 跳转按钮一并删除；同时考虑在后端 [`auth.py`](https://github.com/sleep1223/fast-soy-admin/blob/main/app/system/api/auth.py) 注释掉 `/auth/register`（或加 IP 白名单 / 邀请码）。
+5. **如果你修改了 `init_data.py` 删除了模板用户的种子数据**，注意 `init_data.py` 仅 upsert（不会主动删数据库里已存在的用户），所以**老库需要手工清理一次**，新库则不会再生成。
+
+> **注意**：当前 `init_data.py` 的用户种子是无条件插入的——如果你只在数据库里删了用户没改种子文件，重启后会被重新创建。建议同时把种子里的演示用户也注释掉。
+
+### 3. 重新规划普通用户角色
+
+模板自带 `R_USER` 角色，菜单 / API / 按钮权限是按演示场景配置的（包含一些后台演示页）。生产环境普通用户**通常不应**直接复用 `R_USER`，建议：
+
+**做法 A（推荐）：新建生产专用角色，原 `R_USER` 留空备用 / 删除**
+
+1. 系统管理 → 角色管理 → 新增角色，例如 `R_BIZ_USER`（中文名"业务用户"）。
+2. 在该角色的「菜单权限」里，只勾选用户实际需要看到的页面（一般只有 `home` + 你的业务模块菜单）。
+3. 「按钮权限」里只勾选这些菜单下需要暴露的按钮码（如 `B_HR_DEPT_VIEW`，但不勾 `B_HR_DEPT_DELETE`）。
+4. 「接口权限」一定要把对应的 `(method, path)` 也勾上——按钮在前端隐藏不等于后端拒绝（参见 [RBAC](./rbac.md)）。
+5. 「数据范围」按需选 `self` / `department` / `custom`，不要保留默认 `all`。
+6. 把所有真实业务用户从 `R_USER` 改挂到 `R_BIZ_USER`。
+
+**做法 B：直接修改 `R_USER`**
+
+如果不想新建角色，在角色管理里编辑 `R_USER`，按上面 (2)~(5) 重新勾权限即可。但要注意 [`init_data.py`](./init-data.md) 里 `ensure_role` 是 upsert + clear-and-readd（菜单/按钮/接口），意味着**重启会被种子覆盖回演示配置**——做法 B 必须同步修改 `init_data.py` 里 `R_USER` 的种子定义，否则改动会被回滚。
+
+校验：
+
+```bash
+# 用 R_BIZ_USER 用户登录后台
+# - 侧边栏只剩允许的菜单
+# - 直接 curl 一个未授权接口应返回 2200/PERMISSION_DENIED
+curl -H "Authorization: Bearer <user_token>" http://your-host/api/v1/system/users/search -X POST -d '{}'
+```
+
+### 4. 接入真实短信网关替换验证码占位
+
+当前 [`app/system/services/captcha.py`](https://github.com/sleep1223/fast-soy-admin/blob/main/app/system/services/captcha.py) 的 `send_captcha()` **只把验证码写进 Redis 并打日志**，并未真正发送。这意味着：注册 / 验证码登录 / 忘记密码三条链路在生产环境形同虚设——任何人能看到日志（或拿到 Redis）就能登录任意账号。
+
+替换步骤（以阿里云 SMS 为例，腾讯云 / 华为云 / Twilio 思路一致）：
+
+1. **添加依赖**：
+
+   ```bash
+   uv add alibabacloud_dysmsapi20170525
+   ```
+
+2. **加配置项**到 `.env` 与 `app/core/config.py`：
+
+   ```env
+   SMS_PROVIDER=aliyun                # aliyun / tencent / mock，留 mock 等价当前占位
+   SMS_ACCESS_KEY_ID=xxx
+   SMS_ACCESS_KEY_SECRET=xxx
+   SMS_SIGN_NAME=your-sign            # 阿里云已审核的签名
+   SMS_TEMPLATE_CODE=SMS_xxxxx        # 已审核的模板码，模板内容要含 ${code}
+   SMS_DAILY_LIMIT_PER_PHONE=10       # 单号单日上限
+   SMS_COOLDOWN_SECONDS=60            # 同号两次发送冷却
+   ```
+
+3. **改写 `send_captcha`**，把 `radar_log("...开发模式...")` 替换为真实 SDK 调用，并加频控：
+
+   ```python
+   async def send_captcha(redis: Redis, phone: str) -> bool:
+       cooldown_key = f"captcha_cd:{phone}"
+       if await redis.get(cooldown_key):
+           return False                                    # 命中冷却
+       daily_key = f"captcha_daily:{phone}:{date.today()}"
+       if int(await redis.get(daily_key) or 0) >= APP_SETTINGS.SMS_DAILY_LIMIT_PER_PHONE:
+           return False                                    # 命中日上限
+
+       code = _generate_code()
+       await redis.set(f"{_CAPTCHA_PREFIX}{phone}", code, ex=_CAPTCHA_EXPIRE)
+
+       ok = await _provider_send(phone, code)              # 调阿里云 SDK
+       if not ok:
+           return False
+
+       await redis.set(cooldown_key, "1", ex=APP_SETTINGS.SMS_COOLDOWN_SECONDS)
+       await redis.incr(daily_key)
+       await redis.expire(daily_key, 86400)
+       return True
+   ```
+
+4. **加测试 + 灰度**：先在 staging 用真实手机号验证一遍登录 / 注册 / 重置密码三条链路，再切生产。**生产环境一定要把 `radar_log` 里打印 `code` 的那一行删掉**，否则验证码会进入 Radar 监控数据库，等同于明文留底。
+
+5. **加风控**：建议把 `/auth/captcha`、`/auth/register`、`/auth/reset-password` 三个端点单独配 IP 限流（参考 `app/core` 里 `GUARD_*` 配置），防止短信轰炸。
+
+### 上线前最终检查
+
+```bash
+# 后端
+grep -RnE "password.*123456|Soybean|Super|Admin" app/                 # 应只剩注释 / 文档
+docker compose exec app uv run python -c "from app.system.models import User; ..."  # 列表应为你的真实账号
+
+# 前端
+grep -RnE "userName: 'Soybean'|password: '123456'" web/src/             # 应无命中
+curl -s https://your-host/login | grep -iE "soybean|123456"            # 应无命中
+
+# 短信
+APP_DEBUG=false python -c "import asyncio; from app.system.services.captcha import send_captcha; ..."
+# 用真实手机号收一条短信确认
+```
+
+完成上述四项才视为生产就绪。建议把这份清单挂到 PR 模板或上线 checklist 里，避免以后新环境复发。
