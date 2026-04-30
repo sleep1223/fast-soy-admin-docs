@@ -1,17 +1,17 @@
 # Switching the database
 
-FastSoyAdmin uses [Tortoise ORM](https://tortoise.github.io), with native support for **SQLite / PostgreSQL / MySQL (MariaDB) / SQL Server**. **Switching DB only requires changing `DB_URL` in `.env`; no code changes**.
+FastSoyAdmin uses [Tortoise ORM](https://tortoise.github.io), with native support for **PostgreSQL / SQLite / MySQL (MariaDB) / SQL Server**. **Switching DB only requires changing `DB_URL` in `.env`; no code changes**.
 
 ## Quick switch (single DB)
 
 Edit `.env`:
 
 ```dotenv
-# SQLite (default, dev)
-DB_URL="sqlite://app_system.sqlite3?busy_timeout=5000"
+# PostgreSQL (default, driver: asyncpg)
+DB_URL="postgres://postgres:password@localhost:5432/fastsoyadmin"
 
-# PostgreSQL (default driver: asyncpg)
-DB_URL="postgres://user:password@localhost:5432/fastsoyadmin"
+# SQLite (dev/single-node, aiosqlite ships with tortoise-orm)
+DB_URL="sqlite://app_system.sqlite3?busy_timeout=5000"
 
 # MySQL / MariaDB
 DB_URL="mysql://root:password@localhost:3306/fastsoyadmin"
@@ -46,23 +46,23 @@ Full URL syntax: [Tortoise ORM docs](https://tortoise.github.io/setup.html#db-ur
 
 ## Driver install
 
-Only SQLite is bundled by default (via Tortoise's built-in `aiosqlite`). Other engines are shipped as optional extras in `pyproject.toml`:
+PostgreSQL is bundled by default (`tortoise-orm[asyncpg]`); SQLite also works out of the box via Tortoise's built-in `aiosqlite`. Other engines are shipped as optional extras in `pyproject.toml`:
 
 ```toml
+dependencies = [
+  "tortoise-orm[asyncpg]>=1.1.7",   # PostgreSQL (default) + SQLite (aiosqlite, bundled with tortoise)
+  ...
+]
+
 [project.optional-dependencies]
 mysql = ["tortoise-orm[asyncmy]>=1.1.7"]
-postgres = ["tortoise-orm[asyncpg]>=1.1.7"]
 mssql = ["tortoise-orm[asyncodbc]>=1.1.7"]
 oracle = ["tortoise-orm[asyncodbc]>=1.1.7"]
 ```
 
-Install the matching extra when you switch databases:
+Install the matching extra for MySQL / MSSQL / Oracle:
 
 ::: code-group
-```bash [PostgreSQL]
-uv sync --extra postgres    # asyncpg
-```
-
 ```bash [MySQL / MariaDB]
 uv sync --extra mysql       # asyncmy
 ```
@@ -76,7 +76,7 @@ uv sync --extra oracle      # asyncodbc
 ```
 :::
 
-Stack multiple `--extra` flags if you need more than one, e.g. `uv sync --extra postgres --extra mysql`.
+Stack multiple `--extra` flags if you need more than one, e.g. `uv sync --extra mysql --extra mssql`.
 
 ## Container deployment
 

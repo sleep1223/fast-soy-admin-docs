@@ -1,17 +1,17 @@
 # 切换后端数据库
 
-FastSoyAdmin 的 ORM 层用 [Tortoise ORM](https://tortoise.github.io)，原生支持 **SQLite / PostgreSQL / MySQL(MariaDB) / SQL Server** 四种引擎。**切换数据库只需改一个环境变量 `DB_URL`，不需要动代码**。
+FastSoyAdmin 的 ORM 层用 [Tortoise ORM](https://tortoise.github.io)，原生支持 **PostgreSQL / SQLite / MySQL(MariaDB) / SQL Server** 四种引擎。**切换数据库只需改一个环境变量 `DB_URL`，不需要动代码**。
 
 ## 快速切换（单数据库）
 
 在项目根目录的 `.env` 里改 `DB_URL`：
 
 ```dotenv
-# SQLite（默认，开发环境）
-DB_URL="sqlite://app_system.sqlite3?busy_timeout=5000"
+# PostgreSQL（默认，驱动 asyncpg）
+DB_URL="postgres://postgres:password@localhost:5432/fastsoyadmin"
 
-# PostgreSQL（默认驱动 asyncpg）
-DB_URL="postgres://user:password@localhost:5432/fastsoyadmin"
+# SQLite（开发/单机，aiosqlite 由 tortoise-orm 自带）
+DB_URL="sqlite://app_system.sqlite3?busy_timeout=5000"
 
 # MySQL / MariaDB
 DB_URL="mysql://root:password@localhost:3306/fastsoyadmin"
@@ -46,23 +46,23 @@ make mm             # makemigrations + migrate
 
 ## 驱动安装
 
-`pyproject.toml` 默认只带 SQLite（走 Tortoise 内置的 `aiosqlite`），其他引擎通过 optional extras 选装：
+`pyproject.toml` 默认依赖 PostgreSQL 驱动（`tortoise-orm[asyncpg]`），SQLite 驱动 `aiosqlite` 是 tortoise-orm 的核心依赖（开箱即用）；其他引擎通过 optional extras 选装：
 
 ```toml
+dependencies = [
+  "tortoise-orm[asyncpg]>=1.1.7",   # PostgreSQL（默认）+ SQLite（aiosqlite, tortoise 自带）
+  ...
+]
+
 [project.optional-dependencies]
 mysql = ["tortoise-orm[asyncmy]>=1.1.7"]
-postgres = ["tortoise-orm[asyncpg]>=1.1.7"]
 mssql = ["tortoise-orm[asyncodbc]>=1.1.7"]
 oracle = ["tortoise-orm[asyncodbc]>=1.1.7"]
 ```
 
-切换数据库时一并安装对应 extra：
+切换到 MySQL / MSSQL / Oracle 时安装对应 extra：
 
 ::: code-group
-```bash [PostgreSQL]
-uv sync --extra postgres    # asyncpg
-```
-
 ```bash [MySQL / MariaDB]
 uv sync --extra mysql       # asyncmy
 ```
@@ -76,7 +76,7 @@ uv sync --extra oracle      # asyncodbc
 ```
 :::
 
-需要同时装多个时叠加 `--extra`，例如 `uv sync --extra postgres --extra mysql`。
+需要同时装多个时叠加 `--extra`，例如 `uv sync --extra mysql --extra mssql`。
 
 ## 容器部署切换
 

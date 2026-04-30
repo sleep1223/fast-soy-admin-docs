@@ -159,8 +159,8 @@ DICTIONARY_SEEDS = [
 
 ## 数据库
 
-- 默认 SQLite（`app_system.sqlite3`）
-- 通过 `.env` 的 `DB_URL` 切换到 PostgreSQL / MySQL / SQL Server（**无需改代码**），详见 [切换数据库](../ops/database.md)
+- 默认 PostgreSQL（`tortoise-orm[asyncpg]`）；SQLite（`aiosqlite`，tortoise 自带）也开箱即用
+- 通过 `.env` 的 `DB_URL` 切换到 SQLite / MySQL / SQL Server（**无需改代码**），详见 [切换数据库](../ops/database.md)
 - 业务模块可声明独立 `DB_URL`，自动挂到独立 Tortoise 连接
 
 ## 迁移

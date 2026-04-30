@@ -15,7 +15,7 @@ SECRET_KEY=015a42020f023ac2c3eda3d45fe5ca3fef8921ce63589f6d4fcdef9814cd7fa7
 CORS_ORIGINS=["http://localhost:9527"]
 
 # ---- DB ----
-DB_URL=sqlite://app_system.sqlite3?busy_timeout=5000
+DB_URL=postgres://postgres:password@localhost:5432/fastsoyadmin
 
 # ---- Redis ----
 REDIS_URL=redis://localhost:6379/0
@@ -72,7 +72,7 @@ TRUSTED_HOSTS=["10.0.0.0/8"]
 | `CORS_ALLOW_CREDENTIALS` | `true` | — |
 | `CORS_ALLOW_METHODS` | `["*"]` | — |
 | `CORS_ALLOW_HEADERS` | `["*"]` | — |
-| `DB_URL` | `sqlite://app_system.sqlite3?busy_timeout=5000` | Tortoise URL; see [Switching DB](/en/ops/database) |
+| `DB_URL` | `postgres://postgres:password@localhost:5432/fastsoyadmin` | Tortoise URL; see [Switching DB](/en/ops/database) for SQLite/MySQL/MSSQL |
 | `TORTOISE_ORM` | auto-built | **don't set manually**; multi-line JSON in `.env` is fragile |
 | `REDIS_URL` | `redis://redis:6379/0` | Redis URL |
 | `JWT_ALGORITHM` | `HS256` | — |

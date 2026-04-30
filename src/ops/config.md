@@ -15,7 +15,7 @@ SECRET_KEY=015a42020f023ac2c3eda3d45fe5ca3fef8921ce63589f6d4fcdef9814cd7fa7
 CORS_ORIGINS=["http://localhost:9527"]
 
 # ---- 数据库 ----
-DB_URL=sqlite://app_system.sqlite3?busy_timeout=5000
+DB_URL=postgres://postgres:password@localhost:5432/fastsoyadmin
 
 # ---- Redis ----
 REDIS_URL=redis://localhost:6379/0
@@ -72,7 +72,7 @@ TRUSTED_HOSTS=["10.0.0.0/8"]
 | `CORS_ALLOW_CREDENTIALS` | `true` | — |
 | `CORS_ALLOW_METHODS` | `["*"]` | — |
 | `CORS_ALLOW_HEADERS` | `["*"]` | — |
-| `DB_URL` | `sqlite://app_system.sqlite3?busy_timeout=5000` | Tortoise URL，详见 [切换数据库](./database.md) |
+| `DB_URL` | `postgres://postgres:password@localhost:5432/fastsoyadmin` | Tortoise URL，详见 [切换数据库](./database.md)；SQLite 写法见该文档 |
 | `TORTOISE_ORM` | 自动构建 | **不要手动设置**，会破坏多行 JSON 的 .env 解析 |
 | `REDIS_URL` | `redis://redis:6379/0` | Redis 连接 URL |
 | `JWT_ALGORITHM` | `HS256` | — |
