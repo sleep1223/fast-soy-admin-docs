@@ -30,7 +30,7 @@
 | `Api` | 后端可调用接口集合（由启动钩子从 FastAPI 路由全量对账） |
 | `Role` | 对上述三者的授权关系（M2M） |
 
-业务模块通过 `init_data.py` 里的 `ensure_menu()` / `ensure_role()` 声明自己的路由和权限，详见 [启动初始化与对账](../../backend/init-data.md)。
+业务模块通过 `init_data.py` 里的 `ensure_menu()` / `ensure_role()` 声明自己的路由和权限，详见 [启动初始化与对账](../../develop/init-data.md)。
 
 ## 前端页面文件组织
 
@@ -78,4 +78,4 @@ interface RouteMeta {
 4. `ensure_role()` 把菜单 / 按钮 / API 授权给对应角色
 5. 重启后端，登录对应角色的用户即可看到菜单
 
-完整步骤见 [开发指南](../../backend/development.md)。
+完整步骤见 [开发指南](../../getting-started/workflow.md)。

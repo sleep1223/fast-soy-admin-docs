@@ -128,9 +128,11 @@ export default defineConfig({
       copyright: 'Copyright © 2024 sleep1223'
     },
     nav: [
-      { text: '指南', link: '/guide/intro', activeMatch: '/guide/' },
+      { text: '入门', link: '/getting-started/intro', activeMatch: '/getting-started/' },
+      { text: '后端开发', link: '/develop/intro', activeMatch: '/develop/' },
       { text: '前端', link: '/frontend/intro', activeMatch: '/frontend/' },
-      { text: '后端', link: '/backend/intro', activeMatch: '/backend/' },
+      { text: '运维', link: '/ops/deployment', activeMatch: '/ops/' },
+      { text: '速查', link: '/reference/commands', activeMatch: '/reference/' },
       { text: '规范', link: '/standard/', activeMatch: '/standard/' },
       { text: '常见问题', link: '/faq/', activeMatch: '/faq/' },
       {
@@ -146,12 +148,14 @@ export default defineConfig({
       }
     ],
     sidebar: {
-      '/guide/': [
+      '/getting-started/': [
         {
-          text: '开始',
+          text: '入门',
           items: [
-            { text: '简介', link: '/guide/intro' },
-            { text: '快速开始', link: '/guide/quick-start' }
+            { text: '简介', link: '/getting-started/intro' },
+            { text: '快速开始', link: '/getting-started/quick-start' },
+            { text: '架构总览', link: '/getting-started/architecture' },
+            { text: '开发流程', link: '/getting-started/workflow' }
           ]
         }
       ],
@@ -206,68 +210,75 @@ export default defineConfig({
           ]
         }
       ],
-      '/backend/': [
+      '/develop/': [
         {
           text: '开始',
           items: [
-            { text: '简介', link: '/backend/intro' },
-            { text: '架构', link: '/backend/architecture' },
-            { text: '命令参考', link: '/backend/commands' },
-            { text: '开发指南', link: '/backend/development' }
+            { text: '简介', link: '/develop/intro' }
           ]
         },
         {
           text: '路由 / Schema',
           items: [
-            { text: 'API 约定', link: '/backend/api' },
-            { text: 'CRUDRouter', link: '/backend/crud-router' },
-            { text: 'CRUDBase', link: '/backend/crud' },
-            { text: 'Schema 基类', link: '/backend/schema' },
-            { text: '响应码', link: '/backend/codes' },
-            { text: 'app.utils 入口', link: '/backend/utils' }
+            { text: 'API 约定', link: '/develop/api' },
+            { text: 'CRUDRouter', link: '/develop/crud-router' },
+            { text: 'CRUDBase', link: '/develop/crud' },
+            { text: 'Schema 基类', link: '/develop/schema' }
           ]
         },
         {
           text: '核心机制',
           items: [
-            { text: '自动发现', link: '/backend/core/autodiscover' },
-            { text: '启动初始化与对账', link: '/backend/init-data' },
-            { text: '资源 ID（Sqids）', link: '/backend/core/sqids' },
-            { text: '事件总线', link: '/backend/core/events' },
-            { text: '状态机', link: '/backend/core/state-machine' }
+            { text: '自动发现', link: '/develop/autodiscover' },
+            { text: '启动初始化与对账', link: '/develop/init-data' },
+            { text: '资源 ID（Sqids）', link: '/develop/sqids' },
+            { text: '事件总线', link: '/develop/events' },
+            { text: '状态机', link: '/develop/state-machine' }
           ]
         },
         {
           text: '数据',
           items: [
-            { text: '数据模型（System）', link: '/backend/models' },
-            { text: '模型 Mixin', link: '/backend/mixins' },
-            { text: 'ORM 速查', link: '/backend/orm-cookbook' },
-            { text: '切换数据库', link: '/backend/database' },
-            { text: '缓存', link: '/backend/cache' },
-            { text: '高并发业务', link: '/backend/concurrency' }
+            { text: '数据模型（System）', link: '/develop/models' },
+            { text: '模型 Mixin', link: '/develop/mixins' }
           ]
         },
         {
           text: '认证与权限',
           items: [
-            { text: '认证（JWT / token_version）', link: '/backend/auth' },
-            { text: 'RBAC（菜单/API/按钮）', link: '/backend/rbac' },
-            { text: '数据权限（data_scope）', link: '/backend/data-scope' }
+            { text: '认证（JWT / token_version）', link: '/develop/auth' },
+            { text: 'RBAC（菜单/API/按钮）', link: '/develop/rbac' },
+            { text: '数据权限（data_scope）', link: '/develop/data-scope' }
           ]
         },
         {
           text: '业务模块',
           items: [
-            { text: 'HR 管理（参考样例）', link: '/backend/business/hr' }
+            { text: 'HR 管理（参考样例）', link: '/develop/business-hr' }
           ]
-        },
+        }
+      ],
+      '/reference/': [
+        {
+          text: '速查',
+          items: [
+            { text: '命令参考（Makefile）', link: '/reference/commands' },
+            { text: '响应码', link: '/reference/codes' },
+            { text: 'app.utils 入口', link: '/reference/utils' },
+            { text: 'ORM 速查', link: '/reference/orm-cookbook' }
+          ]
+        }
+      ],
+      '/ops/': [
         {
           text: '运维',
           items: [
-            { text: '配置', link: '/backend/config' },
-            { text: '部署', link: '/backend/deployment' },
-            { text: '监控（Radar / Guard）', link: '/backend/radar' }
+            { text: '配置', link: '/ops/config' },
+            { text: '部署', link: '/ops/deployment' },
+            { text: '切换数据库', link: '/ops/database' },
+            { text: '缓存', link: '/ops/cache' },
+            { text: '高并发业务', link: '/ops/concurrency' },
+            { text: '监控（Radar / Guard）', link: '/ops/radar' }
           ]
         }
       ],

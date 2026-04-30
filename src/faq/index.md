@@ -14,7 +14,7 @@ make initdb        # 等同 tortoise init-db + 首次种子数据
 make mm            # makemigrations + migrate
 ```
 
-后续模型变更也走 `make mm`。详见 [命令参考](../backend/commands.md)。
+后续模型变更也走 `make mm`。详见 [命令参考](../reference/commands.md)。
 
 ### Redis 连接失败
 
@@ -36,7 +36,7 @@ REDIS_URL=redis://localhost:6379/0
 
 ### 重启后我手动建的菜单 / 按钮被清掉了
 
-`init_data.py` 调用了 [`reconcile_menu_subtree(...)`](../backend/init-data.md#菜单按钮对账reconcile_menu_subtree) — 该子树进入 IaC 模式，**只接受**通过 `init_data.py` 声明的菜单 / 按钮，Web UI 手动创建的会在下次启动时被删除。
+`init_data.py` 调用了 [`reconcile_menu_subtree(...)`](../develop/init-data.md#菜单按钮对账reconcile_menu_subtree) — 该子树进入 IaC 模式，**只接受**通过 `init_data.py` 声明的菜单 / 按钮，Web UI 手动创建的会在下次启动时被删除。
 
 某子树需允许动态创建菜单时，**不要**对它调 `reconcile_menu_subtree`。
 
@@ -47,7 +47,7 @@ REDIS_URL=redis://localhost:6379/0
 - 路由被重命名 / 删除，但角色 seed 的 `apis` 列表忘了同步
 - 拼写错误（注意 method 是小写：`"post"` 不是 `"POST"`）
 
-**看到必须修**——否则该角色的对应权限会静默缺失。详见 [启动初始化与对账](../backend/init-data.md#ensure_role-配置漂移告警)。
+**看到必须修**——否则该角色的对应权限会静默缺失。详见 [启动初始化与对账](../develop/init-data.md#ensure_role-配置漂移告警)。
 
 ### 删了 init_data 里的角色，DB 中的 Role 还在
 
@@ -59,7 +59,7 @@ async def upgrade(db):
     await db.execute_query("DELETE FROM roles WHERE role_code = 'R_OLD'")
 ```
 
-业务种子数据同理，刻意不自动化。详见 [启动初始化与对账](../backend/init-data.md#删除残留的手动清理)。
+业务种子数据同理，刻意不自动化。详见 [启动初始化与对账](../develop/init-data.md#删除残留的手动清理)。
 
 ### 业务模块新加的，但路由没挂
 
@@ -75,7 +75,7 @@ Business: module 'inventory' discovered but has no api.py or api/ package — ro
 Business: module 'inventory' api module does not export a valid 'router' (APIRouter) object
 ```
 
-`api/__init__.py` 必须有 `router = APIRouter()` 这一行。详见 [自动发现](../backend/core/autodiscover.md#常见漂移与排查)。
+`api/__init__.py` 必须有 `router = APIRouter()` 这一行。详见 [自动发现](../develop/autodiscover.md#常见漂移与排查)。
 
 ### 想临时屏蔽某个业务模块
 
@@ -113,7 +113,7 @@ from app.system.services.auth import invalidate_user_session
 await invalidate_user_session(redis, user_id)
 ```
 
-会 `INCR token_version:{uid}`，旧 token 在下一次请求时返回 `2106 SESSION_INVALIDATED`。详见 [认证](../backend/auth.md#token-失效token_version)。
+会 `INCR token_version:{uid}`，旧 token 在下一次请求时返回 `2106 SESSION_INVALIDATED`。详见 [认证](../develop/auth.md#token-失效token_version)。
 
 ### 业务接口权限拒绝（`2201`）但角色已挂菜单
 
@@ -143,7 +143,7 @@ await ensure_role(
 }
 ```
 
-详见 [数据权限](../backend/data-scope.md)。
+详见 [数据权限](../develop/data-scope.md)。
 
 ## 路由（前端）
 
@@ -162,7 +162,7 @@ await ensure_role(
 
 ### 跨域错误
 
-开发环境用 Vite 代理（`vite.config.ts` 的 `server.proxy`），生产环境用 Nginx 反代（详见 [部署](../backend/deployment.md)）。
+开发环境用 Vite 代理（`vite.config.ts` 的 `server.proxy`），生产环境用 Nginx 反代（详见 [部署](../ops/deployment.md)）。
 
 ### 生产 404
 
@@ -187,7 +187,7 @@ await ensure_role(
 
 ### 前端拿到的 ID 是字符串 `Yc7vN3kE`，不是数字
 
-那是 [sqid](../backend/core/sqids.md) — 对外暴露的资源 ID 一律走 sqid。前端无需解码，原样发回后端即可（后端用 `SqidPath` / `SqidId` 自动解码）。
+那是 [sqid](../develop/sqids.md) — 对外暴露的资源 ID 一律走 sqid。前端无需解码，原样发回后端即可（后端用 `SqidPath` / `SqidId` 自动解码）。
 
 ### 测试里发数字 ID 也通过了？
 
@@ -195,7 +195,7 @@ await ensure_role(
 
 ### 部署后所有外部 sqid 链接都失效
 
-`SECRET_KEY` 被换了——sqid 字母表由 SECRET_KEY 派生。详见 [Sqids / 轮换 SECRET_KEY](../backend/core/sqids.md#轮换-secret_key-怎么办)。
+`SECRET_KEY` 被换了——sqid 字母表由 SECRET_KEY 派生。详见 [Sqids / 轮换 SECRET_KEY](../develop/sqids.md#轮换-secret_key-怎么办)。
 
 ## 部署
 
@@ -226,7 +226,7 @@ uv add asyncmy          # mysql
 uv add asyncodbc        # mssql
 ```
 
-详见 [切换数据库 / 驱动安装](../backend/database.md#驱动安装)。
+详见 [切换数据库 / 驱动安装](../ops/database.md#驱动安装)。
 
 ### 多 worker 启动后菜单 / 用户重复创建？
 

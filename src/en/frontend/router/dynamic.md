@@ -36,7 +36,7 @@ In `static` mode, "permission" is just UI hiding — direct URL access still ren
 └──────────────────────────────────────────────────┘
 ```
 
-Implementation in [src/router/guard/route.ts](../../../web/src/router/guard/route.ts) and backend [RBAC](/en/backend/rbac).
+Implementation in [src/router/guard/route.ts](../../../web/src/router/guard/route.ts) and backend [RBAC](/en/develop/rbac).
 
 ## How the backend decides visible routes
 
@@ -72,7 +72,7 @@ await routeStore.initAuthRoute();    // re-fetch and remount
 Or have the user re-login.
 
 ::: tip Backend cache impact
-Route data comes from Redis (loaded at startup). After backend CUD, you must call `load_role_permissions(redis, role_code=...)` to incrementally refresh — otherwise the frontend still fetches stale data. See backend [Cache](/en/backend/cache).
+Route data comes from Redis (loaded at startup). After backend CUD, you must call `load_role_permissions(redis, role_code=...)` to incrementally refresh — otherwise the frontend still fetches stale data. See backend [Cache](/en/ops/cache).
 :::
 
 ## Super admin
@@ -87,4 +87,4 @@ Route data comes from Redis (loaded at startup). After backend CUD, you must cal
 
 - [Route structure](/en/frontend/router/structure)
 - [Route guard](/en/frontend/router/guard)
-- Backend: [Auth](/en/backend/auth) / [RBAC](/en/backend/rbac)
+- Backend: [Auth](/en/develop/auth) / [RBAC](/en/develop/rbac)

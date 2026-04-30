@@ -64,7 +64,7 @@ pnpm lint         # ESLint + oxlint
 pnpm typecheck    # vue-tsc
 ```
 
-也可以从项目根目录走 `make web-dev / web-build / web-lint / web-typecheck` 或一键 `make dev`（同时起前后端）。详见 [命令参考](../backend/commands.md)。
+也可以从项目根目录走 `make web-dev / web-build / web-lint / web-typecheck` 或一键 `make dev`（同时起前后端）。详见 [命令参考](../reference/commands.md)。
 
 ## 与后端的关系
 
@@ -77,7 +77,7 @@ pnpm typecheck    # vue-tsc
 | 当前用户能看到的菜单树 | `GET /api/v1/route/user-routes` |
 | 字典选项 | `GET /api/v1/system-manage/dictionaries/{type}/options` |
 
-详细机制见 [动态路由](./router/dynamic.md) 与后端 [RBAC](../backend/rbac.md)。
+详细机制见 [动态路由](./router/dynamic.md) 与后端 [RBAC](../develop/rbac.md)。
 
 ## 子主题入口
 

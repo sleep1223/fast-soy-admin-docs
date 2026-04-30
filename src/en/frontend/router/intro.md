@@ -30,7 +30,7 @@ Menus, APIs and button permissions are centralized in `app/system/models/admin.p
 | `Api` | Complete set of callable backend endpoints (reconciled from FastAPI routes at startup) |
 | `Role` | Many-to-many grants over the three above |
 
-Business modules declare their own routes and permissions via `ensure_menu()` / `ensure_role()` in `init_data.py`. See [Startup Init & Reconciliation](../../backend/init-data.md).
+Business modules declare their own routes and permissions via `ensure_menu()` / `ensure_role()` in `init_data.py`. See [Startup Init & Reconciliation](../../develop/init-data.md).
 
 ## Frontend page layout
 
@@ -78,4 +78,4 @@ Typical workflow (using the inventory module):
 4. Use `ensure_role()` to grant menus / buttons / APIs to the appropriate roles
 5. Restart the backend; users with that role will see the menu after logging in
 
-Full walkthrough: [Development Guide](../../backend/development.md).
+Full walkthrough: [Development Guide](../../getting-started/workflow.md).

@@ -19,7 +19,7 @@ The CLI produces:
 - `web/src/typings/api/inventory-manage.d.ts` — TS types
 - `web/src/locales/langs/_generated/inventory/{zh-cn,en-us}.ts` — i18n fragment (merge into the main file)
 
-See backend [Development guide](/en/backend/development).
+See backend [Development guide](/en/getting-started/workflow).
 
 ## Manually create a new page
 
@@ -103,7 +103,7 @@ meta: {
 | `roles` | only used when `VITE_AUTH_ROUTE_MODE=static` |
 | `query` | fixed query params injected on navigation |
 
-Full type in [src/typings/router.d.ts](../../../web/src/typings/router.d.ts) and the backend `Menu` model ([backend/models.md](/en/backend/models)).
+Full type in [src/typings/router.d.ts](../../../web/src/typings/router.d.ts) and the backend `Menu` model ([backend/models.md](/en/develop/models)).
 
 ## Common issues
 
@@ -121,4 +121,4 @@ The backend hasn't declared the `Menu`, or the current role's `menus` list doesn
 
 - [Route structure](/en/frontend/router/structure)
 - [Dynamic routes](/en/frontend/router/dynamic)
-- Backend: [RBAC](/en/backend/rbac) / [Init data](/en/backend/init-data)
+- Backend: [RBAC](/en/develop/rbac) / [Init data](/en/develop/init-data)

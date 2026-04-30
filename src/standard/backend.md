@@ -46,7 +46,7 @@ return JSONResponse({"code": Code.FAIL, "msg": "失败"})
 - ❌ 路径不带尾斜杠
 - ❌ 不要用 `GET /resources?xxx=...&yyy=...` 实现复杂搜索——一律走 `POST /search`
 
-完整约定见 [API 约定](../backend/api.md)。
+完整约定见 [API 约定](../develop/api.md)。
 
 ## 4. 路由层（CRUD）
 
@@ -57,7 +57,7 @@ return JSONResponse({"code": Code.FAIL, "msg": "失败"})
 - ❌ 不要直接操作 `router.routes.append(...)` 绕过 `_OrderedRouter` 排序
 - ❌ Controller / Service 中**不要** import `fastapi.Request` / `Response`——HTTP 相关只在 api 层
 - ❌ `@crud.override` 内**禁止**出现 `in_transaction` / `request.app.state.redis` / 跨模型写 / 事件 / 审计——必须下沉到 `services/`，api 层只做参数转发与响应封装
-- ❌ 当某资源 override 数 ≥ 3，或该资源是聚合根（带状态、带副作用），**应改为**显式 `@router.post(...)` + `services/`，不要硬塞 `CRUDRouter`（CRUDRouter 只服务贫血资源；详见 [CRUDRouter / 适用边界](../backend/crud-router.md#适用边界-别让-crudrouter-上瘾)）
+- ❌ 当某资源 override 数 ≥ 3，或该资源是聚合根（带状态、带副作用），**应改为**显式 `@router.post(...)` + `services/`，不要硬塞 `CRUDRouter`（CRUDRouter 只服务贫血资源；详见 [CRUDRouter / 适用边界](../develop/crud-router.md#适用边界-别让-crudrouter-上瘾)）
 
 ## 5. 分层职责
 
@@ -130,7 +130,7 @@ new_emp = await Employee.create(department_id=other.department_id)
 ## 8. 业务模块边界
 
 - ✅ 业务模块 import 入口统一走 `app.utils`
-- ✅ 跨业务模块联动用 [事件总线](../backend/core/events.md)（`emit` / `on`）
+- ✅ 跨业务模块联动用 [事件总线](../develop/events.md)（`emit` / `on`）
 - ❌ 业务模块**不得反向 import** `app.system.*`（除了 `ensure_menu` / `ensure_role` 等 system 主动暴露的 service）
 - ❌ 业务模块**不得**互相 import（`app.business.crm.*` 不能 `from app.business.hr import ...`）
 
@@ -176,7 +176,7 @@ make check        # 上面三条一次跑完
 - ❌ 不要给带分页 / 多参数的接口加全局 `@cache(...)` 装饰器
 - ✅ 业务 key 命名：`<module>_<resource>:<scope>`（如 `dict_options:tag_category`）
 
-详见 [缓存](../backend/cache.md)。
+详见 [缓存](../ops/cache.md)。
 
 ## 13. 日志与监控
 
@@ -194,7 +194,7 @@ make check-all    # 后端 + 前端所有质量检查
 
 ## 相关
 
-- [架构](../backend/architecture.md) — 总览
-- [开发指南](../backend/development.md) — 用 CLI 创建模块的端到端流程
-- [API 约定](../backend/api.md) / [响应码](../backend/codes.md)
-- [HR 模块（最佳实践全集）](../backend/business/hr.md)
+- [架构](../getting-started/architecture.md) — 总览
+- [开发指南](../getting-started/workflow.md) — 用 CLI 创建模块的端到端流程
+- [API 约定](../develop/api.md) / [响应码](../reference/codes.md)
+- [HR 模块（最佳实践全集）](../develop/business-hr.md)

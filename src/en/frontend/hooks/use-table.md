@@ -149,5 +149,5 @@ Full sample: [HR employee list](../../../web/src/views/hr/employee/index.vue).
 
 ## See also
 
-- [Development guide](/en/backend/development) — end-to-end CRUD module
-- Backend [API conventions / pagination](/en/backend/api#pagination)
+- [Development guide](/en/getting-started/workflow) — end-to-end CRUD module
+- Backend [API conventions / pagination](/en/develop/api#pagination)

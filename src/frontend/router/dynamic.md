@@ -36,7 +36,7 @@ VITE_AUTH_ROUTE_MODE=dynamic       # 默认；推荐
 └──────────────────────────────────────────────────┘
 ```
 
-后端实现要点见 [src/router/guard/route.ts](../../../web/src/router/guard/route.ts) 与后端 [RBAC](../../backend/rbac.md)。
+后端实现要点见 [src/router/guard/route.ts](../../../web/src/router/guard/route.ts) 与后端 [RBAC](../../develop/rbac.md)。
 
 ## 后端怎么决定可见路由
 
@@ -72,7 +72,7 @@ await routeStore.initAuthRoute();    // 重新拉取并挂载
 或者推动用户重新登录。
 
 ::: tip 后端缓存的影响
-路由数据来自 Redis 缓存（启动时灌入）。后端 CUD 后必须调 `load_role_permissions(redis, role_code=...)` 增量刷新，否则前端拉到的还是旧数据。详见后端 [缓存](../../backend/cache.md)。
+路由数据来自 Redis 缓存（启动时灌入）。后端 CUD 后必须调 `load_role_permissions(redis, role_code=...)` 增量刷新，否则前端拉到的还是旧数据。详见后端 [缓存](../../ops/cache.md)。
 :::
 
 ## 超级管理员行为
@@ -87,4 +87,4 @@ await routeStore.initAuthRoute();    // 重新拉取并挂载
 
 - [路由结构](./structure.md)
 - [路由守卫](./guard.md)
-- 后端：[认证](../../backend/auth.md) / [RBAC](../../backend/rbac.md)
+- 后端：[认证](../../develop/auth.md) / [RBAC](../../develop/rbac.md)

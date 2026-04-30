@@ -104,7 +104,7 @@ CLI-generated code already follows this; manual code should too.
 
 ## Resource IDs are sqid strings
 
-Backend resource IDs are [sqid](/en/backend/core/sqids) strings (e.g. `Yc7vN3kE`). Frontend **does not decode** — pass through:
+Backend resource IDs are [sqid](/en/develop/sqids) strings (e.g. `Yc7vN3kE`). Frontend **does not decode** — pass through:
 
 ```typescript
 const id: string = '...sqid...';

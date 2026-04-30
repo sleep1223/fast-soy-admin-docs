@@ -46,7 +46,7 @@ return JSONResponse({"code": Code.FAIL, "msg": "fail"})
 - ❌ No trailing slashes
 - ❌ Don't implement complex search via `GET /resources?...` — always use `POST /search`
 
-See full convention in [API conventions](/en/backend/api).
+See full convention in [API conventions](/en/develop/api).
 
 ## 4. Routing layer (CRUD)
 
@@ -89,7 +89,7 @@ See full convention in [API conventions](/en/backend/api).
 ## 8. Business module boundaries
 
 - ✅ Business modules import via `app.utils` only
-- ✅ Cross-business communication goes through the [Event bus](/en/backend/core/events) (`emit` / `on`)
+- ✅ Cross-business communication goes through the [Event bus](/en/develop/events) (`emit` / `on`)
 - ❌ Business modules **never reverse-import** `app.system.*` (except for the few services system explicitly exposes — `ensure_menu` / `ensure_role` / ...)
 - ❌ Business modules **never import each other** (`app.business.crm.*` cannot import `app.business.hr.*`)
 
@@ -135,7 +135,7 @@ make check        # all three above
 - ❌ Don't slap `@cache(...)` on paginated / multi-param endpoints
 - ✅ Business key naming: `<module>_<resource>:<scope>` (e.g. `dict_options:tag_category`)
 
-See [Cache](/en/backend/cache).
+See [Cache](/en/ops/cache).
 
 ## 13. Logging & monitoring
 
@@ -153,7 +153,7 @@ Includes: `ruff fix + format`, `basedpyright`, `pytest`, `eslint + oxlint`, `vue
 
 ## See also
 
-- [Architecture](/en/backend/architecture)
-- [Development guide](/en/backend/development)
-- [API conventions](/en/backend/api) / [Response codes](/en/backend/codes)
-- [HR module (best-practice reference)](/en/backend/business/hr)
+- [Architecture](/en/getting-started/architecture)
+- [Development guide](/en/getting-started/workflow)
+- [API conventions](/en/develop/api) / [Response codes](/en/reference/codes)
+- [HR module (best-practice reference)](/en/develop/business-hr)

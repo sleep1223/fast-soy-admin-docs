@@ -51,7 +51,7 @@ Driven by `web/.env`:
 | `VITE_SERVICE_EXPIRED_TOKEN_CODES` | `2103` | auto-refresh + replay |
 | Other non-`0000` | — | default error toast (`window.$message`) |
 
-Full backend codes: [Response codes](/en/backend/codes).
+Full backend codes: [Response codes](/en/reference/codes).
 
 ## token_version invalidation
 
@@ -110,10 +110,10 @@ if (error) {
 | 3. fetchXxx function | `web/src/service/api/<x>-manage.ts` |
 | 4. Use in component / store / hook | — |
 
-Steps 1–3 can be auto-generated via `make cli-gen-all`. See [Development](/en/backend/development).
+Steps 1–3 can be auto-generated via `make cli-gen-all`. See [Development](/en/getting-started/workflow).
 
 ## See also
 
 - [Intro](/en/frontend/request/intro)
 - [Usage](/en/frontend/request/usage)
-- Backend: [Auth](/en/backend/auth) / [Response codes](/en/backend/codes)
+- Backend: [Auth](/en/develop/auth) / [Response codes](/en/reference/codes)

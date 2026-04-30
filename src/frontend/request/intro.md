@@ -28,7 +28,7 @@ VITE_SERVICE_MODAL_LOGOUT_CODES=2102,2106        # 弹窗后登出
 VITE_SERVICE_EXPIRED_TOKEN_CODES=2103            # 自动刷新 token
 ```
 
-后端响应码定义见 [响应码](../../backend/codes.md)。
+后端响应码定义见 [响应码](../../reference/codes.md)。
 
 ## 响应格式（与后端完全对应）
 
@@ -105,4 +105,4 @@ const reportRequest = createRequest({
 - [使用方式](./usage.md) — 怎么写一个 fetchXxx
 - [代理](./proxy.md) — 开发 / 生产代理
 - [对接后端](./backend.md) — 错误码 + token 行为
-- 后端：[API 约定](../../backend/api.md) / [响应码](../../backend/codes.md)
+- 后端：[API 约定](../../develop/api.md) / [响应码](../../reference/codes.md)

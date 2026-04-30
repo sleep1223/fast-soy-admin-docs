@@ -51,7 +51,7 @@ config.headers.Authorization = `Bearer ${token}`;
 | `VITE_SERVICE_EXPIRED_TOKEN_CODES` | `2103` | 自动刷新 + 重放 |
 | 其他非 `0000` | — | 弹默认错误消息（`window.$message`） |
 
-后端响应码全集见 [响应码](../../backend/codes.md)。
+后端响应码全集见 [响应码](../../reference/codes.md)。
 
 ## token_version 失效
 
@@ -111,10 +111,10 @@ if (error) {
 | 3. fetchXxx 函数 | `web/src/service/api/<x>-manage.ts` |
 | 4. 在组件 / store / hook 调 | — |
 
-1–3 步可由 `make cli-gen-all` 自动产出。详见 [开发指南](../../backend/development.md)。
+1–3 步可由 `make cli-gen-all` 自动产出。详见 [开发指南](../../getting-started/workflow.md)。
 
 ## 相关
 
 - [简介](./intro.md)
 - [使用方式](./usage.md)
-- 后端：[认证](../../backend/auth.md) / [响应码](../../backend/codes.md)
+- 后端：[认证](../../develop/auth.md) / [响应码](../../reference/codes.md)

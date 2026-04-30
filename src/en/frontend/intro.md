@@ -64,7 +64,7 @@ pnpm lint         # ESLint + oxlint
 pnpm typecheck    # vue-tsc
 ```
 
-Or use root `make web-dev / web-build / web-lint / web-typecheck` or `make dev` to start backend + frontend together. See [Commands](/en/backend/commands).
+Or use root `make web-dev / web-build / web-lint / web-typecheck` or `make dev` to start backend + frontend together. See [Commands](/en/reference/commands).
 
 ## Relationship with the backend
 
@@ -77,7 +77,7 @@ The frontend **does not** define permissions or visible routes — both come fro
 | Menu tree visible to the current user | `GET /api/v1/route/user-routes` |
 | Dictionary options | `GET /api/v1/system-manage/dictionaries/{type}/options` |
 
-See [Dynamic routes](/en/frontend/router/dynamic) and backend [RBAC](/en/backend/rbac).
+See [Dynamic routes](/en/frontend/router/dynamic) and backend [RBAC](/en/develop/rbac).
 
 ## Subtopic entrypoints
 

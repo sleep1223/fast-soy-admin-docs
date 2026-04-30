@@ -19,7 +19,7 @@ CLI 自动产出：
 - `web/src/typings/api/inventory-manage.d.ts` — TS 类型
 - `web/src/locales/langs/_generated/inventory/{zh-cn,en-us}.ts` — i18n 片段（手动合并到主文件）
 
-详见后端 [开发指南](../../backend/development.md)。
+详见后端 [开发指南](../../getting-started/workflow.md)。
 
 ## 手动建一个新页面
 
@@ -103,7 +103,7 @@ meta: {
 | `roles` | 仅当 `VITE_AUTH_ROUTE_MODE=static` 时按角色过滤 |
 | `query` | 跳转时附带的固定 query 参数 |
 
-完整定义见 [src/typings/router.d.ts](../../../web/src/typings/router.d.ts) 与后端 `Menu` 模型字段（[backend/models.md](../../backend/models.md)）。
+完整定义见 [src/typings/router.d.ts](../../../web/src/typings/router.d.ts) 与后端 `Menu` 模型字段（[backend/models.md](../../develop/models.md)）。
 
 ## 常见问题
 
@@ -121,4 +121,4 @@ meta: {
 
 - [路由结构](./structure.md)
 - [动态路由](./dynamic.md)
-- 后端：[RBAC](../../backend/rbac.md) / [启动初始化与对账](../../backend/init-data.md)
+- 后端：[RBAC](../../develop/rbac.md) / [启动初始化与对账](../../develop/init-data.md)

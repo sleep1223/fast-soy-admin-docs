@@ -149,5 +149,5 @@ const {
 
 ## 相关
 
-- [开发指南](../../backend/development.md) — 端到端 CRUD 模块
-- 后端 [API 约定 / 分页](../../backend/api.md#分页约定)
+- [开发指南](../../getting-started/workflow.md) — 端到端 CRUD 模块
+- 后端 [API 约定 / 分页](../../develop/api.md#分页约定)

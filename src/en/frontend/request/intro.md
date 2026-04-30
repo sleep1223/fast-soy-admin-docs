@@ -28,7 +28,7 @@ VITE_SERVICE_MODAL_LOGOUT_CODES=2102,2106             # modal then logout
 VITE_SERVICE_EXPIRED_TOKEN_CODES=2103            # auto-refresh
 ```
 
-Backend codes: see [Response codes](/en/backend/codes).
+Backend codes: see [Response codes](/en/reference/codes).
 
 ## Response shape (1:1 with backend)
 
@@ -105,4 +105,4 @@ See [Proxy](/en/frontend/request/proxy).
 - [Usage](/en/frontend/request/usage)
 - [Proxy](/en/frontend/request/proxy)
 - [Connect backend](/en/frontend/request/backend)
-- Backend: [API conventions](/en/backend/api) / [Response codes](/en/backend/codes)
+- Backend: [API conventions](/en/develop/api) / [Response codes](/en/reference/codes)

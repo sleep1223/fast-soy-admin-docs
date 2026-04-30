@@ -8,9 +8,11 @@ const enConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
   description: 'A full-stack admin template with FastAPI and Vue3',
   themeConfig: {
     nav: [
-      { text: 'Guide', link: '/en/guide/intro', activeMatch: '/en/guide/' },
+      { text: 'Getting Started', link: '/en/getting-started/intro', activeMatch: '/en/getting-started/' },
+      { text: 'Backend Dev', link: '/en/develop/intro', activeMatch: '/en/develop/' },
       { text: 'Frontend', link: '/en/frontend/intro', activeMatch: '/en/frontend/' },
-      { text: 'Backend', link: '/en/backend/intro', activeMatch: '/en/backend/' },
+      { text: 'Operations', link: '/en/ops/deployment', activeMatch: '/en/ops/' },
+      { text: 'Reference', link: '/en/reference/commands', activeMatch: '/en/reference/' },
       { text: 'Standard', link: '/en/standard/', activeMatch: '/en/standard/' },
       { text: 'FAQ', link: '/en/faq/', activeMatch: '/en/faq/' },
       {
@@ -26,12 +28,14 @@ const enConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
       }
     ],
     sidebar: {
-      '/en/guide/': [
+      '/en/getting-started/': [
         {
           text: 'Getting Started',
           items: [
-            { text: 'Introduction', link: '/en/guide/intro' },
-            { text: 'Quick Start', link: '/en/guide/quick-start' }
+            { text: 'Introduction', link: '/en/getting-started/intro' },
+            { text: 'Quick Start', link: '/en/getting-started/quick-start' },
+            { text: 'Architecture', link: '/en/getting-started/architecture' },
+            { text: 'Development Workflow', link: '/en/getting-started/workflow' }
           ]
         }
       ],
@@ -86,66 +90,73 @@ const enConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
           ]
         }
       ],
-      '/en/backend/': [
+      '/en/develop/': [
         {
           text: 'Getting Started',
           items: [
-            { text: 'Introduction', link: '/en/backend/intro' },
-            { text: 'Architecture', link: '/en/backend/architecture' },
-            { text: 'Commands', link: '/en/backend/commands' },
-            { text: 'Development Guide', link: '/en/backend/development' }
+            { text: 'Introduction', link: '/en/develop/intro' }
           ]
         },
         {
           text: 'Routing / Schema',
           items: [
-            { text: 'API Conventions', link: '/en/backend/api' },
-            { text: 'CRUDRouter', link: '/en/backend/crud-router' },
-            { text: 'CRUDBase', link: '/en/backend/crud' },
-            { text: 'Schema Base', link: '/en/backend/schema' },
-            { text: 'Response Codes', link: '/en/backend/codes' },
-            { text: 'app.utils Facade', link: '/en/backend/utils' }
+            { text: 'API Conventions', link: '/en/develop/api' },
+            { text: 'CRUDRouter', link: '/en/develop/crud-router' },
+            { text: 'CRUDBase', link: '/en/develop/crud' },
+            { text: 'Schema Base', link: '/en/develop/schema' }
           ]
         },
         {
           text: 'Core Mechanisms',
           items: [
-            { text: 'Autodiscover', link: '/en/backend/core/autodiscover' },
-            { text: 'Startup Init & Reconciliation', link: '/en/backend/init-data' },
-            { text: 'Resource IDs (Sqids)', link: '/en/backend/core/sqids' },
-            { text: 'Event Bus', link: '/en/backend/core/events' },
-            { text: 'State Machine', link: '/en/backend/core/state-machine' }
+            { text: 'Autodiscover', link: '/en/develop/autodiscover' },
+            { text: 'Startup Init & Reconciliation', link: '/en/develop/init-data' },
+            { text: 'Resource IDs (Sqids)', link: '/en/develop/sqids' },
+            { text: 'Event Bus', link: '/en/develop/events' },
+            { text: 'State Machine', link: '/en/develop/state-machine' }
           ]
         },
         {
           text: 'Data',
           items: [
-            { text: 'Data Models (System)', link: '/en/backend/models' },
-            { text: 'Model Mixins', link: '/en/backend/mixins' },
-            { text: 'Switching Database', link: '/en/backend/database' },
-            { text: 'Cache', link: '/en/backend/cache' }
+            { text: 'Data Models (System)', link: '/en/develop/models' },
+            { text: 'Model Mixins', link: '/en/develop/mixins' }
           ]
         },
         {
           text: 'Auth & Permissions',
           items: [
-            { text: 'Authentication (JWT / token_version)', link: '/en/backend/auth' },
-            { text: 'RBAC (menu/api/button)', link: '/en/backend/rbac' },
-            { text: 'Data Scope', link: '/en/backend/data-scope' }
+            { text: 'Authentication (JWT / token_version)', link: '/en/develop/auth' },
+            { text: 'RBAC (menu/api/button)', link: '/en/develop/rbac' },
+            { text: 'Data Scope', link: '/en/develop/data-scope' }
           ]
         },
         {
           text: 'Business Modules',
           items: [
-            { text: 'HR (reference)', link: '/en/backend/business/hr' }
+            { text: 'HR (reference)', link: '/en/develop/business-hr' }
           ]
-        },
+        }
+      ],
+      '/en/reference/': [
+        {
+          text: 'Reference',
+          items: [
+            { text: 'Commands (Makefile)', link: '/en/reference/commands' },
+            { text: 'Response Codes', link: '/en/reference/codes' },
+            { text: 'app.utils Facade', link: '/en/reference/utils' }
+          ]
+        }
+      ],
+      '/en/ops/': [
         {
           text: 'Operations',
           items: [
-            { text: 'Configuration', link: '/en/backend/config' },
-            { text: 'Deployment', link: '/en/backend/deployment' },
-            { text: 'Monitoring (Radar / Guard)', link: '/en/backend/radar' }
+            { text: 'Configuration', link: '/en/ops/config' },
+            { text: 'Deployment', link: '/en/ops/deployment' },
+            { text: 'Switching Database', link: '/en/ops/database' },
+            { text: 'Cache', link: '/en/ops/cache' },
+            { text: 'Monitoring (Radar / Guard)', link: '/en/ops/radar' }
           ]
         }
       ],

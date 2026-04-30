@@ -89,4 +89,4 @@ export const builtinRoutes: ElegantConstRoute[] = [
 - [创建路由](./create.md)
 - [动态路由](./dynamic.md)
 - [路由组件](./component.md)
-- 后端：[RBAC](../../backend/rbac.md)
+- 后端：[RBAC](../../develop/rbac.md)

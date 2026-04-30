@@ -105,7 +105,7 @@ CLI 一键生成已经按这套约定产出；手写时也建议沿用。
 
 ## 资源 ID 是 sqid 字符串
 
-后端所有资源 ID 是 [sqid](../../backend/core/sqids.md) 字符串（如 `Yc7vN3kE`），不是数字。前端**不要解码**，原样传递即可：
+后端所有资源 ID 是 [sqid](../../develop/sqids.md) 字符串（如 `Yc7vN3kE`），不是数字。前端**不要解码**，原样传递即可：
 
 ```typescript
 const id: string = '...sqid...';

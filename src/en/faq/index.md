@@ -14,7 +14,7 @@ make initdb        # equivalent to tortoise init-db + first-time seeds
 make mm            # makemigrations + migrate
 ```
 
-For ongoing model changes, use `make mm`. See [Commands](/en/backend/commands).
+For ongoing model changes, use `make mm`. See [Commands](/en/reference/commands).
 
 ### Redis connection fails
 
@@ -36,7 +36,7 @@ Backend: 9999, frontend: 9527, Nginx: 1880. Adjust in `run.py` or `web/vite.conf
 
 ### My manually-created menus / buttons disappeared after restart
 
-Your `init_data.py` calls [`reconcile_menu_subtree(...)`](/en/backend/init-data) — that subtree is now in IaC mode and **only** menus / buttons declared in `init_data.py` survive. Web-UI-created entries are reaped on every restart.
+Your `init_data.py` calls [`reconcile_menu_subtree(...)`](/en/develop/init-data) — that subtree is now in IaC mode and **only** menus / buttons declared in `init_data.py` survive. Web-UI-created entries are reaped on every restart.
 
 If a subtree needs to allow user-created menus, **don't** call `reconcile_menu_subtree` on it.
 
@@ -47,7 +47,7 @@ The declared `(method, path)` no longer exists in the `Api` table. Common causes
 - A route was renamed / removed but the role seed `apis` list wasn't updated
 - Typo (note method is lowercase: `"post"` not `"POST"`)
 
-**Fix on sight** — otherwise the role's permission silently drops. See [Init data / drift warnings](/en/backend/init-data).
+**Fix on sight** — otherwise the role's permission silently drops. See [Init data / drift warnings](/en/develop/init-data).
 
 ### I removed a role from init_data but it's still in the DB
 
@@ -77,7 +77,7 @@ Business: module 'inventory' api module does not export a valid 'router' (APIRou
 
 Make sure `api/__init__.py` actually has `router = APIRouter()` (or assigns it from a sub-router).
 
-See [Autodiscover / common drift](/en/backend/core/autodiscover).
+See [Autodiscover / common drift](/en/develop/autodiscover).
 
 ### Temporarily disable a business module
 
@@ -115,7 +115,7 @@ from app.system.services.auth import invalidate_user_session
 await invalidate_user_session(redis, user_id)
 ```
 
-This does `INCR token_version:{uid}`. Old tokens fail with `2106 SESSION_INVALIDATED` on next request. See [Auth / token_version](/en/backend/auth).
+This does `INCR token_version:{uid}`. Old tokens fail with `2106 SESSION_INVALIDATED` on next request. See [Auth / token_version](/en/develop/auth).
 
 ### Permission denied (`2201`) but the role is granted the menu
 
@@ -143,7 +143,7 @@ The seed didn't declare `data_scope` explicitly. The model default is `all` = fu
 }
 ```
 
-See [Data scope](/en/backend/data-scope).
+See [Data scope](/en/develop/data-scope).
 
 ## Routing (frontend)
 
@@ -162,7 +162,7 @@ Check `hide_in_menu=True` on the menu, or that the current role doesn't have the
 
 ### CORS error
 
-Dev: Vite proxy (`vite.config.ts` `server.proxy`). Prod: Nginx reverse proxy (see [Deployment](/en/backend/deployment)).
+Dev: Vite proxy (`vite.config.ts` `server.proxy`). Prod: Nginx reverse proxy (see [Deployment](/en/ops/deployment)).
 
 ### Production 404
 
@@ -182,7 +182,7 @@ Page transitions use `<Transition>` which requires a single root:
 
 ### Frontend gets ID like `Yc7vN3kE`, not a number
 
-That's a [sqid](/en/backend/core/sqids) — public-facing IDs are sqids. Frontend doesn't decode; just send it back as-is and the backend (`SqidPath` / `SqidId`) decodes automatically.
+That's a [sqid](/en/develop/sqids) — public-facing IDs are sqids. Frontend doesn't decode; just send it back as-is and the backend (`SqidPath` / `SqidId`) decodes automatically.
 
 ### Tests passed by sending numeric IDs?
 
@@ -190,7 +190,7 @@ That's a [sqid](/en/backend/core/sqids) — public-facing IDs are sqids. Fronten
 
 ### After deploy, all external sqid links broke
 
-`SECRET_KEY` was rotated — sqid alphabet derives from `SECRET_KEY`. See [Sqids / rotating SECRET_KEY](/en/backend/core/sqids).
+`SECRET_KEY` was rotated — sqid alphabet derives from `SECRET_KEY`. See [Sqids / rotating SECRET_KEY](/en/develop/sqids).
 
 ## Deployment
 
@@ -221,7 +221,7 @@ uv add asyncmy          # mysql
 uv add asyncodbc        # mssql
 ```
 
-See [Switching DB / drivers](/en/backend/database).
+See [Switching DB / drivers](/en/ops/database).
 
 ### Multi-worker startup duplicates seeds?
 
