@@ -6,6 +6,7 @@
   --vp-c-brand-dark: #535bf2;
   --vp-c-brand-darker: #454ce1;
   --vp-c-brand-dimm: rgba(100, 108, 255, 0.08);
+  --vp-font-family-mono: "Cascadia Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Monaco, "Courier New", monospace;
 }
 
 :root {
@@ -53,4 +54,11 @@
   --vp-custom-block-tip-border: var(--vp-c-brand);
   --vp-custom-block-tip-text: var(--vp-c-brand-lightest);
   --vp-custom-block-tip-bg: var(--vp-c-brand-dimm);
+}
+
+.vp-doc div[class*="language-"] code,
+.vp-doc pre,
+.vp-doc code {
+  font-variant-ligatures: none;
+  text-rendering: geometricPrecision;
 }
