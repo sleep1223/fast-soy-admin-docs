@@ -142,7 +142,7 @@ const enConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
         {
           text: 'Reference',
           items: [
-            { text: 'Commands (Makefile)', link: '/en/reference/commands' },
+            { text: 'Commands (justfile)', link: '/en/reference/commands' },
             { text: 'Response Codes', link: '/en/reference/codes' },
             { text: 'app.utils Facade', link: '/en/reference/utils' }
           ]

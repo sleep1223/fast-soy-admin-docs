@@ -262,7 +262,7 @@ export default defineConfig({
         {
           text: '速查',
           items: [
-            { text: '命令参考（Makefile）', link: '/reference/commands' },
+            { text: '命令参考（justfile）', link: '/reference/commands' },
             { text: '响应码', link: '/reference/codes' },
             { text: 'app.utils 入口', link: '/reference/utils' },
             { text: 'ORM 速查', link: '/reference/orm-cookbook' }
