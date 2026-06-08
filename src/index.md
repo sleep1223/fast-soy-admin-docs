@@ -59,9 +59,3 @@ features:
 ![性能监控-SQL查询](/screenshots/radar-sql.png)
 
 ![性能监控-异常列表](/screenshots/radar-exceptions.png)
-
-## 交流群
-
-欢迎扫码加入 FastSoyAdmin QQ 交流群，一起交流使用、二开和部署经验。
-
-<img src="/community/qq-group.jpg" alt="FastSoyAdmin QQ 交流群二维码" width="240" />

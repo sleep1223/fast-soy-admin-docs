@@ -11,6 +11,7 @@ const enConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
       { text: 'Getting Started', link: '/en/getting-started/intro', activeMatch: '/en/getting-started/' },
       { text: 'Backend Dev', link: '/en/develop/intro', activeMatch: '/en/develop/' },
       { text: 'Frontend', link: '/en/frontend/intro', activeMatch: '/en/frontend/' },
+      { text: 'Advanced', link: '/en/advanced/business-hr', activeMatch: '/en/advanced/' },
       { text: 'Operations', link: '/en/ops/deployment', activeMatch: '/en/ops/' },
       { text: 'Reference', link: '/en/reference/commands', activeMatch: '/en/reference/' },
       { text: 'Standard', link: '/en/standard/', activeMatch: '/en/standard/' },
@@ -131,10 +132,12 @@ const enConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
             { text: 'Data Scope', link: '/en/develop/data-scope' }
           ]
         },
+      ],
+      '/en/advanced/': [
         {
-          text: 'Business Modules',
+          text: 'Extensions / Advanced',
           items: [
-            { text: 'HR (reference)', link: '/en/develop/business-hr' }
+            { text: 'HR (historical reference)', link: '/en/advanced/business-hr' }
           ]
         }
       ],

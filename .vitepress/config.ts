@@ -131,6 +131,7 @@ export default defineConfig({
       { text: '入门', link: '/getting-started/intro', activeMatch: '/getting-started/' },
       { text: '后端开发', link: '/develop/intro', activeMatch: '/develop/' },
       { text: '前端', link: '/frontend/intro', activeMatch: '/frontend/' },
+      { text: '高级', link: '/advanced/business-hr', activeMatch: '/advanced/' },
       { text: '运维', link: '/ops/deployment', activeMatch: '/ops/' },
       { text: '速查', link: '/reference/commands', activeMatch: '/reference/' },
       { text: '规范', link: '/standard/', activeMatch: '/standard/' },
@@ -251,10 +252,12 @@ export default defineConfig({
             { text: '数据权限（data_scope）', link: '/develop/data-scope' }
           ]
         },
+      ],
+      '/advanced/': [
         {
-          text: '业务模块',
+          text: '扩展 / 高级',
           items: [
-            { text: 'HR 管理（参考样例）', link: '/develop/business-hr' }
+            { text: 'HR 管理（历史参考）', link: '/advanced/business-hr' }
           ]
         }
       ],
