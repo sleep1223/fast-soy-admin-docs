@@ -26,7 +26,7 @@ A layered, modular **FastAPI** backend. Code is split into "system" and "busines
 app/
 ├── __init__.py           # FastAPI app factory, lifespan, multi-worker init coordination
 ├── core/                 # Framework infrastructure (business uses it via app.utils)
-│   ├── autodiscover.py   # business module discovery (models / api / init_data / standalone DB)
+│   ├── autodiscover.py   # business module discovery (models / manifest / api / init_data / standalone DB)
 │   ├── base_model.py     # BaseModel / AuditMixin / TreeMixin / enums
 │   ├── base_schema.py    # SchemaBase / PageQueryBase / Success / Fail / SuccessExtra
 │   ├── code.py           # All response codes
@@ -54,7 +54,7 @@ app/
 │   ├── security.py       # Argon2 + JWT helpers
 │   └── init_data.py      # System menus / roles / users / dictionary seeds
 ├── business/             # Business modules (autodiscovered)
-│   └── hr/               # reference: employees / departments / tags
+│   └── <module>/               # example business module created by CLI
 ├── cli/                  # Code generators (init / gen / gen-web / initdb)
 └── utils/                # Stable import facade for business code (re-exports core/system)
 ```
@@ -88,7 +88,7 @@ models / schemas
 
 ## system / business one-way dependency
 
-- `app.system.*` is unaware of `app.business.*`; autodiscover wires up business `init()` and `router` at startup
+- `app.system.*` is unaware of `app.business.*`; autodiscover wires up business manifest / legacy routers plus init / policy / event / task slots at startup
 - Business modules **must not** reverse-import `app.system.*` (except a few explicitly exposed services) or sibling modules; cross-module talk uses the [event bus](/en/develop/events)
 - Business modules import from [`app.utils`](/en/reference/utils) — the stable public surface
 
@@ -111,4 +111,4 @@ Details: [Startup init & reconciliation](/en/develop/init-data).
 - [Architecture](/en/getting-started/architecture) — middleware stack, lifecycle, layer responsibilities
 - [Development guide](/en/getting-started/workflow) — build a business module from scratch using the CLI
 - [API conventions](/en/develop/api) / [Response codes](/en/reference/codes) — enforced rules
-- [HR module](/en/advanced/business-hr) — full reference implementation of a business module
+- [Business development](/en/develop/intro) — business module development entry

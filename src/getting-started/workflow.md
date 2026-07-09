@@ -18,7 +18,6 @@ just db-init          # 首次建表 + 基础数据
 
 ```bash
 just cli-init inventory
-# 执行过程中会要求输入模块中文名，如"库存管理"
 ```
 
 执行后会生成：
@@ -150,7 +149,7 @@ web/
 
 ### 6. 处理 TODO
 
-前端中的外键 / 自定义枚举无法自动推导数据源，生成代码里留有 `// TODO` 注释。用 IDE 搜索 TODO，补齐 options 的数据源（通常是配置一个 `fetchGetXxxList` 请求）。
+前端中的外键 / 自定义枚举无法自动推导数据源，列表页会生成集中式 `options` 接线点并留有 `// TODO` 注释。用 IDE 搜索 TODO，在父页面补齐 options 的数据源（通常是配置一个 `fetchGetXxxList` 请求），搜索区和新增/编辑抽屉会通过 props 复用同一份 options。
 
 ### 7. 迁移数据库
 
@@ -186,12 +185,12 @@ CLI 根据 Tortoise 字段类型自动推导 TS 类型和表单组件：
 | `DateField` | `string` | `date` | `NDatePicker type="date"` | — |
 | `DatetimeField` | `string` | `datetime` | `NDatePicker type="datetime"` | — |
 | `CharEnumField(StatusType)` | `string` | `StatusType` | `NSelect statusTypeOptions` | 同左 |
-| `CharEnumField(其他枚举)` | `string` | `str` | `NSelect` + TODO | 同左 |
-| `ForeignKeyField` | `number` | `int` | `NSelect` + TODO | 同左 |
+| `CharEnumField(其他枚举)` | `string` | `str` | `NSelect` + 父页面 options TODO | 同左 |
+| `ForeignKeyField` | `string` | `SqidId` | `NSelect` + 父页面 options TODO | 同左 |
 
 ## i18n 命名规则
 
-- **模块中文名**：`init` 命令时输入，用于 `route.<module>` 和 `page.<module>` 顶层
+- **模块中文名**：`cli-gen-web` / `cli-crud` 的第二个位置参数或 `--cn-name` 指定；未指定时默认使用模块名，用于 `route.<module>` 和 `page.<module>` 顶层
 - **模型中文名**：类 docstring（`"""仓库"""`）或 `Meta.table_description`
 - **字段中文名**：`description="..."`，**截断到第一个中英文句号之前**
   - 例：`description="仓库编号。全局唯一"` → 取 `仓库编号`

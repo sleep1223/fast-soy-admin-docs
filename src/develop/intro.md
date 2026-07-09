@@ -26,7 +26,7 @@
 app/
 ├── __init__.py           # FastAPI 应用工厂、lifespan、多 worker init 协调
 ├── core/                 # 框架基础设施（业务模块通过 app.utils 间接使用）
-│   ├── autodiscover.py   # 业务模块发现（models/api/init_data/独立 DB）
+│   ├── autodiscover.py   # 业务模块发现（models/manifest/api/init_data/独立 DB）
 │   ├── base_model.py     # BaseModel / AuditMixin / TreeMixin / 枚举
 │   ├── base_schema.py    # SchemaBase / PageQueryBase / Success / Fail / SuccessExtra
 │   ├── code.py           # 全应用响应码
@@ -54,7 +54,7 @@ app/
 │   ├── security.py       # Argon2 + JWT 工具
 │   └── init_data.py      # 系统菜单/角色/用户/字典种子
 ├── business/             # 业务模块（autodiscover 自动加载）
-│   └── hr/               # 参考实现：员工 / 部门 / 标签
+│   └── <module>/               # 业务模块示例：由 CLI 创建
 ├── cli/                  # 代码生成器（init / gen / gen-web / initdb）
 └── utils/                # 业务开发者的统一导入入口（重新导出 core/system 常用符号）
 ```
@@ -88,7 +88,7 @@ models / schemas
 
 ## system / business 单向依赖
 
-- `app.system.*` 不感知 `app.business.*`，仅启动时由 `autodiscover` 调用业务模块的 `init()` 与 `router`
+- `app.system.*` 不感知 `app.business.*`，仅启动时由 `autodiscover` 挂载业务 manifest / legacy router，并调用 init / policy / event / task 插槽
 - 业务模块**禁止**反向 import `app.system.*`，**禁止**互相 import；跨模块用[事件总线](./events.md)
 - 业务模块统一从 [`app.utils`](../reference/utils.md) 导入，这是稳定对外入口
 
@@ -111,4 +111,4 @@ models / schemas
 - [架构](../getting-started/architecture.md) — 中间件栈、生命周期、目录到职责的映射
 - [开发指南](../getting-started/workflow.md) — 用 CLI 从 0 搭一个业务模块
 - [API 约定](./api.md) / [响应码](../reference/codes.md) — 强制约定
-- [HR 模块](../advanced/business-hr.md) — 完整的业务模块参考实现
+- [业务开发](intro.md) — 业务模块开发入口

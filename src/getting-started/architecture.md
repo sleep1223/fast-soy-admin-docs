@@ -23,7 +23,7 @@ Runtime dependencies
 |---|---|---|
 | `app/core/` | 框架基础设施（无业务） | 不依赖 system / business |
 | `app/system/` | 内置系统模块（认证、RBAC、用户、菜单、API、字典） | 仅依赖 `app/core/` |
-| `app/business/<x>/` | 业务模块（HR / CRM / Inventory ...） | 依赖 `app/utils`（间接到 core/system），**不得依赖兄弟业务模块** |
+| `app/business/<x>/` | 业务模块（Inventory / CRM / Inventory ...） | 依赖 `app/utils`（间接到 core/system），**不得依赖兄弟业务模块** |
 | `app/utils/` | 业务开发者的统一对外入口 | 重新导出 `app/core/*` 与 `app/system/security` 等少量符号 |
 | `app/cli/` | 代码生成器（init/gen/gen-web/initdb） | 仅离线使用，不参与运行时 |
 
@@ -41,7 +41,7 @@ Runtime dependencies
 2. **路由分发** — 业务模块路由统一前缀 `/api/v1/business/<name>`，系统模块挂在 `/api/v1/{auth,route,system-manage}` 下
 3. **依赖注入**
    - `DependAuth` — JWT 解码 → 校验 token 版本号 → 加载用户与角色/按钮权限到 ContextVars
-   - `DependPermission` — 在 `DependAuth` 之上，按 `role.apis` 精确比对 `(method, path)`
+   - `DependPermission` — 在 `DependAuth` 之上，按 `role.apis` 授权 route key（兼容旧 `(method, path)`）
    - `require_buttons(...)` / `require_roles(...)` — 工厂依赖，按需挂在路由上
 4. **业务逻辑**
    - `api/` 层只接线，业务规则在 `services/` 与 `controllers/`
@@ -55,7 +55,8 @@ create_app()
   |-- register_db(app)                      # Tortoise.init(config=TORTOISE_ORM)
   |-- register_exceptions(app)              # BizError / DoesNotExist / IntegrityError / ValidationError 处理器
   |-- register_routers(app, prefix="/api")  # 系统模块 /api/v1/...
-  |-- discover_business_routers()           # /api/v1/business/<name>/...
+  |-- discover_business_routers()           # manifest routers 或 legacy api router
+  |-- register business policies            # manifest DataPolicy
   `-- setup_radar(app)                      # 可选
 
 lifespan(app)
@@ -66,7 +67,8 @@ lifespan(app)
   |   |-- init_menus()                      # 系统菜单种子（仅在 Menu 表为空时插入）
   |   |-- refresh_api_list()                # FastAPI 路由 <-> Api 表全量对账
   |   |-- init_users()                      # 系统角色 + 默认账号 + 字典
-  |   |-- for each business init():         # 业务模块 init_data.init()
+  |   |-- for each business init():         # manifest init 或 legacy init_data.init()
+  |   |-- start business tasks              # manifest PeriodicTask
   |   `-- refresh_all_cache()               # 角色权限 / 常量路由刷到 Redis
   |-- startup_radar()                       # 可选
   |-- yield
@@ -90,7 +92,7 @@ User
 - 超级管理员 `R_SUPER`（[`app.core.constants.SUPER_ADMIN_ROLE`](../../../app/core/constants.py)）跳过所有权限校验
 - API 权限由 `refresh_api_list()` 自动维护（按 `(method, path)` 全量对账）
 - 菜单/按钮由各模块 `init_data.py` 通过 `ensure_menu()` 声明，可选 `reconcile_menu_subtree()` 做 IaC 对账
-- 按钮编码约定 `B_<MODULE>_<RESOURCE>_<ACTION>`（如 `B_HR_EMP_CREATE`）
+- 按钮编码约定 `B_<MODULE>_<RESOURCE>_<ACTION>`（如 `B_INVENTORY_PRODUCT_CREATE`）
 - 详见 [认证与权限](../develop/auth.md) / [数据权限](../develop/data-scope.md)
 
 ## 多 worker 启动

@@ -9,7 +9,7 @@ web/src/service/
 ├── api/      # per-module fetchXxx functions
 │   ├── auth.ts
 │   ├── system-manage.ts
-│   ├── hr-manage.ts
+│   ├── inventory-manage.ts
 │   └── ...
 └── request/  # generic request layer (interceptors, codes, refresh)
     └── index.ts
@@ -22,10 +22,10 @@ web/src/service/
 VITE_SERVICE_BASE_URL=/api/v1                    # business base
 VITE_OTHER_SERVICE_BASE_URL={"demo":"/demo"}     # other services (multi-backend)
 
-VITE_SERVICE_SUCCESS_CODE=0000                    # success code
+VITE_SERVICE_SUCCESS_CODE=0000                             # success code
 VITE_SERVICE_LOGOUT_CODES=2100,2101,2104,2105              # force logout
-VITE_SERVICE_MODAL_LOGOUT_CODES=2102,2106             # modal then logout
-VITE_SERVICE_EXPIRED_TOKEN_CODES=2103            # auto-refresh
+VITE_SERVICE_MODAL_LOGOUT_CODES=2102,2106                  # modal then logout
+VITE_SERVICE_EXPIRED_TOKEN_CODES=2103                      # auto-refresh
 ```
 
 Backend codes: see [Response codes](/en/reference/codes).

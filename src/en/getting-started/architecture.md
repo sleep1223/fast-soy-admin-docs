@@ -23,7 +23,7 @@ Runtime dependencies
 |---|---|---|
 | `app/core/` | framework infrastructure (no business) | doesn't depend on system / business |
 | `app/system/` | built-in modules (auth, RBAC, users, menus, APIs, dictionary) | only `app/core/` |
-| `app/business/<x>/` | business modules (HR / CRM / Inventory ...) | `app/utils` (transitively core/system); **never** sibling business modules |
+| `app/business/<x>/` | business modules (Inventory / CRM / Inventory ...) | `app/utils` (transitively core/system); **never** sibling business modules |
 | `app/utils/` | stable public facade for business code | re-exports `app/core/*` and a few `app/system/security` symbols |
 | `app/cli/` | code generators (init/gen/gen-web/initdb) | offline-only, no runtime impact |
 
@@ -41,7 +41,7 @@ Business code should never `from app.system.xxx import ...` (except services sys
 2. **Routing** — business routes uniformly under `/api/v1/business/<name>`; system routes under `/api/v1/{auth,route,system-manage}`
 3. **Dependency injection**
    - `DependAuth` — JWT decode → check token version → load user + role/button permissions into ContextVars
-   - `DependPermission` — on top of `DependAuth`, exact `(method, path)` match against `role.apis`
+   - `DependPermission` — on top of `DependAuth`, authorizes route keys in `role.apis` (legacy `(method, path)` still works)
    - `require_buttons(...)` / `require_roles(...)` — factory dependencies, attach as needed
 4. **Business logic**
    - `api/` only wires; rules live in `services/` and `controllers/`
@@ -55,7 +55,8 @@ create_app()
   |-- register_db(app)                      # Tortoise.init(config=TORTOISE_ORM)
   |-- register_exceptions(app)              # BizError / DoesNotExist / IntegrityError / ValidationError handlers
   |-- register_routers(app, prefix="/api")  # system /api/v1/...
-  |-- discover_business_routers()           # /api/v1/business/<name>/...
+  |-- discover_business_routers()           # manifest routers or legacy api router
+  |-- register business policies            # manifest DataPolicy
   `-- setup_radar(app)                      # optional
 
 lifespan(app)
@@ -66,7 +67,8 @@ lifespan(app)
   |   |-- init_menus()                      # system menu seeds (only when Menu table is empty)
   |   |-- refresh_api_list()                # FastAPI routes <-> Api table reconciliation
   |   |-- init_users()                      # system roles + default users + dictionary
-  |   |-- for each business init():         # business modules' init_data.init()
+  |   |-- for each business init():         # manifest init or legacy init_data.init()
+  |   |-- start business tasks              # manifest PeriodicTask
   |   `-- refresh_all_cache()               # role permissions / constant routes -> Redis
   |-- startup_radar()                       # optional
   |-- yield
@@ -90,7 +92,7 @@ User
 - The super-admin role `R_SUPER` (`app.core.constants.SUPER_ADMIN_ROLE`) bypasses every check
 - API permissions are auto-managed by `refresh_api_list()` (full reconciliation by `(method, path)`)
 - Menus / buttons are declared per module via `ensure_menu()`, optionally with `reconcile_menu_subtree()` for IaC
-- Button code convention: `B_<MODULE>_<RESOURCE>_<ACTION>` (e.g. `B_HR_EMP_CREATE`)
+- Button code convention: `B_<MODULE>_<RESOURCE>_<ACTION>` (e.g. `B_INVENTORY_PRODUCT_CREATE`)
 - See [Auth](/en/develop/auth) / [Data scope](/en/develop/data-scope)
 
 ## Multi-worker startup
