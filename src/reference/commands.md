@@ -40,6 +40,9 @@ just --list
 | `uv run python -m app.cli gen-web <MOD>` | `just cli-gen-web xxx [中文名]` | 选择页面模型、列表/搜索字段，生成前端 service/typings/views/i18n |
 | `uv run python -m app.cli gen-all <MOD>` | `just cli-gen-all xxx [中文名]` | 一次选择并生成后端 + 前端 CRUD |
 | `uv run python -m app.cli crud <MOD>` | `just cli-crud xxx [中文名]` | 同上，完整 CRUD 生成别名 |
+| `uv run python -m app.cli init-plan` | `just init-plan` | 预览业务模块声明式初始化内容与 route key 漂移 |
+| `uv run python -m app.cli module-list` | `just module-list` | 列出业务模块、版本、依赖、事件、policy、任务等 manifest 信息 |
+| `uv run python -m app.cli check-boundaries` | `just check-boundaries` | 检查业务模块 import 边界 |
 
 ### 参数化生成（AI 友好）
 
@@ -47,6 +50,12 @@ just --list
 
 ```bash
 uv run python -m app.cli crud utility_fee --cn-name 水电费 --yes --force
+```
+
+生成前可加 `--dry-run` 预览将创建、覆盖或追加的文件；dry-run 不写磁盘，也不要求当前 Git 工作区干净：
+
+```bash
+just cli-crud inventory 库存管理 "--yes --dry-run"
 ```
 
 选择模型与字段时统一使用 `Model:field1,field2`，多个模型可重复参数或用分号分隔：
@@ -64,17 +73,17 @@ uv run python -m app.cli crud utility_fee \
 后端高级能力也可直接从 CLI 调用：
 
 ```bash
-uv run python -m app.cli crud hr \
-  --cn-name 人事 \
-  --models Employee,Department \
-  --data-scope Employee:user_id,tenant_id \
+uv run python -m app.cli crud inventory \
+  --cn-name 库存 \
+  --models Product,Warehouse \
+  --data-scope Product:user_id,tenant_id \
   --button-auth \
-  --soft-delete Employee \
-  --tree Department \
-  --list-order Employee:-created_at,id \
-  --enable-routes Department:list,get \
-  --list-cache Department:60 \
-  --rate-limit Employee:30/60
+  --soft-delete Product \
+  --tree Warehouse \
+  --list-order Product:-created_at,id \
+  --enable-routes Warehouse:list,get \
+  --list-cache Warehouse:60 \
+  --rate-limit Product:30/60
 ```
 
 能力说明：
@@ -85,7 +94,7 @@ uv run python -m app.cli crud hr \
 | `--button-auth` | 生成菜单按钮声明，并在 create/edit/delete/batch_delete 挂 `require_buttons()` |
 | `--soft-delete Model` | `CRUDRouter(..., soft_delete=True)`，模型需使用 `SoftDeleteMixin` |
 | `--tree Model` | `CRUDRouter(..., tree_endpoint=True)`，模型需使用 `TreeMixin` 或 `parent_id` |
-| `--list-cache Model:60` | 为列表 override 加 `@cache(expire=60, namespace=...)`，仅建议低组合度列表使用 |
+| `--list-cache Model:60` | 为列表 override 加缓存 TODO，提醒按用户/范围/分页/查询参数设计 key |
 | `--rate-limit Model:30/60` | 在 `api/manage.py` 输出 `ENDPOINT_RATE_LIMITS`，启动时自动合并到 guard 配置 |
 | `--enable-routes Model:list,get` | 限制标准 CRUD 路由集合 |
 | `--exclude-fields Model:secret` | 设置 `to_dict()` 排除字段 |
@@ -127,6 +136,7 @@ just cli-crud utility_fee 水电费 "--yes --models UtilityConfig --button-auth"
 
 | 原始命令 | just 命令 | 作用 |
 |---|---|---|
+| `docker compose up -d postgres redis && docker compose run --rm app uv run python -m app.cli initdb` | `just docker-db-init` | 首次 Docker 初始化数据库 |
 | `docker compose up -d` | `just up` | 启动全栈（nginx :1880 + fastapi :9999 + redis） |
 | `docker compose up -d --build` | `just rebuild` | 重建镜像并重建容器（代码 / Dockerfile 变更后使用） |
 | `docker compose down` | `just down` | 停止并移除容器 |
@@ -151,7 +161,7 @@ just cli-init inventory
 
 # 5. 编辑 app/business/inventory/models.py，定义 Tortoise 模型
 
-# 6. 生成后端代码（schemas / controllers / api / init_data）
+# 6. 生成后端代码（module / schemas / controllers / api / init_data）
 just cli-gen inventory
 
 # 7. 生成前端代码（service / typings / views / i18n 片段）
@@ -168,4 +178,9 @@ just run
 
 # 10. 提交前跑一遍质量检查
 just check
+
+# 可选：查看业务模块 init 声明与 import 边界
+just init-plan
+just module-list
+just check-boundaries
 ```
