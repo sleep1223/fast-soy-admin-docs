@@ -131,7 +131,7 @@ export default defineConfig({
       { text: '入门', link: '/getting-started/intro', activeMatch: '/getting-started/' },
       { text: '后端开发', link: '/develop/intro', activeMatch: '/develop/' },
       { text: '前端', link: '/frontend/intro', activeMatch: '/frontend/' },
-      { text: '高级', link: '/advanced/upgrade-architecture', activeMatch: '/advanced/' },
+      { text: '高级', link: '/advanced/business-hr', activeMatch: '/advanced/' },
       { text: '运维', link: '/ops/deployment', activeMatch: '/ops/' },
       { text: '速查', link: '/reference/commands', activeMatch: '/reference/' },
       { text: '规范', link: '/standard/', activeMatch: '/standard/' },
@@ -257,7 +257,7 @@ export default defineConfig({
         {
           text: '扩展 / 高级',
           items: [
-            { text: '一键升级与内核化', link: '/advanced/upgrade-architecture' },
+            { text: 'HR 管理（示例）', link: '/advanced/business-hr' },
           ]
         }
       ],

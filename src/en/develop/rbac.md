@@ -46,7 +46,7 @@ INVENTORY_MENU_CHILDREN = [
             {"button_code": "B_INVENTORY_PRODUCT_CREATE", "button_desc": "create product"},
             {"button_code": "B_INVENTORY_PRODUCT_EDIT",   "button_desc": "edit product"},
             {"button_code": "B_INVENTORY_PRODUCT_DELETE", "button_desc": "delete product"},
-            {"button_code": "B_INVENTORY_PRODUCT_PUBLISH", "button_desc": "publish product"},
+            {"button_code": "B_INVENTORY_PRODUCT_TRANSITION", "button_desc": "state transition"},
         ],
     },
 ]
@@ -65,7 +65,7 @@ B_<MODULE>_<RESOURCE>_<ACTION>
 | Example | Meaning |
 |---|---|
 | `B_INVENTORY_WAREHOUSE_CREATE` | Inventory / warehouse / create |
-| `B_INVENTORY_PRODUCT_PUBLISH` | Inventory / product / publish |
+| `B_INVENTORY_PRODUCT_TRANSITION` | Inventory / product / state transition |
 | `B_INV_PRODUCT_DELETE` | Inventory / product / delete |
 
 General rules:
@@ -96,7 +96,7 @@ from app.system.services import ensure_role
 
 await ensure_role(
     role_name="inventory admin",
-    role_code="R_INVENTORY_MANAGER",
+    role_code="R_INVENTORY_ADMIN",
     role_desc="Inventory specialist",
     home_route="inventory_product",
     data_scope=DataScopeType.all,
@@ -117,7 +117,7 @@ await ensure_role(
 When a declared `route_name` / `button_code` / `(method, path)` doesn't exist in the DB:
 
 ```
-ensure_role 'R_INVENTORY_MANAGER': missing apis [('post', '/api/v1/business/inventory/old')] (route signature changed?)
+ensure_role 'R_INVENTORY_ADMIN': missing apis [('post', '/api/v1/business/inventory/old')] (route signature changed?)
 ```
 
 **Fix on sight** — the seed is out of sync with the code. See [Init data / drift](/en/develop/init-data).

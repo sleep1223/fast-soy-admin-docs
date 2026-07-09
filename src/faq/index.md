@@ -98,7 +98,7 @@ mv app/business/inventory app/business/_inventory
 ```python
 from app.core.cache import load_role_permissions, load_user_roles
 
-await load_role_permissions(redis, role_code="R_INVENTORY_MANAGER")
+await load_role_permissions(redis, role_code="R_INVENTORY_ADMIN")
 await load_user_roles(redis, user_id=123)
 ```
 
@@ -121,7 +121,7 @@ await invalidate_user_session(redis, user_id)
 
 ```python
 await ensure_role(
-    role_code="R_INVENTORY_MANAGER",
+    role_code="R_INVENTORY_ADMIN",
     menus=[..., "inventory_product"],
     apis=[
         ("post", "/api/v1/business/inventory/products/search"),

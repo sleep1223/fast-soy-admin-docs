@@ -46,7 +46,7 @@ INVENTORY_MENU_CHILDREN = [
             {"button_code": "B_INVENTORY_PRODUCT_CREATE", "button_desc": "创建商品"},
             {"button_code": "B_INVENTORY_PRODUCT_EDIT",   "button_desc": "编辑商品"},
             {"button_code": "B_INVENTORY_PRODUCT_DELETE", "button_desc": "删除商品"},
-            {"button_code": "B_INVENTORY_PRODUCT_PUBLISH", "button_desc": "发布商品"},
+            {"button_code": "B_INVENTORY_PRODUCT_TRANSITION", "button_desc": "状态流转"},
         ],
     },
 ]
@@ -65,7 +65,7 @@ B_<MODULE>_<RESOURCE>_<ACTION>
 | 例 | 含义 |
 |---|---|
 | `B_INVENTORY_WAREHOUSE_CREATE` | 库存 / 仓库 / 创建 |
-| `B_INVENTORY_PRODUCT_PUBLISH` | 库存 / 商品 / 发布 |
+| `B_INVENTORY_PRODUCT_TRANSITION` | 库存 / 商品 / 状态流转 |
 | `B_INV_PRODUCT_DELETE` | 库存 / 产品 / 删除 |
 
 通用约定：
@@ -112,7 +112,7 @@ from app.system.services import ensure_role
 
 await ensure_role(
     role_name="HR管理员",
-    role_code="R_INVENTORY_MANAGER",
+    role_code="R_INVENTORY_ADMIN",
     role_desc="库存专员",
     home_route="inventory_product",
     data_scope=DataScopeType.all,
@@ -133,7 +133,7 @@ await ensure_role(
 声明的 `route_name` / `button_code` / `(method, path)` 在 DB 中找不到时输出：
 
 ```
-ensure_role 'R_INVENTORY_MANAGER': missing apis [('post', '/api/v1/business/inventory/old')] (route signature changed?)
+ensure_role 'R_INVENTORY_ADMIN': missing apis [('post', '/api/v1/business/inventory/old')] (route signature changed?)
 ```
 
 **看到必须修**——意味着 seed 与代码脱节。详见 [启动初始化与对账](./init-data.md#ensure_role-配置漂移告警)。

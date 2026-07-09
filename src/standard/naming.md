@@ -54,8 +54,8 @@ R_<UPPER>                       # 角色编码
 | 例 | 含义 |
 |---|---|
 | `B_INVENTORY_PRODUCT_CREATE` | 库存 / 商品 / 创建 |
-| `B_INVENTORY_PRODUCT_PUBLISH` | 库存 / 商品 / 发布 |
-| `R_INVENTORY_MANAGER` | 库存管理员 |
+| `B_INVENTORY_PRODUCT_TRANSITION` | 库存 / 商品 / 状态流转 |
+| `R_INVENTORY_ADMIN` | 库存管理员 |
 | `R_DEPT_MGR` | 通用仓库主管 |
 | `R_SUPER` | 超级管理员（保留） |
 
@@ -89,7 +89,7 @@ common.<key>         # 全局通用
 
 | 范围 | 模板 | 示例 |
 |---|---|---|
-| 系统级权限 | `role:{code}:*` / `user:{uid}:*` | `role:R_INVENTORY_MANAGER:apis` |
+| 系统级权限 | `role:{code}:*` / `user:{uid}:*` | `role:R_INVENTORY_ADMIN:apis` |
 | 业务模块自有 | `<module>_<resource>:<scope>` | `dict_options:tag_category` |
 | 启动协调 | `app:<purpose>` | `app:init_lock` / `app:init_done` |
 

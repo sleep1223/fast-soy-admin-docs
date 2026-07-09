@@ -54,8 +54,8 @@ R_<UPPER>                       # Role code
 | Example | Meaning |
 |---|---|
 | `B_INVENTORY_PRODUCT_CREATE` | Inventory / product / create |
-| `B_INVENTORY_PRODUCT_PUBLISH` | Inventory / product / publish |
-| `R_INVENTORY_MANAGER` | inventory admin |
+| `B_INVENTORY_PRODUCT_TRANSITION` | Inventory / product / state transition |
+| `R_INVENTORY_ADMIN` | inventory admin |
 | `R_DEPT_MGR` | generic warehouse manager |
 | `R_SUPER` | super admin (reserved) |
 
@@ -89,7 +89,7 @@ common.<key>         # global
 
 | Scope | Template | Example |
 |---|---|---|
-| System-level permission | `role:{code}:*` / `user:{uid}:*` | `role:R_INVENTORY_MANAGER:apis` |
+| System-level permission | `role:{code}:*` / `user:{uid}:*` | `role:R_INVENTORY_ADMIN:apis` |
 | Business module | `<module>_<resource>:<scope>` | `dict_options:tag_category` |
 | Startup coordination | `app:<purpose>` | `app:init_lock` / `app:init_done` |
 

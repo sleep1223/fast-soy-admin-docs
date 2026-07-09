@@ -132,7 +132,7 @@ class _OrderTransitionError(BizError):
 状态机只校验"合法性"，不做"谁有权这么做"。**鉴权放在路由层**：
 
 ```python
-@router.post("/products/{product_id}/transition", dependencies=[require_buttons("B_INVENTORY_PRODUCT_PUBLISH")])
+@router.post("/products/{product_id}/transition", dependencies=[require_buttons("B_INVENTORY_PRODUCT_TRANSITION")])
 async def _(product_id: SqidPath, body: ProductTransition):
     return await transition_product(product_id, body.to_state)
 ```

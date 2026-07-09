@@ -123,7 +123,7 @@ Then in business code wrap conditionally — or just reuse `Code.INVENTORY_INVAL
 The state machine only validates "legality"; it doesn't check "who's allowed to transition". **Authorize at the route layer**:
 
 ```python
-@router.post("/products/{product_id}/transition", dependencies=[require_buttons("B_INVENTORY_PRODUCT_PUBLISH")])
+@router.post("/products/{product_id}/transition", dependencies=[require_buttons("B_INVENTORY_PRODUCT_TRANSITION")])
 async def _(product_id: SqidPath, body: ProductTransition):
     return await transition_product(product_id, body.to_state)
 ```
