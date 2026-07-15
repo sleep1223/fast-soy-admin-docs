@@ -20,6 +20,7 @@ const enConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
         text: 'Links',
         items: [
           { text: 'Preview', link: 'https://fast-soy-admin.sleep0.de/' },
+          { text: 'QQ Community', link: 'https://qm.qq.com/q/JHL7VHvDa' },
           { text: 'API Docs (Apidog)', link: 'https://fast-soy-admin.apidog.io' },
           { text: 'SoybeanAdmin', link: 'https://github.com/soybeanjs/soybean-admin' },
           { text: 'SoybeanAdmin Docs', link: 'https://docs.soybeanjs.cn' },

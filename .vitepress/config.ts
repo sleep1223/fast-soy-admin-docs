@@ -140,6 +140,7 @@ export default defineConfig({
         text: '链接',
         items: [
           { text: '在线预览', link: 'https://fast-soy-admin.sleep0.de/' },
+          { text: 'QQ 交流群', link: 'https://qm.qq.com/q/JHL7VHvDa' },
           { text: 'API 文档 (Apidog)', link: 'https://fast-soy-admin.apidog.io' },
           { text: 'SoybeanAdmin', link: 'https://github.com/soybeanjs/soybean-admin' },
           { text: 'SoybeanAdmin 文档', link: 'https://docs.soybeanjs.cn' },
