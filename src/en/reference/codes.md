@@ -95,6 +95,7 @@ Source: `app/core/code.py`. The frontend `.env` maps select codes to behaviors (
 | `2404` | `PHONE_NOT_REGISTERED` | Phone not registered |
 | `2405` | `OLD_PASSWORD_WRONG` | Old password wrong on change-password |
 | `2406` | `TARGET_USER_NOT_FOUND` | Target user not found (e.g. impersonate) |
+| `2407` | `STATE_TRANSITION_INVALID` | Disallowed state transition |
 
 ### 25xx — Rate limit / security
 
@@ -124,18 +125,20 @@ Project-specific codes. The framework doesn't touch them; the frontend doesn't a
 
 > Module convention: business module codes must start at `4000` (do **not** occupy the `2xxx` system range). Append your module's range at the end of `app/core/code.py` (e.g. `41xx`, `42xx`). One unique code per failure scenario — never re-use `2400`.
 
-### 40xx — Inventory business (sample of module-specific codes)
+`main` does not define `4xxx` constants for any concrete business module. The `example` branch keeps this HR-specific range:
 
 | Code | Constant | Meaning |
 |---|---|---|
-| `4000` | `INVENTORY_WAREHOUSE_REQUIRED` | Super-admin must specify warehouse on product create |
-| `4001` | `INVENTORY_MANAGER_REQUIRED` | Only warehouse managers may create products |
-| `4002` | `INVENTORY_CREATE_FORBIDDEN` | No permission to create product |
-| `4003` | `INVENTORY_TAGS_EXCEED_LIMIT` | Product tag count over limit |
-| `4004` | `INVENTORY_PRODUCT_NOT_IN_WAREHOUSE` | Product not in current manager's warehouse |
-| `4005` | `INVENTORY_PRODUCT_BIND_REQUIRED` | Current user is not bound to an product |
-| `4006` | `INVENTORY_MANAGER_ONLY` | Only warehouse managers may perform this |
-| `4007` | `INVENTORY_INVALID_TRANSITION` | Disallowed state transition |
+| `4000` | `HR_DEPARTMENT_REQUIRED` | A valid department is required when creating an employee |
+| `4001` | `HR_MANAGER_REQUIRED` | A department manager is required |
+| `4002` | `HR_CREATE_FORBIDDEN` | Employee creation is forbidden |
+| `4003` | `HR_TAGS_EXCEED_LIMIT` | Employee tag limit exceeded |
+| `4004` | `HR_EMPLOYEE_NOT_IN_DEPT` | Employee is outside the current manager's department |
+| `4005` | `HR_USER_NOT_EMPLOYEE` | Current user has no linked employee record |
+| `4006` | `HR_MANAGER_ONLY` | The operation is restricted to department managers |
+| `4007` | `HR_INVALID_TRANSITION` | Invalid HR employee status transition |
+
+The HR state machine explicitly selects `4007` with `StateMachine(..., error_code=Code.HR_INVALID_TRANSITION)`. Other business modules should allocate their own unique failure codes.
 
 ## Raising
 
@@ -143,7 +146,7 @@ Project-specific codes. The framework doesn't touch them; the frontend doesn't a
 from app.utils import BizError, Code, Fail
 
 # A: raise (recommended; transparent across layers)
-raise BizError(code=Code.INVENTORY_INVALID_TRANSITION, msg="invalid transition")
+raise BizError(code=Code.STATE_TRANSITION_INVALID, msg="invalid transition")
 
 # B: return Fail (api layer only; more direct)
 return Fail(code=Code.OLD_PASSWORD_WRONG, msg="old password wrong")
